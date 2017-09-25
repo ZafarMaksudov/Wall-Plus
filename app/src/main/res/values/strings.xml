@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Wall+</string>
+
+    <string name="search">Tell me what you are searching for , \n I will do the rest!</string>
+    <string name="search_query_hint">What are you looking for ?</string>
+    <string name="search_query">Searching wallpapers for </string>
+
+    <string name="toFullScreenTransition">toFullScreenTransition</string>
+</resources>

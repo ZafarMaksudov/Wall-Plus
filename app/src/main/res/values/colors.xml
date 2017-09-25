@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#263238</color>
+    <color name="colorPrimaryDark">#222c31</color>
+    <color name="colorAccent">#B2DFD8</color>
+    <color name="colorBackground">#1e282d</color>
+
+    <color name="tabSelected">#ecf0f1</color>
+    <color name="textColor">#B2DFD8</color>
+    <color name="textColorHint">#80B2DFD8</color>
+
+    <color name="selectorDisables">#00000000</color>
+
+    <color name="transparentColor">#00000000</color>
+</resources>
