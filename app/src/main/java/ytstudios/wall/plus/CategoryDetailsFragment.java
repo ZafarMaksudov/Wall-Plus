@@ -18,5 +18,9 @@ public class CategoryDetailsFragment extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.categories_details_fragment);
         categoryType = findViewById(R.id.categoryType);
+
+        //getWindow().setSharedElementEnterTransition(TransitionInflater.from(this).inflateTransition(R.transition.shared_element_transation));
+        Integer drawable = getIntent().getIntExtra("Image", 0);
+        categoryType.setImageResource(drawable);
     }
 }
