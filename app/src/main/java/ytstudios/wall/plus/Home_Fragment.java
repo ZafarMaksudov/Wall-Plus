@@ -52,8 +52,7 @@ public class Home_Fragment extends Fragment {
     GridLayoutManager gridLayoutManager;
 
     boolean isNetworkConnected;
-
-    public static final String API_KEY = "0b1eb5e584dc4f45a8caf9efb50fe8ad";
+    
     private static int pageCount = 2;
 
     protected Handler handler;
