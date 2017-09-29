@@ -155,7 +155,6 @@ public class HomeFragmentCustomAdapter extends RecyclerView.Adapter {
         this.onLoadMoreListener = onLoadMoreListener;
     }
 
-
     @Override
     public int getItemCount() {
         return wallpapersModels.size();

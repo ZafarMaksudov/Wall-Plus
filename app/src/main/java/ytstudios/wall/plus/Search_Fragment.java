@@ -51,8 +51,6 @@ public class Search_Fragment extends Fragment {
 
     String query;
 
-    //https://wall.alphacoders.com/api2.0/get.php?auth=YOUR_KEY&method=search&term=star+wars&width=1920&height=1080
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

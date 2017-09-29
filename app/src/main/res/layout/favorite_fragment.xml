@@ -6,7 +6,7 @@
     android:background="@color/colorBackground">
 
     <ImageView
-        android:padding="24dp"
+        android:padding="30dp"
         android:id="@+id/broken_heart"
         android:layout_width="220dp"
         android:layout_height="220dp"

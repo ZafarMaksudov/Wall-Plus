@@ -7,6 +7,7 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -19,7 +20,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -48,18 +51,20 @@ public class Home_Fragment extends Fragment {
     RecyclerView recyclerView;
     HomeFragmentCustomAdapter homeFragmentCustomAdapter;
     ImageView noNetImage;
+    TextView noNetText;
+    Button connectBtn;
 
     GridLayoutManager gridLayoutManager;
 
     boolean isNetworkConnected;
-    
+
     private static int pageCount = 2;
 
     protected Handler handler;
 
     public static int spanCount = 2;
 
-    //random : https://wall.alphacoders.com/api2.0/get.php?auth=YOUR_KEY&method=random&info_level=2
+    public static final String API_KEY = "0b1eb5e584dc4f45a8caf9efb50fe8ad";
 
     @Nullable
     @Override
@@ -68,6 +73,15 @@ public class Home_Fragment extends Fragment {
         View view = inflater.inflate(R.layout.home_fragment, null);
 
         noNetImage = view.findViewById(R.id.noNet);
+        noNetText = view.findViewById(R.id.noNetText);
+        connectBtn = view.findViewById(R.id.connectBtn);
+        connectBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivityForResult(new Intent(Settings.ACTION_WIFI_SETTINGS), 0);
+            }
+        });
+
 
         wallpapersModelArrayList = new ArrayList<>();
         handler = new Handler();
@@ -92,19 +106,16 @@ public class Home_Fragment extends Fragment {
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        //remove progress item
                         wallpapersModelArrayList.remove(wallpapersModelArrayList.size()-1);
                         homeFragmentCustomAdapter.notifyItemRemoved(wallpapersModelArrayList.size());
                         Log.i("REMOVED", "NULL");
                         //add items one by one
                         Log.i("INIT", "DATA");
-//                        int start = wallpapersModelArrayList.size();
-//                        int end = start + 16;
                         new loadMore().execute("https://wallpaperscraft.com/all/ratings/1080x1920/page" + pageCount);
                         homeFragmentCustomAdapter.setLoaded();
                         Log.i("INIT", "FINISHED");
                     }
-                }, 700);
+                }, 900);
             }
         });
 
@@ -117,9 +128,22 @@ public class Home_Fragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent intent)
+    {
+        if(requestCode==0)
+        {
+            boolean n = isNetworkAvailable();
+            if(n){
+                initData();
+            }
+        }
+    }
+
     class loadMore extends AsyncTask<String , Integer, String>{
 
         List list;
+        List id;
 
         @Override
         protected String  doInBackground(String ... params) {
@@ -160,6 +184,8 @@ public class Home_Fragment extends Fragment {
         isNetworkConnected = isNetworkAvailable();
         if (isNetworkConnected) {
             noNetImage.setVisibility(View.INVISIBLE);
+            noNetText.setVisibility(View.INVISIBLE);
+            connectBtn.setVisibility(View.GONE);
 //            for (int i=1;i<2;i++)
 //            {
 //                if(i < 2){
@@ -174,6 +200,8 @@ public class Home_Fragment extends Fragment {
 
             noNetImage.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.nonetwork));
             noNetImage.setVisibility(View.VISIBLE);
+            noNetText.setVisibility(View.VISIBLE);
+            connectBtn.setVisibility(View.VISIBLE);
             Toast.makeText(getContext(), "No Internet Connected!", Toast.LENGTH_SHORT).show();
 
         }
@@ -240,13 +268,15 @@ public class Home_Fragment extends Fragment {
                 // Connect to the web site
                 Document document = Jsoup.connect(params[0]).get();
                 Element wall = document.select("div.wallpapers").first();
+                //Log.i("WALL  ", wall.toString());
                 Elements url = wall.getElementsByAttribute("src");
+                //Log.i("ELEMENTS   ", url.toString());
                 list = url.eachAttr("src");
 
                 for(int i = 0; i < list.size(); i++){
                     String string = list.get(i).toString();
                     String[] sep = string.split("wallpaperscraft.com");
-                    Log.i("URL ", sep[1]);
+                    ///Log.i("URL ", sep[1]);
                     wallpapersModelArrayList.add(new WallpapersModel(
                             "https:/www.wallpaperscraft.com"+sep[1].replace("168x300", "320x480"),///
                             "https:/www.wallpaperscraft.com"+sep[1].replace("168x300", "1080x1920"),
