@@ -3,7 +3,6 @@ package ytstudios.wall.plus;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -72,23 +71,23 @@ public class DownloadHandler extends AppCompatActivity{
 
             /* checks the file and if it already exist delete */
                 File file = new File (myDir, imageName);
+                Log.i("DIRECTORY", myDir.toString());
+                Log.i("IMAGE", imageName);
                 if (file.exists ()){
                     file.delete ();
                 }
                 file.createNewFile();
 
-                             /* Open a connection */
+                /* Open a connection */
                 URLConnection ucon = url.openConnection();
                 InputStream inputStream = null;
                 HttpURLConnection httpConn = (HttpURLConnection)ucon;
                 httpConn.setDoInput(true);
-                httpConn.setInstanceFollowRedirects(false);
+                //httpConn.setInstanceFollowRedirects(false);
                 httpConn.setRequestMethod("GET");
                 httpConn.connect();
                 inputStream = httpConn.getInputStream();
                 Log.i("STREAM", inputStream.toString());
-                Bitmap myBitmap = BitmapFactory.decodeStream(inputStream);
-                Log.i("BITMAP", myBitmap.toString());
 
                 if (httpConn.getResponseCode() == HttpURLConnection.HTTP_OK)
                 {
