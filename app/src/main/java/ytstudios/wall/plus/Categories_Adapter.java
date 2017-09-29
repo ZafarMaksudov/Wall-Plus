@@ -52,9 +52,9 @@ public class Categories_Adapter extends RecyclerView.Adapter<Categories_Adapter.
                 //Pair<View, String> pair1 = Pair.create((View) holder.image, holder.image.getTransitionName());
                 Intent intent = new Intent(context, CategoryDetailsFragment.class);
                 intent.putExtra("Image", categoriesArray.get(position).getCategory_image_id());
+                intent.putExtra("categoryName", categoriesArray.get(position).category_name);
                 //ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity)context, pair1);
                 context.startActivity(intent);
-                Log.i("TOUCH", "TOUCH");
             }
         });
         //Picasso.with(context).load(categoriesArray.get(position).getCategory_image_id()).into(holder.image);
