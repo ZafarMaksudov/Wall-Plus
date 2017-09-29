@@ -24,6 +24,8 @@ public class Favorite_Fragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
+        setHasOptionsMenu(true);
+
         View view = inflater.inflate(R.layout.favorite_fragment, null);
         add_fav = view.findViewById(R.id.add_fav);
         viewPager = getActivity().findViewById(R.id.view_pager);
@@ -38,8 +40,7 @@ public class Favorite_Fragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        menu.clear();
-        inflater.inflate(R.menu.menu,menu);
-        return;
+        inflater.inflate(R.menu.menu, menu);
+        super.onCreateOptionsMenu(menu, inflater);
     }
 }
