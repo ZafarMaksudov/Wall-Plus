@@ -111,7 +111,7 @@ public class Home_Fragment extends Fragment {
                         Log.i("REMOVED", "NULL");
                         //add items one by one
                         Log.i("INIT", "DATA");
-                        new loadMore().execute("https://wallpaperscraft.com/all/ratings/1080x1920/page" + pageCount);
+                        new loadMore().execute("http://wallpaperscraft.com/all/1080x1920/page" + pageCount);
                         homeFragmentCustomAdapter.setLoaded();
                         Log.i("INIT", "FINISHED");
                     }
@@ -121,7 +121,6 @@ public class Home_Fragment extends Fragment {
 
         recyclerView.setAdapter(homeFragmentCustomAdapter);
         recyclerView.addItemDecoration(new RecyclerItemDecoration(2));
-
 
         setHasOptionsMenu(true);
 
@@ -166,8 +165,8 @@ public class Home_Fragment extends Fragment {
                             0
                     ));
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
+            } catch (Exception e) {
+                Log.i("ERROR" , e.toString());
             }
             return null;
         }
@@ -195,7 +194,7 @@ public class Home_Fragment extends Fragment {
 //                    loadFromInternet("https://wallpaperscraft.com/all/ratings/1080x1920/page" + i);
 //            }
             //https://wall.alphacoders.com/api2.0/get.php?auth=" + API_KEY + "&method=highest_rated&page=10&info_level=2&page=1
-            loadFromInternet("https://wallpaperscraft.com/all/ratings/1080x1920");
+            loadFromInternet("http://wallpaperscraft.com/all/1080x1920");
         } else {
 
             noNetImage.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.nonetwork));
@@ -281,7 +280,7 @@ public class Home_Fragment extends Fragment {
                             "https:/www.wallpaperscraft.com"+sep[1].replace("168x300", "320x480"),///
                             "https:/www.wallpaperscraft.com"+sep[1].replace("168x300", "1080x1920"),
                             "jpg",
-                            0
+                            1
                     ));
                 }
             } catch (IOException e) {
