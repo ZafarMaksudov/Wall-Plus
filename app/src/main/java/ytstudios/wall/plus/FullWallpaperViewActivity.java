@@ -84,6 +84,7 @@ public class FullWallpaperViewActivity extends AppCompatActivity{
 //                downloadHandler.ImageDownloadAndSave.execute(encodedUrl, "Wallpaper " + String.valueOf(wallId)+fileType);
                 String fileName = String .valueOf(wallId)+fileType;
                 Toast.makeText(getApplicationContext(), "Downloading "+ fileName, Toast.LENGTH_SHORT).show();
+
             }
         });
 

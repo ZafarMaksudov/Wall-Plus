@@ -1,19 +1,18 @@
 package ytstudios.wall.plus;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
+import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.Toast;
 
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 
 import java.io.File;
 
@@ -23,10 +22,11 @@ import java.io.File;
 
 public class DownloadFragmentAdapter extends RecyclerView.Adapter {
 
-    private String[] paths;
-    private String[] names;
+    private static String[] paths;
+    private static String[] names;
     Context context;
     DisplayMetrics displayMetrics;
+    public static String uri;
 
     public DownloadFragmentAdapter(Context context, String[] paths, String[] names) {
         this.paths = paths;
@@ -34,6 +34,7 @@ public class DownloadFragmentAdapter extends RecyclerView.Adapter {
         //this.activity = activity;
         this.context = context;
     }
+
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -46,16 +47,22 @@ public class DownloadFragmentAdapter extends RecyclerView.Adapter {
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
 
-        Bitmap bitmap = BitmapFactory.decodeFile(paths[position]);
+        //refreshDownloads(paths, position, (displayMetrics.widthPixels/2), 220, context, holder);
+
+        Log.i("Position  ", paths[position]);
         int width = displayMetrics.widthPixels/2;
         int height = 220;
-        Bitmap scaled = getResizedBitmap(bitmap, 320,220);
 
-        Uri uri = Uri.fromFile(new File(paths[position]));
+        Uri uriImage = Uri.fromFile(new File(paths[position]));
+        RequestOptions myOptions = new RequestOptions()
+                .centerCrop()
+                .override(width, height);
 
-        Picasso.with(context).load(uri).into(((DownloadsHolder)holder).downloadedImage);
+        //((DownloadsHolder)holder).downloadedImage.setImageBitmap(scaled);
+        //Picasso.with(context).load(uri).into(((DownloadsHolder)holder).downloadedImage);
+        Glide.with(context).load(uriImage).apply(myOptions).into(((DownloadsHolder)holder).downloadedImage);
     }
 
     @Override
@@ -72,30 +79,35 @@ public class DownloadFragmentAdapter extends RecyclerView.Adapter {
             super(itemView);
             this.context = context;
             downloadedImage = itemView.findViewById(R.id.downloadImage);
-
             itemView.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View view) {
 
-            Toast.makeText(this.context, "TOUCHED", Toast.LENGTH_SHORT).show();
-
+            int position = getAdapterPosition();
+            //          Toast.makeText(this.context, paths[position], Toast.LENGTH_SHORT).show();
+            //this.context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(paths[position])));
+            Intent intent = new Intent();
+            intent.setAction(Intent.ACTION_VIEW);
+            intent.setDataAndType(Uri.parse(paths[position]), "image/*");
+            intent.putExtra(Intent.EXTRA_STREAM, Uri.parse(paths[position]));
+            this.context.startActivity(intent);
         }
     }
-
-    public Bitmap getResizedBitmap(Bitmap bm, int newHeight, int newWidth)
-    {
-        int width = bm.getWidth();
-        int height = bm.getHeight();
-        float scaleWidth = ((float) newWidth) / width;
-        float scaleHeight = ((float) newHeight) / height;
-        // create a matrix for the manipulation
-        Matrix matrix = new Matrix();
-        // resize the bit map
-        matrix.postScale(scaleWidth, scaleHeight);
-        // recreate the new Bitmap
-        Bitmap resizedBitmap = Bitmap.createBitmap(bm, 0, 0, width, height, matrix, false);
-        return resizedBitmap;
-    }
+//
+//    public Bitmap getResizedBitmap(Bitmap bm, int newHeight, int newWidth)
+//    {
+//        int width = bm.getWidth();
+//        int height = bm.getHeight();
+//        float scaleWidth = ((float) newWidth) / width;
+//        float scaleHeight = ((float) newHeight) / height;
+//        // create a matrix for the manipulation
+//        Matrix matrix = new Matrix();
+//        // resize the bit map
+//        matrix.postScale(scaleWidth, scaleHeight);
+//        // recreate the new Bitmap
+//        Bitmap resizedBitmap = Bitmap.createBitmap(bm, 0, 0, width, height, matrix, false);
+//        return resizedBitmap;
+//    }
 }

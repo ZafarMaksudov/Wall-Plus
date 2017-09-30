@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
         viewPager = findViewById(R.id.view_pager);
         viewPager.setAdapter(new setViewAdapter(getSupportFragmentManager()));
         viewPager.setCurrentItem(2);
-        viewPager.setOffscreenPageLimit(5);
+        viewPager.setOffscreenPageLimit(4);
 
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -138,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
                     downloaded_fragment = new Downloaded_Fragment();
                     return downloaded_fragment;
                 }
-                return downloaded_fragment;
+                return new Downloaded_Fragment();
             }
             else
                 return null;
