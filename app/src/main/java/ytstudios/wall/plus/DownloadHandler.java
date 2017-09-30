@@ -50,7 +50,7 @@ public class DownloadHandler extends AppCompatActivity{
         @Override
         protected void onPostExecute(Bitmap bitmap) {
             super.onPostExecute(bitmap);
-            Toast.makeText(this.context,"Downloaded!",Toast.LENGTH_SHORT).show();
+            Toast.makeText(this.context,"Downloaded!",Toast.LENGTH_LONG).show();
         }
 
         private void downloadImagesToSdCard(String downloadUrl, String imageName)
