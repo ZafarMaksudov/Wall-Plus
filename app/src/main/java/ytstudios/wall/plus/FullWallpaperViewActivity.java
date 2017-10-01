@@ -1,5 +1,6 @@
 package ytstudios.wall.plus;
 
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -8,7 +9,9 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -33,13 +36,13 @@ public class FullWallpaperViewActivity extends AppCompatActivity{
     FloatingActionButton floatingActionButton;
     LikeButton favToggleBtn;
     ViewPager fullScreenViewPager;
+    CharSequence options[] = new CharSequence[] {"Small - 1024x1024", "Medium - 2048x2048", "Large - 2732x2732"};
 
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.full_wallpaper_view_activity);
-        supportPostponeEnterTransition();
 
         fullScreenViewPager = findViewById(R.id.fullscreen_view_pager);
 
@@ -55,18 +58,6 @@ public class FullWallpaperViewActivity extends AppCompatActivity{
 
             }
         });
-//        favToggleBtn.setChecked(false);
-//        favToggleBtn.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.fav_white_border));
-//        favToggleBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//            @Override
-//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//                if (isChecked)
-//                    favToggleBtn.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(),R.drawable.fav_white_full));
-//                else
-//                    favToggleBtn.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.fav_white_border));
-//            }
-//        });
-
 
         encodedUrlFull = getIntent().getStringExtra("fullUrl");
         encodedUrlThumb = getIntent().getStringExtra("thumbUrl");
@@ -79,11 +70,43 @@ public class FullWallpaperViewActivity extends AppCompatActivity{
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//               DownloadHandler downloadHandler = new DownloadHandler();
-                new DownloadHandler.ImageDownloadAndSave(getApplicationContext()).execute(encodedUrlFull, "Wallpaper " + String.valueOf(wallId)+fileType);
-//                downloadHandler.ImageDownloadAndSave.execute(encodedUrl, "Wallpaper " + String.valueOf(wallId)+fileType);
-                String fileName = String .valueOf(wallId)+fileType;
-                Toast.makeText(getApplicationContext(), "Downloading "+ fileName, Toast.LENGTH_SHORT).show();
+                final String fileName = String .valueOf(wallId)+fileType;
+
+                try{
+                    AlertDialog.Builder builder = new AlertDialog.Builder(FullWallpaperViewActivity.this, R.style.MyDialogTheme);
+                    builder.setCancelable(false);
+                    builder.setTitle("Select your option:");
+                    builder.setItems(options, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            switch (which){
+                                case 0 :
+                                    Toast.makeText(getApplicationContext(), "Downloading Small "+ fileName, Toast.LENGTH_SHORT).show();
+                                    new DownloadHandler.ImageDownloadAndSave(getApplicationContext()).execute(encodedUrlFull, "Wallpaper " + String.valueOf(wallId)+fileType);
+                                    break;
+                                case 1 :
+                                    Toast.makeText(getApplicationContext(), "Downloading Medium"+ fileName, Toast.LENGTH_SHORT).show();
+                                    encodedUrlFull = encodedUrlFull.replace("-6-", "-8-");
+                                    new DownloadHandler.ImageDownloadAndSave(getApplicationContext()).execute(encodedUrlFull, "Wallpaper " + String.valueOf(wallId)+fileType);
+                                    break;
+                                case 2 :
+                                    Toast.makeText(getApplicationContext(), "Downloading Large"+ fileName, Toast.LENGTH_SHORT).show();
+                                    encodedUrlFull = encodedUrlFull.replace("-6-", "-40-");
+                                    new DownloadHandler.ImageDownloadAndSave(getApplicationContext()).execute(encodedUrlFull, "Wallpaper " + String.valueOf(wallId)+fileType);
+                                    break;
+                            }
+                        }
+                    });
+                    builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    });
+                    builder.show();
+                }catch (Exception e){
+                    Log.i("EXCEPTION ", e.toString());
+                }
 
             }
         });
