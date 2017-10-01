@@ -29,7 +29,7 @@
         <item name="actionMenuTextColor">@android:color/white</item>
     </style>
     
-    <style name="FullScreenTheme" parent="Theme.AppCompat">
+    <style name="FullScreenTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="android:windowTranslucentStatus">true</item>
     </style>
 

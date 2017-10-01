@@ -1,6 +1,5 @@
 package ytstudios.wall.bucket;
 
-import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -9,13 +8,9 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Toast;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -23,7 +18,6 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 import com.like.LikeButton;
-import com.like.OnLikeListener;
 
 import static android.os.Build.VERSION_CODES.M;
 
@@ -64,19 +58,6 @@ public class FullWallpaperViewActivity extends AppCompatActivity{
 
         bannerAd.loadAd(adRequest);
 
-        favToggleBtn = findViewById(R.id.fav_toggle);
-        favToggleBtn.setOnLikeListener(new OnLikeListener() {
-            @Override
-            public void liked(LikeButton likeButton) {
-
-            }
-
-            @Override
-            public void unLiked(LikeButton likeButton) {
-
-            }
-        });
-
         encodedUrlFull = getIntent().getStringExtra("fullUrl");
         encodedUrlThumb = getIntent().getStringExtra("thumbUrl");
 
@@ -84,50 +65,50 @@ public class FullWallpaperViewActivity extends AppCompatActivity{
         fileType = "." + getIntent().getStringExtra("file_type");
 
 
-        floatingActionButton = findViewById(R.id.fab);
-        floatingActionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                final String fileName = String .valueOf(wallId)+fileType;
-
-                try{
-                    AlertDialog.Builder builder = new AlertDialog.Builder(FullWallpaperViewActivity.this, R.style.MyDialogTheme);
-                    builder.setCancelable(false);
-                    builder.setTitle("Select your option:");
-                    builder.setItems(options, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            switch (which){
-                                case 0 :
-                                    Toast.makeText(getApplicationContext(), "Downloading Small "+ fileName, Toast.LENGTH_SHORT).show();
-                                    new DownloadHandler.ImageDownloadAndSave(getApplicationContext()).execute(encodedUrlFull, "Wallpaper " + String.valueOf(wallId)+fileType);
-                                    break;
-                                case 1 :
-                                    Toast.makeText(getApplicationContext(), "Downloading Medium"+ fileName, Toast.LENGTH_SHORT).show();
-                                    encodedUrlFull = encodedUrlFull.replace("-6-", "-8-");
-                                    new DownloadHandler.ImageDownloadAndSave(getApplicationContext()).execute(encodedUrlFull, "Wallpaper " + String.valueOf(wallId)+fileType);
-                                    break;
-                                case 2 :
-                                    Toast.makeText(getApplicationContext(), "Downloading Large"+ fileName, Toast.LENGTH_SHORT).show();
-                                    encodedUrlFull = encodedUrlFull.replace("-6-", "-40-");
-                                    new DownloadHandler.ImageDownloadAndSave(getApplicationContext()).execute(encodedUrlFull, "Wallpaper " + String.valueOf(wallId)+fileType);
-                                    break;
-                            }
-                        }
-                    });
-                    builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-
-                        }
-                    });
-                    builder.show();
-                }catch (Exception e){
-                    Log.i("EXCEPTION ", e.toString());
-                }
-
-            }
-        });
+//        floatingActionButton = findViewById(R.id.fab);
+//        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                final String fileName = String .valueOf(wallId)+fileType;
+//
+//                try{
+//                    AlertDialog.Builder builder = new AlertDialog.Builder(FullWallpaperViewActivity.this, R.style.MyDialogTheme);
+//                    builder.setCancelable(false);
+//                    builder.setTitle("Select your option:");
+//                    builder.setItems(options, new DialogInterface.OnClickListener() {
+//                        @Override
+//                        public void onClick(DialogInterface dialog, int which) {
+//                            switch (which){
+//                                case 0 :
+//                                    Toast.makeText(getApplicationContext(), "Downloading Small "+ fileName, Toast.LENGTH_SHORT).show();
+//                                    new DownloadHandler.ImageDownloadAndSave(getApplicationContext()).execute(encodedUrlFull, "Wallpaper " + String.valueOf(wallId)+fileType);
+//                                    break;
+//                                case 1 :
+//                                    Toast.makeText(getApplicationContext(), "Downloading Medium"+ fileName, Toast.LENGTH_SHORT).show();
+//                                    encodedUrlFull = encodedUrlFull.replace("-6-", "-8-");
+//                                    new DownloadHandler.ImageDownloadAndSave(getApplicationContext()).execute(encodedUrlFull, "Wallpaper " + String.valueOf(wallId)+fileType);
+//                                    break;
+//                                case 2 :
+//                                    Toast.makeText(getApplicationContext(), "Downloading Large"+ fileName, Toast.LENGTH_SHORT).show();
+//                                    encodedUrlFull = encodedUrlFull.replace("-6-", "-40-");
+//                                    new DownloadHandler.ImageDownloadAndSave(getApplicationContext()).execute(encodedUrlFull, "Wallpaper " + String.valueOf(wallId)+fileType);
+//                                    break;
+//                            }
+//                        }
+//                    });
+//                    builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+//                        @Override
+//                        public void onClick(DialogInterface dialog, int which) {
+//
+//                        }
+//                    });
+//                    builder.show();
+//                }catch (Exception e){
+//                    Log.i("EXCEPTION ", e.toString());
+//                }
+//
+//            }
+//        });
 
         window = getWindow();
         if(Build.VERSION.SDK_INT >= M){
@@ -138,7 +119,6 @@ public class FullWallpaperViewActivity extends AppCompatActivity{
         }
 
         Fresco.initialize(this);
-        appBarLayout = findViewById(R.id.app_bar);
 
         //avLoadingIndicatorView = findViewById(R.id.avi);
         full_imageView = findViewById(R.id.full_image_view);

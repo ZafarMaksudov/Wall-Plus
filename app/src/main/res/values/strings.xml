@@ -1,9 +1,14 @@
 <resources>
     <string name="app_name">Wall Bucket</string>
 
+    <string name="toFullScreenTransition">toFullScreenTransition</string>
+
+
+    <!--App Strings -->
     <string name="search">Tell me what you are searching for , \n I will do the rest!</string>
     <string name="search_query_hint">What are you looking for ?</string>
     <string name="search_query">Searching wallpapers for </string>
+    <string name="downloadWallBtn">Download</string>
+    <string name="setWallBtn">Set</string>
 
-    <string name="toFullScreenTransition">toFullScreenTransition</string>
 </resources>
