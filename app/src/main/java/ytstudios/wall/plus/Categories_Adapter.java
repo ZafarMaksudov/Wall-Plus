@@ -3,7 +3,6 @@ package ytstudios.wall.plus;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,7 +56,6 @@ public class Categories_Adapter extends RecyclerView.Adapter<Categories_Adapter.
                 context.startActivity(intent);
             }
         });
-        //Picasso.with(context).load(categoriesArray.get(position).getCategory_image_id()).into(holder.image);
 
     }
 
@@ -73,7 +71,6 @@ public class Categories_Adapter extends RecyclerView.Adapter<Categories_Adapter.
             image = view.findViewById(R.id.category_image);
             this.context = context;
             this.arrayList = arrayList;
-            Log.i("Created", "ViewHolder");
         }
     }
 }
