@@ -64,13 +64,15 @@ public class Home_Fragment extends Fragment {
 
     public static int spanCount = 2;
 
-    public static final String API_KEY = "0b1eb5e584dc4f45a8caf9efb50fe8ad";
+    public static String API_KEY;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.home_fragment, null);
+
+        API_KEY = getResources().getString(R.string.API_KEY);
 
         noNetImage = view.findViewById(R.id.noNet);
         noNetText = view.findViewById(R.id.noNetText);
