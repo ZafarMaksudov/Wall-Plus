@@ -84,22 +84,9 @@ public class Downloaded_Fragment extends Fragment {
                         swipeRefreshLayout.setRefreshing(false);
                     }
                 }, 1000);
-                //downloadFragmentAdapter.notifyDataSetChanged();
-                //recyclerView.invalidate();
                 Log.i("DATA CHANGED", "DATA SET CHANGED");
             }
         });
-//
-//        gridView = view.findViewById(R.id.grid_view);
-//        adapter = new DownloadFragmentAdapter(getActivity(), filePaths, fileNames);
-//        gridView.setAdapter(adapter);
-//        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-//                Toast.makeText(context, fileNames[i].toString(), Toast.LENGTH_SHORT).show();
-//            }
-//        });
-
 
         gridLayoutManager = new GridLayoutManager(context, 2);
         recyclerView = view.findViewById(R.id.downloaded_rv);
