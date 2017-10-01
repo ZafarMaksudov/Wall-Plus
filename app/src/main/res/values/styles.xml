@@ -8,7 +8,10 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:windowDisablePreview">true</item>
         <item name="android:windowActivityTransitions">true</item>
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
     </style>
+
+    <style name="MyDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert" />
 
     <!-- Base application theme. -->
     <style name="AppTheme.FullScreen" parent="Theme.AppCompat.Light.NoActionBar">
@@ -28,6 +31,23 @@
     
     <style name="FullScreenTheme" parent="Theme.AppCompat">
         <item name="android:windowTranslucentStatus">true</item>
+    </style>
+
+
+    <style name="PreferenceThemeOverlay">
+        <item name="preferenceScreenStyle">@style/Preference.PreferenceScreen</item>
+        <item name="preferenceFragmentCompatStyle">@style/PreferenceFragment</item>
+        <item name="preferenceCategoryStyle">@style/Preference.Category</item>
+        <item name="preferenceStyle">@style/Preference</item>
+        <item name="preferenceInformationStyle">@style/Preference.Information</item>
+        <item name="checkBoxPreferenceStyle">@style/Preference.CheckBoxPreference</item>
+        <item name="switchPreferenceCompatStyle">@style/Preference.SwitchPreferenceCompat</item>
+        <item name="seekBarPreferenceStyle">@style/Preference.SeekBarPreference</item>
+        <item name="dialogPreferenceStyle">@style/Preference.DialogPreference</item>
+        <item name="editTextPreferenceStyle">@style/Preference.DialogPreference.EditTextPreference</item>
+        <item name="preferenceFragmentListStyle">@style/PreferenceFragmentList</item>
+        <item name="dropdownPreferenceStyle">@style/Preference.DropDown</item>
+        <item name="android:textColor">@color/colorAccent</item>
     </style>
 
 </resources>
