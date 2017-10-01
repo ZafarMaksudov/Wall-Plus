@@ -31,7 +31,8 @@
             </intent-filter>
         </activity>
         <activity android:name="ytstudios.wall.bucket.SettingsActivity"/>
-        <activity android:name="ytstudios.wall.bucket.FullWallpaperViewActivity"/>
+        <activity android:name="ytstudios.wall.bucket.FullWallpaperViewActivity"
+            android:theme="@style/AppTheme.FullScreen"/>
         <activity android:name="ytstudios.wall.bucket.CategoryDetailsFragment"/>
     </application>
 

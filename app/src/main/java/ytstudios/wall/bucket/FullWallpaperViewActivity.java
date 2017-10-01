@@ -9,6 +9,7 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -18,8 +19,6 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 import com.like.LikeButton;
-
-import static android.os.Build.VERSION_CODES.M;
 
 /**
  * Created by Yugansh Tyagi on 15-09-2017.
@@ -44,6 +43,16 @@ public class FullWallpaperViewActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.full_wallpaper_view_activity);
+
+        window = getWindow();
+        if(Build.VERSION.SDK_INT >= 21){
+            window.getDecorView().setSystemUiVisibility(
+                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+        }
+        else if(Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT){
+            window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        }
 
         fullScreenViewPager = findViewById(R.id.fullscreen_view_pager);
 
@@ -109,14 +118,6 @@ public class FullWallpaperViewActivity extends AppCompatActivity{
 //
 //            }
 //        });
-
-        window = getWindow();
-        if(Build.VERSION.SDK_INT >= M){
-            window.setStatusBarColor(getColor(R.color.transparentColor));
-        }
-        else if(Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT){
-            window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        }
 
         Fresco.initialize(this);
 
