@@ -1,4 +1,4 @@
-package ytstudios.wall.plus;
+package ytstudios.wall.bucket;
 
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;

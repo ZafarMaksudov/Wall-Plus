@@ -1,4 +1,4 @@
-package ytstudios.wall.plus;
+package ytstudios.wall.bucket;
 
 import org.junit.Test;
 

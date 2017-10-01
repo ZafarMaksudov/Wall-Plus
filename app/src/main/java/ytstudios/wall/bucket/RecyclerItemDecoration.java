@@ -1,4 +1,4 @@
-package ytstudios.wall.plus;
+package ytstudios.wall.bucket;
 
 import android.graphics.Rect;
 import android.support.v7.widget.RecyclerView;

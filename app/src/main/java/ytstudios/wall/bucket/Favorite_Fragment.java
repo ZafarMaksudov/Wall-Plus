@@ -1,4 +1,4 @@
-package ytstudios.wall.plus;
+package ytstudios.wall.bucket;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

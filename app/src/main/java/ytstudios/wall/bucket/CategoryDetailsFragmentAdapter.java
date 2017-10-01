@@ -1,4 +1,4 @@
-package ytstudios.wall.plus;
+package ytstudios.wall.bucket;
 
 import android.content.Context;
 import android.content.Intent;
@@ -16,14 +16,13 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import java.util.ArrayList;
 
 /**
- * Created by Yugansh Tyagi on 15-09-2017.
+ * Created by Yugansh Tyagi on 29-09-2017.
  */
 
-public class HomeFragmentCustomAdapter extends RecyclerView.Adapter {
+public class CategoryDetailsFragmentAdapter extends RecyclerView.Adapter {
 
     ArrayList<WallpapersModel> wallpapersModels;
     Context context;
-    public int rvPosition;
 
     private final int VIEW_ITEM = 1;
     private final int VIEW_PROG = 0;
@@ -33,7 +32,9 @@ public class HomeFragmentCustomAdapter extends RecyclerView.Adapter {
     private boolean loading;
     private onLoadMoreListener onLoadMoreListener;
 
-    public HomeFragmentCustomAdapter(ArrayList<WallpapersModel> wallpapersModels, Context context, RecyclerView recyclerView) {
+    public int rvPosition;
+
+    public CategoryDetailsFragmentAdapter(ArrayList<WallpapersModel> wallpapersModels, Context context, RecyclerView recyclerView) {
         this.wallpapersModels = wallpapersModels;
         this.context = context;
 
@@ -47,11 +48,12 @@ public class HomeFragmentCustomAdapter extends RecyclerView.Adapter {
                         case VIEW_ITEM:
                             return 1;
                         case VIEW_PROG:
-                            if(Home_Fragment.spanCount == 2){
-                                return 2;
-                            }
-                            else if(Home_Fragment.spanCount == 3)
-                                return 3;
+                            return 2;
+//                            if(Home_Fragment.spanCount == 2){
+//                                return 2;
+//                            }
+//                            else if(Home_Fragment.spanCount == 3)
+//                                return 3;
                         default:
                             return 2;
                     }
@@ -90,61 +92,31 @@ public class HomeFragmentCustomAdapter extends RecyclerView.Adapter {
         Fresco.initialize(context);
 
         RecyclerView.ViewHolder recyclerVh;
-        switch(viewType){
+        switch (viewType) {
             case VIEW_ITEM:
                 View v = LayoutInflater.from(parent.getContext()).inflate(
                         R.layout.home_wallpaper_item, parent, false);
                 recyclerVh = new WallpapersViewHolder(v, context, wallpapersModels);
-                return  recyclerVh;
+                return recyclerVh;
             case VIEW_PROG:
-                    v = LayoutInflater.from(parent.getContext()).inflate(
+                v = LayoutInflater.from(parent.getContext()).inflate(
                         R.layout.load_more_progress_bar, parent, false);
                 recyclerVh = new ProgressViewHolder(v);
                 return recyclerVh;
         }
         return null;
-//        if (viewType == VIEW_ITEM) {
-//            View v = LayoutInflater.from(parent.getContext()).inflate(
-//                    R.layout.home_wallpaper_item, parent, false);
-//
-//            recyclerVh = new WallpapersViewHolder(v, context, wallpapersModels);
-//        } else {
-//            View v = LayoutInflater.from(parent.getContext()).inflate(
-//                    R.layout.load_more_progress_bar, parent, false);
-//
-//            recyclerVh = new ProgressViewHolder(v);
-//        }
-//        return recyclerVh;
-
-        //sHeight = displayMetrics.heightPixels;
-        //sWidth = displayMetrics.widthPixels/2;
-//
-//        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.home_wallpaper_item, parent, false);
-//        return new ViewHolder(itemView, context, wallpapersModels);
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
-        if(holder instanceof WallpapersViewHolder){
+        if (holder instanceof WallpapersViewHolder) {
             Uri uri = Uri.parse(wallpapersModels.get(position).getWallpaperURL());
             ((WallpapersViewHolder) holder).displayWallpaper.setImageURI(uri);
             rvPosition = holder.getAdapterPosition();
-        }
-        else
+        } else
             ((ProgressViewHolder) holder).progressBar.setIndeterminate(true);
 
-//        ImageRequest request = ImageRequestBuilder.newBuilderWithSource(uri)
-//                .setResizeOptions(new ResizeOptions(1080, 1280))
-//                .build();
-//        holder.displayWallpaper.setController(
-//                Fresco.newDraweeControllerBuilder()
-//                        .setOldController(holder.displayWallpaper.getController())
-//                        .setImageRequest(request)
-//                        .build());
-
-        //Glide.with(context).load(wallpapersModels.get(position).getWallpaperURL()).into(holder.displayWallpaper);
-        //Picasso.with(context).load(wallpapers.get(position).getWallpaperUrl()).placeholder(R.drawable.load_animation).into(holder.wallpaper);
     }
 
     public void setLoaded(){

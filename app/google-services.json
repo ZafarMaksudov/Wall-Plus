@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "396901402481",
+    "firebase_url": "https://wallbucket-1a592.firebaseio.com",
+    "project_id": "wallbucket-1a592",
+    "storage_bucket": "wallbucket-1a592.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:396901402481:android:b49b84e63ff4026c",
+        "android_client_info": {
+          "package_name": "ytstudios.wall.bucket"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "396901402481-vkuq1t7i67n4nmhhq28ep72bg9b73nri.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCwlb4kVCTQ4rm_6QpEw0AeRIcpzykixfs"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

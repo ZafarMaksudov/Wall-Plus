@@ -1,4 +1,4 @@
-package ytstudios.wall.plus;
+package ytstudios.wall.bucket;
 
 import android.content.Context;
 import android.content.Intent;
@@ -16,13 +16,14 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import java.util.ArrayList;
 
 /**
- * Created by Yugansh Tyagi on 29-09-2017.
+ * Created by Yugansh Tyagi on 15-09-2017.
  */
 
-public class CategoryDetailsFragmentAdapter extends RecyclerView.Adapter {
+public class HomeFragmentCustomAdapter extends RecyclerView.Adapter {
 
     ArrayList<WallpapersModel> wallpapersModels;
     Context context;
+    public int rvPosition;
 
     private final int VIEW_ITEM = 1;
     private final int VIEW_PROG = 0;
@@ -32,9 +33,7 @@ public class CategoryDetailsFragmentAdapter extends RecyclerView.Adapter {
     private boolean loading;
     private onLoadMoreListener onLoadMoreListener;
 
-    public int rvPosition;
-
-    public CategoryDetailsFragmentAdapter(ArrayList<WallpapersModel> wallpapersModels, Context context, RecyclerView recyclerView) {
+    public HomeFragmentCustomAdapter(ArrayList<WallpapersModel> wallpapersModels, Context context, RecyclerView recyclerView) {
         this.wallpapersModels = wallpapersModels;
         this.context = context;
 
@@ -44,16 +43,14 @@ public class CategoryDetailsFragmentAdapter extends RecyclerView.Adapter {
             gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
                 @Override
                 public int getSpanSize(int position) {
-                    switch(getItemViewType(position)){
+                    switch (getItemViewType(position)) {
                         case VIEW_ITEM:
                             return 1;
                         case VIEW_PROG:
-                            return 2;
-//                            if(Home_Fragment.spanCount == 2){
-//                                return 2;
-//                            }
-//                            else if(Home_Fragment.spanCount == 3)
-//                                return 3;
+                            if (Home_Fragment.spanCount == 2) {
+                                return 2;
+                            } else if (Home_Fragment.spanCount == 3)
+                                return 3;
                         default:
                             return 2;
                     }
@@ -83,7 +80,10 @@ public class CategoryDetailsFragmentAdapter extends RecyclerView.Adapter {
 
     @Override
     public int getItemViewType(int position) {
-        return wallpapersModels.get(position) != null ? VIEW_ITEM : VIEW_PROG;
+        if (wallpapersModels.get(position) != null) {
+            return VIEW_ITEM;
+        }
+        return VIEW_PROG;
     }
 
     @Override
@@ -117,13 +117,24 @@ public class CategoryDetailsFragmentAdapter extends RecyclerView.Adapter {
         } else
             ((ProgressViewHolder) holder).progressBar.setIndeterminate(true);
 
+//        ImageRequest request = ImageRequestBuilder.newBuilderWithSource(uri)
+//                .setResizeOptions(new ResizeOptions(1080, 1280))
+//                .build();
+//        holder.displayWallpaper.setController(
+//                Fresco.newDraweeControllerBuilder()
+//                        .setOldController(holder.displayWallpaper.getController())
+//                        .setImageRequest(request)
+//                        .build());
+
+        //Glide.with(context).load(wallpapersModels.get(position).getWallpaperURL()).into(holder.displayWallpaper);
+        //Picasso.with(context).load(wallpapers.get(position).getWallpaperUrl()).placeholder(R.drawable.load_animation).into(holder.wallpaper);
     }
 
-    public void setLoaded(){
+    public void setLoaded() {
         loading = false;
     }
 
-    public void setOnLoadMoreListener(onLoadMoreListener onLoadMoreListener){
+    public void setOnLoadMoreListener(onLoadMoreListener onLoadMoreListener) {
         this.onLoadMoreListener = onLoadMoreListener;
     }
 
@@ -160,12 +171,13 @@ public class CategoryDetailsFragmentAdapter extends RecyclerView.Adapter {
             this.context.startActivity(intent);
         }
     }
+
     public static class ProgressViewHolder extends RecyclerView.ViewHolder {
         public ProgressBar progressBar;
 
         public ProgressViewHolder(View v) {
             super(v);
-            progressBar =  v.findViewById(R.id.progressBar);
+            progressBar = v.findViewById(R.id.progressBar);
         }
     }
 }

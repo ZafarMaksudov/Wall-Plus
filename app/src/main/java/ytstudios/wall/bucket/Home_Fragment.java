@@ -1,4 +1,4 @@
-package ytstudios.wall.plus;
+package ytstudios.wall.bucket;
 
 import android.content.Context;
 import android.content.Intent;
@@ -65,6 +65,8 @@ public class Home_Fragment extends Fragment {
     public static int spanCount = 2;
 
     public static String API_KEY;
+
+    private static int wallpaperNumber = 1;
 
     @Nullable
     @Override
@@ -155,6 +157,7 @@ public class Home_Fragment extends Fragment {
                 list = url.eachAttr("src");
 
                 for (int i = 0; i < list.size(); i++) {
+                    wallpaperNumber++;
                     String string = list.get(i).toString();
                     String sep[] = string.split("http://");
                     sep[1] = sep[1].replace("android/wp-content/uploads", "wallpaper");
@@ -166,7 +169,7 @@ public class Home_Fragment extends Fragment {
                             string,///
                             sep[1],
                             "jpg",
-                            1
+                            wallpaperNumber
                     ));
                 }
             } catch (Exception e) {
@@ -277,6 +280,7 @@ public class Home_Fragment extends Fragment {
                 list = url.eachAttr("src");
 
                 for (int i = 0; i < list.size(); i++) {
+                    wallpaperNumber++;
                     String string = list.get(i).toString();
                     String sep[] = string.split("http://");
                     sep[1] = sep[1].replace("android/wp-content/uploads", "wallpaper");
@@ -289,7 +293,7 @@ public class Home_Fragment extends Fragment {
                             string,///
                             sep[1],
                             "jpg",
-                            1
+                            wallpaperNumber
                     ));
                 }
 

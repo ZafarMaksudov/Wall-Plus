@@ -1,4 +1,4 @@
-package ytstudios.wall.plus;
+package ytstudios.wall.bucket;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -32,7 +32,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 
-import static ytstudios.wall.plus.Home_Fragment.API_KEY;
+import static ytstudios.wall.bucket.Home_Fragment.API_KEY;
 
 /**
  * Created by Yugansh Tyagi on 10-09-2017.

@@ -1,4 +1,4 @@
-package ytstudios.wall.plus;
+package ytstudios.wall.bucket;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -20,7 +20,7 @@ public class SettingsActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.toolbar_settings);
         setSupportActionBar(toolbar);
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.container, new SettingsPreference()).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.frameContainer  , new SettingsPreference()).commit();
     }
 
 }

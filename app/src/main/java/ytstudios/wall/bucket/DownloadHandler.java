@@ -1,4 +1,4 @@
-package ytstudios.wall.plus;
+package ytstudios.wall.bucket;
 
 import android.content.Context;
 import android.content.Intent;
@@ -30,6 +30,7 @@ public class DownloadHandler extends AppCompatActivity{
     {
 
         Context context;
+        Downloaded_Fragment downloaded_fragment;
 
         public ImageDownloadAndSave(Context context) {
             this.context = context;
@@ -60,13 +61,12 @@ public class DownloadHandler extends AppCompatActivity{
                 URL url = new URL(downloadUrl);
             /* making a directory in sdcard */
                 String sdCard= Environment.getExternalStorageDirectory().toString();
-                File myDir = new File(sdCard + "/Wall+/Wall+ Downloads");
+                File myDir = new File(sdCard + "/Wall Bucket/Downloads");
 
             /*  if specified not exist create new */
                 if(!myDir.exists())
                 {
                     myDir.mkdirs();
-                    Log.i("", "inside Wall+ Directory");
                 }
 
             /* checks the file and if it already exist delete */

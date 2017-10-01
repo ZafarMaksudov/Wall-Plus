@@ -1,4 +1,4 @@
-package ytstudios.wall.plus;
+package ytstudios.wall.bucket;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -47,7 +47,7 @@ public class Downloaded_Fragment extends Fragment {
         View view = inflater.inflate(R.layout.downloaded_fragment, null);
 
         try {
-            File imageDir = new File(Environment.getExternalStorageDirectory().toString() + "/Wall+/Wall+ Downloads");
+            File imageDir = new File(Environment.getExternalStorageDirectory().toString() + "/Wall Bucket/Downloads");
             Log.i("DIR", imageDir.toString());
             if (imageDir.exists()) {
                 files = imageDir.listFiles();
@@ -84,6 +84,7 @@ public class Downloaded_Fragment extends Fragment {
                         swipeRefreshLayout.setRefreshing(false);
                     }
                 }, 1000);
+                recyclerView.invalidate();
                 Log.i("DATA CHANGED", "DATA SET CHANGED");
             }
         });
@@ -106,13 +107,13 @@ public class Downloaded_Fragment extends Fragment {
     }
 
 
-    class refreshDownloads extends AsyncTask<Void, Void, Void> {
+    public class refreshDownloads extends AsyncTask<Void, Void, Void> {
 
 
         @Override
         protected Void doInBackground(Void... voids) {
             try {
-                File imageDir = new File(Environment.getExternalStorageDirectory().toString() + "/Wall+/Wall+ Downloads");
+                File imageDir = new File(Environment.getExternalStorageDirectory().toString() + "/Wall Bucket/Downloads");
                 Log.i("DIR", imageDir.toString());
                 if (imageDir.exists()) {
                     files = imageDir.listFiles();
