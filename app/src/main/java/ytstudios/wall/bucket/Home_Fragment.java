@@ -68,6 +68,8 @@ public class Home_Fragment extends Fragment {
 
     private static int wallpaperNumber = 1;
 
+    private String Yo;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
