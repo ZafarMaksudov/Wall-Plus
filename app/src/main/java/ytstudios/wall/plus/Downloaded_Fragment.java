@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.io.File;
+import java.util.ArrayList;
 
 /**
  * Created by Yugansh Tyagi on 10-09-2017.
@@ -33,8 +34,8 @@ public class Downloaded_Fragment extends Fragment {
     SwipeRefreshLayout swipeRefreshLayout;
 
     //Directories
-    private String[] filePaths;
-    private String[] fileNames;
+    private ArrayList<String> filePaths;
+    private ArrayList<String> fileNames;
     private File[] files;
 
     @Nullable
@@ -51,18 +52,18 @@ public class Downloaded_Fragment extends Fragment {
             if (imageDir.exists()) {
                 files = imageDir.listFiles();
                 Log.i("FILES", String.valueOf(files.length));
-                filePaths = new String[files.length];
-                fileNames = new String[files.length];
+                filePaths = new ArrayList<>();
+                fileNames = new ArrayList<>();
 
                 for (int i = 0; i < files.length; i++) {
                     // Get the path of the image file
-                    filePaths[i] = files[i].getAbsolutePath();
-                    Log.i("FILES", filePaths[i].toString());
+                    filePaths.add(i, files[i].getAbsolutePath());
+                    Log.i("FILES", filePaths.get(i));
                     // Get the name image file
-                    fileNames[i] = files[i].getName();
-                    Log.i("FILENAMES", fileNames[i].toString());
+                    fileNames.add(i, files[i].getAbsolutePath());
+                    Log.i("FILENAMES", fileNames.get(i));
                 }
-                Log.i("SIZE  ", String.valueOf(filePaths.length));
+                Log.i("SIZE  ", String.valueOf(filePaths.size()));
 
             }
         } catch (Exception e) {
@@ -83,7 +84,8 @@ public class Downloaded_Fragment extends Fragment {
                         swipeRefreshLayout.setRefreshing(false);
                     }
                 }, 1000);
-                downloadFragmentAdapter.notifyDataSetChanged();
+                //downloadFragmentAdapter.notifyDataSetChanged();
+                //recyclerView.invalidate();
                 Log.i("DATA CHANGED", "DATA SET CHANGED");
             }
         });
@@ -128,18 +130,18 @@ public class Downloaded_Fragment extends Fragment {
                 if (imageDir.exists()) {
                     files = imageDir.listFiles();
                     Log.i("FILES", String.valueOf(files.length));
-                    filePaths = new String[files.length];
-                    fileNames = new String[files.length];
+                    filePaths.clear();
+                    fileNames.clear();
 
                     for (int i = 0; i < files.length; i++) {
                         // Get the path of the image file
-                        filePaths[i] = files[i].getAbsolutePath();
-                        Log.i("FILES", filePaths[i].toString());
+                        filePaths.add(i, files[i].getAbsolutePath());
+                        Log.i("FILES", filePaths.get(i));
                         // Get the name image file
-                        fileNames[i] = files[i].getName();
-                        Log.i("FILENAMES", fileNames[i].toString());
+                        fileNames.add(i, files[i].getAbsolutePath());
+                        Log.i("FILENAMES", fileNames.get(i));
                     }
-                    Log.i("SIZE  ", String.valueOf(filePaths.length));
+                    Log.i("SIZE  ", String.valueOf(filePaths.size()));
 
                 }
             } catch (Exception e) {
@@ -152,7 +154,9 @@ public class Downloaded_Fragment extends Fragment {
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             Log.i("REFRESHED", "CONGO!");
-            downloadFragmentAdapter = new DownloadFragmentAdapter(context, filePaths, fileNames);
+            //downloadFragmentAdapter = new DownloadFragmentAdapter(context, filePaths, fileNames);
+            downloadFragmentAdapter.notifyDataSetChanged();
+            //recyclerView.setAdapter(downloadFragmentAdapter);
             Log.i("ITEM RANGE CHANGED", "ITEM SET CHANGED");
         }
     }
