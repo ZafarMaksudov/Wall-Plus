@@ -1,12 +1,10 @@
 package ytstudios.wall.bucket;
 
-import java.io.Serializable;
-
 /**
  * Created by Yugansh Tyagi on 15-09-2017.
  */
 
-public class WallpapersModel implements Serializable{
+public class WallpapersModel {
 
     private String  wallpaperURL;
     private String  wallpaperFullURL;
@@ -42,5 +40,4 @@ public class WallpapersModel implements Serializable{
     public int getWallId() {
         return wallId;
     }
-
 }

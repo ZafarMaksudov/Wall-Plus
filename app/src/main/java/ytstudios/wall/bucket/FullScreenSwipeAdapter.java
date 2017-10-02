@@ -18,13 +18,13 @@ import java.util.ArrayList;
  * Created by Yugansh Tyagi on 20-09-2017.
  */
 
-public class FullScreeenSwipeAdapter extends PagerAdapter {
+public class FullScreenSwipeAdapter extends PagerAdapter {
 
     Activity activity;
     ArrayList<WallpapersModel> arrayList;
     LayoutInflater layoutInflater;
 
-    public FullScreeenSwipeAdapter(Activity activity, ArrayList<WallpapersModel> arrayList) {
+    public FullScreenSwipeAdapter(Activity activity, ArrayList<WallpapersModel> arrayList) {
         this.activity = activity;
         this.arrayList = arrayList;
         Fresco.initialize(activity);
