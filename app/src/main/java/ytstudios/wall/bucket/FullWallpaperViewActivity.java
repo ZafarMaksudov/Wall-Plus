@@ -11,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -44,11 +45,14 @@ public class FullWallpaperViewActivity extends AppCompatActivity {
 
     private AdView bannerAd;
 
+    Toolbar toolbar;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.full_wallpaper_view_activity);
+
+        toolbar = findViewById(R.id.toolbar);
 
         downloadWallBtn = findViewById(R.id.downloadWallBtn);
         setWallBtn = findViewById(R.id.setWallBtn);
@@ -63,7 +67,6 @@ public class FullWallpaperViewActivity extends AppCompatActivity {
             window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         }
 
-        fullScreenViewPager = findViewById(R.id.fullscreen_view_pager);
 
         MobileAds.initialize(FullWallpaperViewActivity.this, "ca-app-pub-3940256099942544/6300978111");
         bannerAd = new AdView(FullWallpaperViewActivity.this);
