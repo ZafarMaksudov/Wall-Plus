@@ -8,7 +8,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.util.Log;
@@ -36,7 +35,6 @@ public class FullWallpaperViewActivity extends AppCompatActivity {
     String encodedUrlFull, encodedUrlThumb, fileType;
     int wallId;
     Window window;
-    ViewPager fullScreenViewPager;
     CharSequence options[] = new CharSequence[]{"Small - 1024x1024", "Medium - 2048x2048", "Large - 2732x2732"};
 
     Button downloadWallBtn, setWallBtn;
@@ -48,7 +46,7 @@ public class FullWallpaperViewActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.full_wallpaper_view_activity);
+        setContentView(R.layout.fullscreen_view_layout);
 
         downloadWallBtn = findViewById(R.id.downloadWallBtn);
         setWallBtn = findViewById(R.id.setWallBtn);
@@ -63,8 +61,6 @@ public class FullWallpaperViewActivity extends AppCompatActivity {
             window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         }
 
-        fullScreenViewPager = findViewById(R.id.fullscreen_view_pager);
-
         MobileAds.initialize(FullWallpaperViewActivity.this, "ca-app-pub-3940256099942544/6300978111");
         bannerAd = new AdView(FullWallpaperViewActivity.this);
         bannerAd = findViewById(R.id.bannerAdView);
@@ -78,6 +74,7 @@ public class FullWallpaperViewActivity extends AppCompatActivity {
         bannerAd.setAdListener(new AdListener(){
             @Override
             public void onAdFailedToLoad(int i) {
+                super.onAdFailedToLoad(i);
                 disableAdBlock.setVisibility(View.VISIBLE);
             }
 
@@ -184,8 +181,7 @@ public class FullWallpaperViewActivity extends AppCompatActivity {
         }
         super.onDestroy();
     }
-
-
+    
     class loadWall extends AsyncTask<String, Void, Uri> {
 
         @Override
