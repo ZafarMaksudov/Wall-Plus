@@ -156,6 +156,9 @@ public class FullWallpaperViewActivity extends AppCompatActivity {
             }
         });
 
+
+        String hello;
+
     }
 
     @Override
@@ -181,7 +184,7 @@ public class FullWallpaperViewActivity extends AppCompatActivity {
         }
         super.onDestroy();
     }
-    
+
     class loadWall extends AsyncTask<String, Void, Uri> {
 
         @Override
