@@ -47,7 +47,7 @@ public class Downloaded_Fragment extends Fragment {
         View view = inflater.inflate(R.layout.downloaded_fragment, null);
 
         try {
-            File imageDir = new File(Environment.getExternalStorageDirectory().toString() + "/Wall Bucket/Downloads");
+            File imageDir = new File(Environment.getExternalStorageDirectory().toString() + getActivity().getResources().getString(R.string.downloadLocation));
             Log.i("DIR", imageDir.toString());
             if (imageDir.exists()) {
                 files = imageDir.listFiles();
@@ -113,7 +113,7 @@ public class Downloaded_Fragment extends Fragment {
         @Override
         protected Void doInBackground(Void... voids) {
             try {
-                File imageDir = new File(Environment.getExternalStorageDirectory().toString() + "/Wall Bucket/Downloads");
+                File imageDir = new File(Environment.getExternalStorageDirectory().toString() + getActivity().getResources().getString(R.string.downloadLocation));
                 Log.i("DIR", imageDir.toString());
                 if (imageDir.exists()) {
                     files = imageDir.listFiles();

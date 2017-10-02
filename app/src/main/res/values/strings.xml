@@ -11,4 +11,8 @@
     <string name="downloadWallBtn">Download</string>
     <string name="setWallBtn">Set</string>
 
+
+    <!--Download Location-->
+    <string name="downloadLocation">/Wall Bucket/Wall Bucket Downloads</string>
+
 </resources>

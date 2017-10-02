@@ -30,7 +30,6 @@ public class DownloadHandler extends AppCompatActivity{
     {
 
         Context context;
-        Downloaded_Fragment downloaded_fragment;
 
         public ImageDownloadAndSave(Context context) {
             this.context = context;
@@ -61,11 +60,12 @@ public class DownloadHandler extends AppCompatActivity{
                 URL url = new URL(downloadUrl);
             /* making a directory in sdcard */
                 String sdCard= Environment.getExternalStorageDirectory().toString();
-                File myDir = new File(sdCard + "/Wall Bucket/Downloads");
+                File myDir = new File(sdCard + context.getResources().getString(R.string.downloadLocation));
 
             /*  if specified not exist create new */
                 if(!myDir.exists())
                 {
+                    Log.i("CREATED DIR ", myDir.toString());
                     myDir.mkdirs();
                 }
 
