@@ -4,12 +4,10 @@ import android.app.Activity;
 import android.content.Context;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.RelativeLayout;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -26,10 +24,9 @@ public class FullScreeenSwipeAdapter extends PagerAdapter {
     ArrayList<WallpapersModel> arrayList;
     LayoutInflater layoutInflater;
 
-    public FullScreeenSwipeAdapter(Activity activity, ArrayList<String> arrayList, LayoutInflater layoutInflater) {
+    public FullScreeenSwipeAdapter(Activity activity, ArrayList<WallpapersModel> arrayList) {
         this.activity = activity;
         this.arrayList = arrayList;
-        this.layoutInflater = layoutInflater;
         Fresco.initialize(activity);
     }
 
