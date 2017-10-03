@@ -14,6 +14,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -72,17 +74,40 @@ public class DownloadFragmentAdapter extends RecyclerView.Adapter {
             @Override
             public void onClick(View view) {
                 makeText(context, "Deleted!", Toast.LENGTH_SHORT).show();
-                File fdelete = new File(paths.get(position));
-                if (fdelete.exists()) {
-                    fdelete.delete();
-                }
-                Intent mediaScanIntent = new Intent(
-                        Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-                Uri contentUri = Uri.fromFile(fdelete); //out is your file you saved/deleted/moved/copied
-                mediaScanIntent.setData(contentUri);
-                context.sendBroadcast(mediaScanIntent);
-                Intent intent = new Intent("Refresh");
-                LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+                Animation animation = AnimationUtils.loadAnimation(context, R.anim.zoom_out);
+                Animation animation1 = AnimationUtils.loadAnimation(context, R.anim.fadeout);
+
+                animation.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        Log.i("ANIMATION", "END");
+                        File fdelete = new File(paths.get(position));
+                        if (fdelete.exists()) {
+                            fdelete.delete();
+                        }
+                        Intent mediaScanIntent = new Intent(
+                                Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+                        Uri contentUri = Uri.fromFile(fdelete); //out is your file you saved/deleted/moved/copied
+                        mediaScanIntent.setData(contentUri);
+                        context.sendBroadcast(mediaScanIntent);
+                        Intent intent = new Intent("Refresh");
+                        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+
+                    }
+                });
+                ((DownloadsHolder) holder).downloadedImage.startAnimation(animation);
+                ((DownloadsHolder) holder).deleteDownload.startAnimation(animation1);
+                ((DownloadsHolder) holder).setAsWall.startAnimation(animation1);
+                ((DownloadsHolder) holder).view.startAnimation(animation1);
             }
         });
 
@@ -108,6 +133,7 @@ public class DownloadFragmentAdapter extends RecyclerView.Adapter {
     public static class DownloadsHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         ImageView downloadedImage, deleteDownload, setAsWall;
+        View view;
         Context context;
         ArrayList<String> paths;
 
@@ -119,6 +145,7 @@ public class DownloadFragmentAdapter extends RecyclerView.Adapter {
             itemView.setOnClickListener(this);
             this.deleteDownload = itemView.findViewById(R.id.deleteDownload);
             this.setAsWall = itemView.findViewById(R.id.setaswall);
+            this.view = itemView.findViewById(R.id.viewBar);
         }
 
 
