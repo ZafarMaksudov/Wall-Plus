@@ -18,6 +18,7 @@ import android.view.View;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -135,7 +136,7 @@ public class CategoryDetailsFragment extends Activity {
 
         recyclerView.setAdapter(categoryDetailsFragmentAdapter);
         recyclerView.addItemDecoration(new RecyclerItemDecoration(2));
-
+        MobileAds.initialize(context, getResources().getString(R.string.CATEGORY_BANNED_ID));
         bannerAd = new AdView(context);
         bannerAd = findViewById(R.id.bannerAdView);
         AdRequest adRequest = new AdRequest.Builder()

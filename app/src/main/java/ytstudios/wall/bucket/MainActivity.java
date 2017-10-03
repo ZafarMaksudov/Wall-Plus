@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabSelectListener;
@@ -49,18 +50,23 @@ public class MainActivity extends AppCompatActivity {
             public void onPageSelected(int position) {
                 if (position == 0) {
                     setActionBarTitle("Search");
+                    toolbar.setVisibility(View.GONE);
                     bottomBar.selectTabAtPosition(0, true);
                 } else if (position == 1) {
                     setActionBarTitle("Categories");
+                    toolbar.setVisibility(View.VISIBLE);
                     bottomBar.selectTabAtPosition(1, true);
                 } else if (position == 2) {
                     setActionBarTitle("Explore");
+                    toolbar.setVisibility(View.VISIBLE);
                     bottomBar.selectTabAtPosition(2, true);
                 } else if (position == 3) {
                     setActionBarTitle("Favorites");
+                    toolbar.setVisibility(View.VISIBLE);
                     bottomBar.selectTabAtPosition(3, true);
                 } else if (position == 4) {
                     setActionBarTitle("Downloaded");
+                    toolbar.setVisibility(View.VISIBLE);
                     bottomBar.selectTabAtPosition(4, true);
                 }
             }
