@@ -13,6 +13,6 @@
 
 
     <!--Download Location-->
-    <string name="downloadLocation">/Wall Bucket/Wall Bucket Downloads</string>
+    <string name="downloadLocation">/Wall Bucket/WallBucket Downloads</string>
 
 </resources>

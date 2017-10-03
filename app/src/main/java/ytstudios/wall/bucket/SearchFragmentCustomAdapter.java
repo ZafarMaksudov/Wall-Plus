@@ -88,6 +88,7 @@ public class SearchFragmentCustomAdapter extends RecyclerView.Adapter<SearchFrag
             intent.putExtra("fullUrl", wallpapersModels.get(position).getWallpaperFullURL());
             intent.putExtra("file_type", wallpapersModels.get(position).getFileType());
             intent.putExtra("id", wallpapersModels.get(position).getWallId());
+            intent.putExtra("caller", "Search");
             this.context.startActivity(intent);
         }
     }

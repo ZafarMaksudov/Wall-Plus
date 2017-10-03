@@ -66,7 +66,7 @@ public class Home_Fragment extends Fragment {
 
     public static String API_KEY;
 
-    private static int wallpaperNumber = 1;
+    public static int wallpaperNumber = 0;
 
     @Nullable
     @Override

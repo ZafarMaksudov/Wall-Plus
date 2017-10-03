@@ -14,15 +14,14 @@
     <style name="MyDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert" />
 
     <!-- Base application theme. For Categories  -->
-    <style name="AppTheme.FullScreen" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AppTheme.FullScreen" parent="Theme.AppCompat.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/transparentColor</item>
+        <item name="colorPrimaryDark">@color/translucentBlackColor</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:windowTranslucentStatus">true</item>
-        <item name="android:statusBarColor">@color/transparentColor</item>
         <item name="android:windowDisablePreview">true</item>
-        <item name="android:fitsSystemWindows">true</item>
+        <item name="android:colorControlHighlight">@color/colorAccentTransparent</item>
     </style>
 
     <!-- ToolBar -->
@@ -30,14 +29,6 @@
         <item name="android:textColorPrimary">@android:color/white</item>
         <item name="android:textColorSecondary">@android:color/white</item>
         <item name="actionMenuTextColor">@android:color/white</item>
-    </style>
-    
-    <style name="FullScreenTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="android:windowTranslucentStatus">true</item>
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/transparentColor</item>
-        <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:colorControlHighlight">@color/colorAccentTransparent</item>
     </style>
 
 

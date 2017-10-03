@@ -1,12 +1,16 @@
 package ytstudios.wall.bucket;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -43,6 +47,11 @@ public class Downloaded_Fragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         setHasOptionsMenu(true);
+
+        context = getActivity().getApplicationContext();
+
+        LocalBroadcastManager.getInstance(context).registerReceiver(broadcastReceiver,
+                new IntentFilter("DownloadComplete"));
 
         View view = inflater.inflate(R.layout.downloaded_fragment, null);
 
@@ -118,8 +127,11 @@ public class Downloaded_Fragment extends Fragment {
                 if (imageDir.exists()) {
                     files = imageDir.listFiles();
                     Log.i("FILES", String.valueOf(files.length));
-                    filePaths.clear();
-                    fileNames.clear();
+                    if(files.length != 0){
+                        filePaths.clear();
+                        fileNames.clear();
+                    }
+
 
                     for (int i = 0; i < files.length; i++) {
                         // Get the path of the image file
@@ -133,7 +145,7 @@ public class Downloaded_Fragment extends Fragment {
 
                 }
             } catch (Exception e) {
-                Log.i("EXCEPTION ", e.toString());
+                Log.i("EXCEPTION YOYO", e.toString());
             }
             return null;
         }
@@ -148,5 +160,12 @@ public class Downloaded_Fragment extends Fragment {
             Log.i("ITEM RANGE CHANGED", "ITEM SET CHANGED");
         }
     }
+
+    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            new refreshDownloads().execute();
+        }
+    };
 }
 

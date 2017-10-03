@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -13,6 +14,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
+
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -42,10 +47,15 @@ public class CategoryDetailsFragment extends Activity {
 
     Context context;
 
+    AdView bannerAd;
+    CardView disableAdBlock;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.categories_details_fragment);
+
+        disableAdBlock = findViewById(R.id.disableAdBlock);
 
         wallpapersModels = new ArrayList<>();
         handler = new Handler();
@@ -93,7 +103,7 @@ public class CategoryDetailsFragment extends Activity {
 
         recyclerView = findViewById(R.id.detailsCategory_rv);
         recyclerView.setHasFixedSize(true);
-        gridLayoutManager = new GridLayoutManager(getApplicationContext(), 2);
+        gridLayoutManager = new GridLayoutManager(getApplicationContext(), 3);
         recyclerView.setLayoutManager(gridLayoutManager);
 
         categoryDetailsFragmentAdapter = new CategoryDetailsFragmentAdapter(wallpapersModels, getApplicationContext(), recyclerView);
@@ -126,6 +136,54 @@ public class CategoryDetailsFragment extends Activity {
         recyclerView.setAdapter(categoryDetailsFragmentAdapter);
         recyclerView.addItemDecoration(new RecyclerItemDecoration(2));
 
+        bannerAd = new AdView(context);
+        bannerAd = findViewById(R.id.bannerAdView);
+        AdRequest adRequest = new AdRequest.Builder()
+                .addTestDevice("02147518DD550E863FFAA08EA49B5F41")
+                .addTestDevice("4F18060E4B4A11E00C6E6C3B8EEF6353")
+                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                .build();
+
+        bannerAd.loadAd(adRequest);
+        bannerAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdFailedToLoad(int i) {
+                disableAdBlock.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAdLoaded() {
+                super.onAdLoaded();
+                disableAdBlock.setVisibility(View.GONE);
+            }
+        });
+
+    }
+
+
+
+    @Override
+    public void onPause() {
+        if (bannerAd != null) {
+            bannerAd.pause();
+        }
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (bannerAd != null) {
+            bannerAd.resume();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        if (bannerAd != null) {
+            bannerAd.destroy();
+        }
+        super.onDestroy();
     }
 
     @Override
@@ -188,7 +246,7 @@ public class CategoryDetailsFragment extends Activity {
                 List list = img.eachAttr("src");
                 List id = widList.eachAttr("alt");
 //                Log.i("LIST ", list.toString());
-//                Log.i("ID", id.toString());
+                Log.i("ID", id.toString());
 
 
                 for (int i = 0; i < list.size(); i++) {

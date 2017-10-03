@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
@@ -41,6 +42,7 @@ import static ytstudios.wall.bucket.Home_Fragment.API_KEY;
 public class Search_Fragment extends Fragment {
 
     EditText searchBar;
+    CardView searchView;
     ImageView imageView;
     TextView searchNet,searchQueryText,searchQuery;
     LottieAnimationView animationView;
@@ -50,6 +52,8 @@ public class Search_Fragment extends Fragment {
     SearchFragmentCustomAdapter searchFragmentCustomAdapter;
 
     String query;
+
+    GridLayoutManager gridLayoutManager;
 
     @Nullable
     @Override
@@ -61,8 +65,11 @@ public class Search_Fragment extends Fragment {
 
         View view = inflater.inflate(R.layout.search_fragment, null);
 
+        searchView = view.findViewById(R.id.search_cardView);
+
         recyclerView = view.findViewById(R.id.searchFragment_rv);
-        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+        gridLayoutManager = new GridLayoutManager(getContext(), 3);
+        recyclerView.setLayoutManager(gridLayoutManager);
 
         searchBar = view.findViewById(R.id.search_bar);
 
@@ -169,6 +176,7 @@ public class Search_Fragment extends Fragment {
         protected void onPostExecute(String content) {
             wallpapersModels.clear();
             recyclerView.setVisibility(View.VISIBLE);
+            recyclerView.scrollToPosition(0);
             animationView.pauseAnimation();
             animationView.setVisibility(View.INVISIBLE);
             searchQueryText.setVisibility(View.INVISIBLE);

@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Environment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
@@ -50,7 +51,9 @@ public class DownloadHandler extends AppCompatActivity{
         @Override
         protected void onPostExecute(Bitmap bitmap) {
             super.onPostExecute(bitmap);
-            Toast.makeText(this.context,"Downloaded!",Toast.LENGTH_LONG).show();
+            Toast.makeText(this.context,"Downloaded!",Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent("DownloadComplete");
+            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
         }
 
         private void downloadImagesToSdCard(String downloadUrl, String imageName)

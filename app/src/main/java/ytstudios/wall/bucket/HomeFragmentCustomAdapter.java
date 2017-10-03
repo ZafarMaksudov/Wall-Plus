@@ -168,6 +168,8 @@ public class HomeFragmentCustomAdapter extends RecyclerView.Adapter {
             intent.putExtra("thumbUrl", wallpapersModels.get(position).getWallpaperURL());
             intent.putExtra("file_type", wallpapersModels.get(position).getFileType());
             intent.putExtra("id", wallpapersModels.get(position).getWallId());
+            intent.putExtra("number", Home_Fragment.wallpaperNumber);
+            intent.putExtra("caller", "Home");
             this.context.startActivity(intent);
         }
     }

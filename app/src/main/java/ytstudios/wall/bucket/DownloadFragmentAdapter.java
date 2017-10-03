@@ -1,7 +1,6 @@
 package ytstudios.wall.bucket;
 
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
@@ -10,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -90,11 +90,12 @@ public class DownloadFragmentAdapter extends RecyclerView.Adapter {
         public void onClick(View view) {
 
             int position = getAdapterPosition();
-            Intent intent = new Intent();
-            intent.setAction(Intent.ACTION_VIEW);
-            intent.setDataAndType(Uri.parse(paths.get(position)), "image/*");
-            intent.putExtra(Intent.EXTRA_STREAM, Uri.parse(paths.get(position)));
-            this.context.startActivity(intent);
+            Toast.makeText(context, paths.get(position).toString(), Toast.LENGTH_SHORT).show();
+//            Intent intent = new Intent();
+//            intent.setAction(Intent.ACTION_VIEW);
+//            intent.setDataAndType(Uri.parse(paths.get(position)), "image/*");
+//            intent.putExtra(Intent.EXTRA_STREAM, Uri.parse(paths.get(position)));
+//            this.context.startActivity(intent);
         }
     }
 }
