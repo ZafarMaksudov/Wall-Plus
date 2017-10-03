@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -28,7 +29,7 @@ public class HomeFragmentCustomAdapter extends RecyclerView.Adapter {
     private final int VIEW_ITEM = 1;
     private final int VIEW_PROG = 0;
 
-    private int visibleThreshold = 1;
+    private int visibleThreshold = 7;
     private int lastVisibleItem, totalItemCount;
     private boolean loading;
     private onLoadMoreListener onLoadMoreListener;
@@ -176,10 +177,12 @@ public class HomeFragmentCustomAdapter extends RecyclerView.Adapter {
 
     public static class ProgressViewHolder extends RecyclerView.ViewHolder {
         public ProgressBar progressBar;
+        public TextView textView;
 
         public ProgressViewHolder(View v) {
             super(v);
             progressBar = v.findViewById(R.id.progressBar);
+            textView = v.findViewById(R.id.textview);
         }
     }
 }

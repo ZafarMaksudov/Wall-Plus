@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -27,7 +28,7 @@ public class CategoryDetailsFragmentAdapter extends RecyclerView.Adapter {
     private final int VIEW_ITEM = 1;
     private final int VIEW_PROG = 0;
 
-    private int visibleThreshold = 1;
+    private int visibleThreshold = 7;
     private int lastVisibleItem, totalItemCount;
     private boolean loading;
     private onLoadMoreListener onLoadMoreListener;
@@ -48,12 +49,11 @@ public class CategoryDetailsFragmentAdapter extends RecyclerView.Adapter {
                         case VIEW_ITEM:
                             return 1;
                         case VIEW_PROG:
-                            return 2;
-//                            if(Home_Fragment.spanCount == 2){
-//                                return 2;
-//                            }
-//                            else if(Home_Fragment.spanCount == 3)
-//                                return 3;
+                            if(Home_Fragment.spanCount == 2){
+                                return 2;
+                            }
+                            else if(Home_Fragment.spanCount == 3)
+                                return 3;
                         default:
                             return 2;
                     }
@@ -163,10 +163,13 @@ public class CategoryDetailsFragmentAdapter extends RecyclerView.Adapter {
     }
     public static class ProgressViewHolder extends RecyclerView.ViewHolder {
         public ProgressBar progressBar;
+        public TextView textView;
 
         public ProgressViewHolder(View v) {
             super(v);
             progressBar =  v.findViewById(R.id.progressBar);
+            textView = v.findViewById(R.id.textview);
+            textView.setPadding(0,0,0,100);
         }
     }
 }

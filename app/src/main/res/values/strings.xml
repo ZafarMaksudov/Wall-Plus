@@ -11,6 +11,8 @@
     <string name="downloadWallBtn">Download</string>
     <string name="setWallBtn">Set</string>
 
+    <string name="applyingWall">Applying Wallpaper</string>
+
 
     <!--Download Location-->
     <string name="downloadLocation">/Wall Bucket/WallBucket Downloads</string>

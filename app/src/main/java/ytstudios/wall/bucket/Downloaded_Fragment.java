@@ -51,7 +51,7 @@ public class Downloaded_Fragment extends Fragment {
         context = getActivity().getApplicationContext();
 
         LocalBroadcastManager.getInstance(context).registerReceiver(broadcastReceiver,
-                new IntentFilter("DownloadComplete"));
+                new IntentFilter("Refresh"));
 
         View view = inflater.inflate(R.layout.downloaded_fragment, null);
 

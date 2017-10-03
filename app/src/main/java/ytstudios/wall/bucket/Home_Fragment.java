@@ -34,7 +34,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
@@ -62,7 +61,7 @@ public class Home_Fragment extends Fragment {
 
     protected Handler handler;
 
-    public static int spanCount = 2;
+    public static int spanCount = 3;
 
     public static String API_KEY;
 
@@ -92,7 +91,7 @@ public class Home_Fragment extends Fragment {
 
         initData();
 
-        gridLayoutManager = new GridLayoutManager(getContext(), 2);
+        gridLayoutManager = new GridLayoutManager(getContext(), 3);
         recyclerView = view.findViewById(R.id.homeFragment_rv);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(gridLayoutManager);
@@ -161,11 +160,12 @@ public class Home_Fragment extends Fragment {
                     String string = list.get(i).toString();
                     String sep[] = string.split("http://");
                     sep[1] = sep[1].replace("android/wp-content/uploads", "wallpaper");
-                    sep[1] = sep[1].replace("-250x400.jpg", ".jpg?download=true");
-                    sep[1] = "http://"+sep[1];
+                    String septemp[] = sep[1].split("wallpaper-");
+                    septemp[0] = septemp[0] + "wallpaper.jpg?download=true" ;
+                    sep[1] = "http://" + septemp[0];
                     Log.i("String ", sep[1]);
-                    Log.i("URL", string);
-                    wallpapersModelArrayList.add(wallpapersModelArrayList.size()-1, new WallpapersModel(
+                    //Log.i("URL", string);
+                    wallpapersModelArrayList.add(wallpapersModelArrayList.size() - 1, new WallpapersModel(
                             string,///
                             sep[1],
                             "jpg",
@@ -200,9 +200,12 @@ public class Home_Fragment extends Fragment {
 //                else
 //                    loadFromInternet("https://wallpaperscraft.com/all/ratings/1080x1920/page" + i);
 //            }
-            //https://wall.alphacoders.com/api2.0/get.php?auth=" + API_KEY + "&method=highest_rated&page=10&info_level=2&page=1
+
             loadFromInternet("http://papers.co/android/");
+            //https://spliffmobile.com/mobile-wallpapers/hd/wallpapers-for-mobile-2-1-16.html
+            //http://papers.co/android/
             //http://wallpaperscraft.com/all/1080x1920
+
         } else {
 
             noNetImage.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.nonetwork));
@@ -256,7 +259,6 @@ public class Home_Fragment extends Fragment {
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    //https://wall.alphacoders.com/api2.0/get.php?auth="+API_KEY+"&method=highest_rated&page=10&info_level=2
                     wallpapersModelArrayList.clear();
                     //new ReadJSON().execute(url);
                     new ReadHTML().execute(url);
@@ -271,34 +273,60 @@ public class Home_Fragment extends Fragment {
 
         @Override
         protected String doInBackground(String... params) {
-            try {
+                try {
 
-                Document document = Jsoup.connect(params[0]).get();
-                Element wall = document.select("ul.postul").first();
-                //Log.i("LIST ", wall.toString());
-                Elements url = wall.getElementsByAttribute("src");
-                list = url.eachAttr("src");
+                    Document document = Jsoup.connect(params[0]).get();
+                    Element wall = document.select("ul.postul").first();
+                    //Log.i("LIST ", wall.toString());
+                    Elements url = wall.getElementsByAttribute("src");
+                    list = url.eachAttr("src");
 
-                for (int i = 0; i < list.size(); i++) {
-                    wallpaperNumber++;
-                    String string = list.get(i).toString();
-                    String sep[] = string.split("http://");
-                    sep[1] = sep[1].replace("android/wp-content/uploads", "wallpaper");
-                    //sep[1] = sep[1].replace("-6-", "-6-");
-                    sep[1] = sep[1].replace("-250x400.jpg", ".jpg?download=true");
-                    sep[1] = "http://"+sep[1];
-                    Log.i("String ", sep[1]);
-                    Log.i("URL", string);
-                    wallpapersModelArrayList.add(new WallpapersModel(
-                            string,///
-                            sep[1],
-                            "jpg",
-                            wallpaperNumber
-                    ));
+                    for (int i = 0; i < list.size(); i++) {
+                        wallpaperNumber++;
+                        String string = list.get(i).toString();
+                        String sep[] = string.split("http://");
+                        sep[1] = sep[1].replace("android/wp-content/uploads", "wallpaper");
+                        String septemp[] = sep[1].split("wallpaper-");
+                        septemp[0] = septemp[0] + "wallpaper.jpg?download=true" ;
+                        sep[1] = "http://" + septemp[0];
+                        Log.i("String ", sep[1]);
+                        //Log.i("URL", string);
+                        wallpapersModelArrayList.add(new WallpapersModel(
+                                string,///
+                                sep[1],
+                                "jpg",
+                                wallpaperNumber
+                        ));
+                    }
+                }catch (Exception e){
+                    Log.i("ERROR LOADING WEBSITE ", e.toString());
                 }
+                return null;
+        }
+        //Elements url = wall.getElementsByAttribute("src");
+        //Log.i("URL 1  ", url.toString());
+//                list = url.eachAttr("src");
+//
+//                for (int i = 0; i < list.size(); i++) {
+//                    wallpaperNumber++;
+//                    String string = list.get(i).toString();
+//                    String sep[] = string.split("http://");
+//                    sep[1] = sep[1].replace("android/wp-content/uploads", "wallpaper");
+//                    //sep[1] = sep[1].replace("-6-", "-6-");
+//                    sep[1] = sep[1].replace("-250x400.jpg", ".jpg?download=true");
+//                    sep[1] = "http://" + sep[1];
+//                    Log.i("String ", sep[1]);
+//                    Log.i("URL", string);
+//                    wallpapersModelArrayList.add(new WallpapersModel(
+//                            string,///
+//                            sep[1],
+//                            "jpg",
+//                            wallpaperNumber
+//                    ));
+//                }
 
 
-//                // Connect to the web site
+//                //FOR WALLPAPERSCRAFT
 //                Document document = Jsoup.connect(params[0]).get();
 //                Element wall = document.select("div.wallpapers").first();
 //                //Log.i("WALL  ", wall.toString());
@@ -317,11 +345,6 @@ public class Home_Fragment extends Fragment {
 //                            1
 //                    ));
 //                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
 
         @Override
         protected void onPreExecute() {

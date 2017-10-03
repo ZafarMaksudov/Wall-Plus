@@ -1,5 +1,6 @@
 package ytstudios.wall.bucket;
 
+import android.app.Dialog;
 import android.app.WallpaperManager;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -14,10 +15,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
@@ -27,6 +30,8 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 import com.squareup.picasso.Picasso;
+
+import static android.widget.Toast.makeText;
 
 /**
  * Created by Yugansh Tyagi on 15-09-2017.
@@ -51,6 +56,9 @@ public class FullWallpaperViewActivity extends AppCompatActivity {
 
     private boolean visibility = true;
     private boolean adblock = false;
+
+    Dialog alertDialog;
+    ProgressBar progressBar;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -136,12 +144,12 @@ public class FullWallpaperViewActivity extends AppCompatActivity {
                 switch (ActivityCaller) {
                     case "Category":
                         new DownloadHandler.ImageDownloadAndSave(getApplicationContext()).execute(encodedUrlFull, "Wallpaper " + String.valueOf(wallId) + fileType);
-                        Toast.makeText(getApplicationContext(), "Downloading " + "Wallpaper " + String.valueOf(wallId) + fileType, Toast.LENGTH_SHORT).show();
+                        makeText(getApplicationContext(), "Downloading " + "Wallpaper " + String.valueOf(wallId) + fileType, Toast.LENGTH_SHORT).show();
                         break;
 
                     case "Search":
                         new DownloadHandler.ImageDownloadAndSave(getApplicationContext()).execute(encodedUrlFull, "Wallpaper " + String.valueOf(wallId) + fileType);
-                        Toast.makeText(getApplicationContext(), "Downloading " + "Wallpaper " + String.valueOf(wallId) + fileType, Toast.LENGTH_SHORT).show();
+                        makeText(getApplicationContext(), "Downloading " + "Wallpaper " + String.valueOf(wallId) + fileType, Toast.LENGTH_SHORT).show();
                         break;
 
                     case "Home":
@@ -154,24 +162,21 @@ public class FullWallpaperViewActivity extends AppCompatActivity {
                                 public void onClick(DialogInterface dialog, int which) {
                                     switch (which) {
                                         case 0:
-                                            Toast.makeText(getApplicationContext(), "Downloading " + "Wallpaper " + String.valueOf(wallId) + fileType, Toast.LENGTH_SHORT).show();
+                                            makeText(getApplicationContext(), "Downloading Wallpaper " + String.valueOf(wallId) + "(S)" +fileType, Toast.LENGTH_SHORT).show();
                                             new DownloadHandler.ImageDownloadAndSave(getApplicationContext()).execute(encodedUrlFull, "Wallpaper " + String.valueOf(wallId) + fileType);
-                                            try {
-                                                break;
-                                            } catch (Exception e) {
-                                                {
-                                                    e.printStackTrace();
-                                                }
-                                            }
+                                            Log.i("ENCODEDURL", encodedUrlFull);
+                                            break;
                                         case 1:
-                                            Toast.makeText(getApplicationContext(), "Downloading " + "Wallpaper " + String.valueOf(wallId) + fileType, Toast.LENGTH_SHORT).show();
+                                            makeText(getApplicationContext(), "Downloading Wallpaper " + String.valueOf(wallId) + "(M)" +fileType, Toast.LENGTH_SHORT).show();
                                             encodedUrlFull = encodedUrlFull.replace("-6-", "-8-");
                                             new DownloadHandler.ImageDownloadAndSave(getApplicationContext()).execute(encodedUrlFull, "Wallpaper " + String.valueOf(wallId) + fileType);
+                                            Log.i("ENCODEDURL", encodedUrlFull);
                                             break;
                                         case 2:
-                                            Toast.makeText(getApplicationContext(), "Downloading " + "Wallpaper " + String.valueOf(wallId) + fileType, Toast.LENGTH_SHORT).show();
+                                            makeText(getApplicationContext(), "Downloading Wallpaper " + String.valueOf(wallId) + "(L)" +fileType, Toast.LENGTH_SHORT).show();
                                             encodedUrlFull = encodedUrlFull.replace("-6-", "-40-");
                                             new DownloadHandler.ImageDownloadAndSave(getApplicationContext()).execute(encodedUrlFull, "Wallpaper " + String.valueOf(wallId) + fileType);
+                                            Log.i("ENCODEDURL", encodedUrlFull);
                                             break;
                                     }
                                 }
@@ -303,7 +308,13 @@ public class FullWallpaperViewActivity extends AppCompatActivity {
 
         @Override
         protected void onPreExecute() {
-            Toast.makeText(context, "Applying Wallpaper", Toast.LENGTH_SHORT).show();
+            alertDialog = new Dialog(FullWallpaperViewActivity.this);
+            alertDialog.setCancelable(false);
+            alertDialog.setContentView(R.layout.setwall_dialog_layout);
+            progressBar = alertDialog.findViewById(R.id.settingWall);
+            progressBar.setIndeterminate(true);
+            alertDialog.show();
+
         }
 
         @Override
@@ -311,10 +322,16 @@ public class FullWallpaperViewActivity extends AppCompatActivity {
             WallpaperManager wallpaperManager = WallpaperManager.getInstance(FullWallpaperViewActivity.this);
             try {
                 wallpaperManager.setBitmap(result);
-                Toast.makeText(context, "Wallpaper Applied Successfully", Toast.LENGTH_SHORT).show();
+                Toast toast = Toast.makeText(context, "Wallpaper Applied Successfully", Toast.LENGTH_SHORT);
+                toast.setGravity(Gravity.BOTTOM, 0, 220);
+                toast.show();
+                alertDialog.hide();
             } catch (Exception ex) {
                 ex.printStackTrace();
-                Toast.makeText(context, "Cannot apply wallpaper!", Toast.LENGTH_SHORT).show();
+                Toast toast = makeText(context, "Error applying wallpaper!", Toast.LENGTH_SHORT);
+                toast.setGravity(Gravity.BOTTOM, 0 ,220);
+                toast.show();
+                alertDialog.hide();
             }
         }
     }

@@ -1,7 +1,13 @@
 package ytstudios.wall.bucket;
 
+import android.app.WallpaperManager;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -17,14 +23,16 @@ import com.bumptech.glide.request.RequestOptions;
 import java.io.File;
 import java.util.ArrayList;
 
+import static android.widget.Toast.makeText;
+
 /**
  * Created by Yugansh Tyagi on 29-09-2017.
  */
 
 public class DownloadFragmentAdapter extends RecyclerView.Adapter {
 
-    private  ArrayList<String > paths;
-    private  ArrayList<String> names;
+    private ArrayList<String> paths;
+    private ArrayList<String> names;
     Context context;
     DisplayMetrics displayMetrics;
     public static String uri;
@@ -48,25 +56,50 @@ public class DownloadFragmentAdapter extends RecyclerView.Adapter {
     }
 
     @Override
-    public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
 
         Log.i("Position  ", paths.get(position));
-        int width = displayMetrics.widthPixels/2;
+        int width = displayMetrics.widthPixels / 2;
         int height = 220;
 
         Uri uriImage = Uri.fromFile(new File(paths.get(position)));
         RequestOptions myOptions = new RequestOptions()
                 .centerCrop()
                 .override(width, height);
-        Glide.with(context).load(uriImage).apply(myOptions).into(((DownloadsHolder)holder).downloadedImage);
+        Glide.with(context).load(uriImage).apply(myOptions).into(((DownloadsHolder) holder).downloadedImage);
+
+        ((DownloadsHolder) holder).deleteDownload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                makeText(context, "Deleted!", Toast.LENGTH_SHORT).show();
+                File fdelete = new File(paths.get(position));
+                if (fdelete.exists()) {
+                    fdelete.delete();
+                }
+                Intent mediaScanIntent = new Intent(
+                        Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+                Uri contentUri = Uri.fromFile(fdelete); //out is your file you saved/deleted/moved/copied
+                mediaScanIntent.setData(contentUri);
+                context.sendBroadcast(mediaScanIntent);
+                Intent intent = new Intent("Refresh");
+                LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+            }
+        });
+
+        ((DownloadsHolder) holder).setAsWall.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new setWall(context, position).execute();
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
-        try{
+        try {
             Log.i("Returned ", String.valueOf(paths.size()));
             return paths.size();
-        }catch (Exception e){
+        } catch (Exception e) {
             Log.i("NO Downloads", "0");
         }
         return 0;
@@ -74,7 +107,7 @@ public class DownloadFragmentAdapter extends RecyclerView.Adapter {
 
     public static class DownloadsHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        ImageView downloadedImage;
+        ImageView downloadedImage, deleteDownload, setAsWall;
         Context context;
         ArrayList<String> paths;
 
@@ -84,18 +117,58 @@ public class DownloadFragmentAdapter extends RecyclerView.Adapter {
             downloadedImage = itemView.findViewById(R.id.downloadImage);
             this.paths = paths;
             itemView.setOnClickListener(this);
+            this.deleteDownload = itemView.findViewById(R.id.deleteDownload);
+            this.setAsWall = itemView.findViewById(R.id.setaswall);
         }
+
 
         @Override
         public void onClick(View view) {
-
             int position = getAdapterPosition();
-            Toast.makeText(context, paths.get(position).toString(), Toast.LENGTH_SHORT).show();
+            makeText(context, paths.get(position), Toast.LENGTH_SHORT).show();
 //            Intent intent = new Intent();
 //            intent.setAction(Intent.ACTION_VIEW);
 //            intent.setDataAndType(Uri.parse(paths.get(position)), "image/*");
 //            intent.putExtra(Intent.EXTRA_STREAM, Uri.parse(paths.get(position)));
 //            this.context.startActivity(intent);
+
+        }
+    }
+
+    class setWall extends AsyncTask<Void, Void, Void> {
+
+        Context context;
+        Bitmap result;
+        int position;
+
+        public setWall(Context context, int position) {
+            this.context = context;
+            this.result = null;
+            this.position = position;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            result = BitmapFactory.decodeFile(paths.get(position));
+            return null;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            Toast.makeText(context, "Applying Wallpaper", Toast.LENGTH_SHORT).show();
+
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            WallpaperManager wallpaperManager = WallpaperManager.getInstance(context);
+            try {
+                wallpaperManager.setBitmap(result);
+                Toast.makeText(context, "Wallpaper Applied Successfully", Toast.LENGTH_SHORT).show();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                Toast.makeText(context, "Error applying wallpaper!", Toast.LENGTH_SHORT);
+            }
         }
     }
 }
