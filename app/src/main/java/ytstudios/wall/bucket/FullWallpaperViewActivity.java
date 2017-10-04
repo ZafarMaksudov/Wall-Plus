@@ -36,7 +36,7 @@ public class FullWallpaperViewActivity extends AppCompatActivity {
 
         viewPager = findViewById(R.id.view_pager);
 
-        //arrayList = getIntent().getParcelableArrayListExtra("array");
+        arrayList = getIntent().getParcelableArrayListExtra("array");
         fullScreenSwipeAdapter = new FullScreenSwipeAdapter(FullWallpaperViewActivity.this, arrayList);
 
         viewPager.setAdapter(fullScreenSwipeAdapter);

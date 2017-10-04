@@ -32,7 +32,7 @@ public class FullScreenSwipeAdapter extends PagerAdapter {
 
     @Override
     public int getCount() {
-        return arrayList.size();
+        return this.arrayList.size();
     }
 
     @Override
