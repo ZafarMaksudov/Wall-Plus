@@ -162,9 +162,7 @@ public class HomeFragmentCustomAdapter extends RecyclerView.Adapter {
         @Override
         public void onClick(View view) {
             int position = getAdapterPosition();
-            //Toast.makeText(context, this.wallpapersModels.get(position).getWallpaperURL(), Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(this.context, FullWallpaperViewActivity.class);
-            //ActivityOptionsCompat activityOptionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(this.context);
             intent.putExtra("fullUrl", wallpapersModels.get(position).getWallpaperFullURL());
             intent.putExtra("thumbUrl", wallpapersModels.get(position).getWallpaperURL());
             intent.putExtra("file_type", wallpapersModels.get(position).getFileType());
