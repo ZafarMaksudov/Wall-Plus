@@ -8,9 +8,11 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
+import com.google.android.gms.ads.AdView;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabSelectListener;
 
@@ -25,6 +27,9 @@ public class MainActivity extends AppCompatActivity {
     Home_Fragment home_fragment;
     Favorite_Fragment favorite_fragment;
 
+    private AdView bannerAd;
+    CardView disableAdBlock;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -34,6 +39,30 @@ public class MainActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Explore");
+
+//        disableAdBlock = findViewById(R.id.disableAdBlock);
+//        MobileAds.initialize(MainActivity.this, getResources().getString(R.string.FULLSCREEN_BANNER_ID));
+//        bannerAd = new AdView(MainActivity.this);
+//        bannerAd = findViewById(R.id.bannerAdView);
+//        final AdRequest adRequest = new AdRequest.Builder()
+//                .addTestDevice("02147518DD550E863FFAA08EA49B5F41")
+//                .addTestDevice("4F18060E4B4A11E00C6E6C3B8EEF6353")
+//                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+//                .build();
+//
+//        bannerAd.loadAd(adRequest);
+//        bannerAd.setAdListener(new AdListener() {
+//            @Override
+//            public void onAdFailedToLoad(int i) {
+//                disableAdBlock.setVisibility(View.VISIBLE);
+//            }
+//
+//            @Override
+//            public void onAdLoaded() {
+//                super.onAdLoaded();
+//                disableAdBlock.setVisibility(View.GONE);
+//            }
+//        });
 
         viewPager = findViewById(R.id.view_pager);
         viewPager.setAdapter(new setViewAdapter(getSupportFragmentManager()));
