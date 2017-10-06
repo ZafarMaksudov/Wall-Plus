@@ -51,6 +51,8 @@ public class CategoryDetailsFragment extends Activity {
     AdView bannerAd;
     CardView disableAdBlock;
 
+    private static int numPages, currPg = 1;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,32 +77,54 @@ public class CategoryDetailsFragment extends Activity {
         toolbar.setTitle(categoryName);
         switch (categoryName) {
             case "Abstract":
+                numPages =0;
+                currPg = 0;
                 categorySearchUrl = "https://mobile.alphacoders.com/by-resolution/1/Abstract/1080x1920-Wallpapers/?page=";
                 break;
             case "Animal":
+                numPages =0;
+                currPg = 0;
                 categorySearchUrl = "https://mobile.alphacoders.com/by-resolution/1/Animal/1080x1920-Wallpapers/?page=";
                 break;
-            case "Amoled":
-                categorySearchUrl = "https://mobile.alphacoders.com/by-resolution/1/Amoled/1080x1920-Wallpapers/?page=";
-                //Todo : Find wallpaper site for Amoled walls!
-                break;
+//            case "Amoled":
+//                categorySearchUrl = "https://mobile.alphacoders.com/by-resolution/1/Amoled/1080x1920-Wallpapers/?page=";
+//                //Todo : Find wallpaper site for Amoled walls!
+//                break;
             case "Anime":
+                numPages =0;
+                currPg = 0;
                 categorySearchUrl = "https://mobile.alphacoders.com/by-resolution/1/Anime/1080x1920-Wallpapers/?page=";
                 break;
             case "Cityscape":
+                numPages =0;
+                currPg = 0;
                 categorySearchUrl = "https://mobile.alphacoders.com/by-resolution/1/Man-Made/1080x1920-Wallpapers/?page=";
                 break;
-            case "Minimal":
-                categorySearchUrl = "https://mobile.alphacoders.com/by-resolution/1/Minimal/1080x1920-Wallpapers/?page=";
+            case "Comics":
+                numPages =0;
+                currPg = 0;
+                categorySearchUrl = "https://mobile.alphacoders.com/by-resolution/1/Comics/1080x1920-Wallpapers/?page=";
                 break;
+//            case "Minimal":
+//                categorySearchUrl = "https://mobile.alphacoders.com/by-resolution/1/Minimal/1080x1920-Wallpapers/?page=";
+//                break;
             case "Nature":
+                numPages =0;
+                currPg = 0;
                 categorySearchUrl = "https://mobile.alphacoders.com/by-resolution/1/Earth/1080x1920-Wallpapers/?page=";
                 break;
+            case "Patterns":
+                numPages =0;
+                currPg = 0;
+                categorySearchUrl = "https://mobile.alphacoders.com/by-resolution/1/Pattern/1080x1920-Wallpapers/?page=";
+                break;
             case "Vehicles":
+                numPages =0;
+                currPg = 0;
                 categorySearchUrl = "https://mobile.alphacoders.com/by-resolution/1/Vehicles/1080x1920-Wallpapers/?page=";
                 break;
         }
-        getCategoryWallpaper(categorySearchUrl + pageCount);
+        getCategoryWallpaper(categorySearchUrl + currPg);
 
         recyclerView = findViewById(R.id.detailsCategory_rv);
         recyclerView.setHasFixedSize(true);
@@ -111,26 +135,28 @@ public class CategoryDetailsFragment extends Activity {
         categoryDetailsFragmentAdapter.setOnLoadMoreListener(new onLoadMoreListener() {
             @Override
             public void onLoadMore() {
-                pageCount++;
-                //add null , so the adapter will check view_type and show progress bar at bottom
-                wallpapersModels.add(null);
-                Log.i("INSERTED", "NULL");
-                categoryDetailsFragmentAdapter.notifyItemInserted(wallpapersModels.size() - 1);
-                //Log.i("SIZE ", String.valueOf(wallpapersModelArrayList.size()));
+                if (currPg < numPages){
+                    pageCount++;
+                    //add null , so the adapter will check view_type and show progress bar at bottom
+                    wallpapersModels.add(null);
+                    Log.i("INSERTED", "NULL");
+                    categoryDetailsFragmentAdapter.notifyItemInserted(wallpapersModels.size() - 1);
+                    //Log.i("SIZE ", String.valueOf(wallpapersModelArrayList.size()));
 
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        wallpapersModels.remove(wallpapersModels.size() - 1);
-                        categoryDetailsFragmentAdapter.notifyItemRemoved(wallpapersModels.size());
-                        Log.i("REMOVED", "NULL");
-                        //add items one by one
-                        Log.i("INIT", "DATA");
-                        new loadMore().execute(categorySearchUrl + pageCount);
-                        categoryDetailsFragmentAdapter.setLoaded();
-                        Log.i("INIT", "FINISHED");
-                    }
-                }, 700);
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            wallpapersModels.remove(wallpapersModels.size() - 1);
+                            categoryDetailsFragmentAdapter.notifyItemRemoved(wallpapersModels.size());
+                            Log.i("REMOVED", "NULL");
+                            //add items one by one
+                            Log.i("INIT", "DATA");
+                            new loadMore().execute(categorySearchUrl + pageCount);
+                            categoryDetailsFragmentAdapter.setLoaded();
+                            Log.i("INIT", "FINISHED");
+                        }
+                    }, 700);
+                }
             }
         });
 
@@ -160,7 +186,6 @@ public class CategoryDetailsFragment extends Activity {
         });
 
     }
-
 
 
     @Override
@@ -206,19 +231,22 @@ public class CategoryDetailsFragment extends Activity {
                 List list = img.eachAttr("src");
                 List id = widList.eachAttr("alt");
 
-                for (int i = 0; i < list.size(); i++) {
-                    String wallUrl = list.get(i).toString();
-                    String wallId = id.get(i).toString();
-                    String sep[] = wallId.split("Wallpaper ");
-                    wallpapersModels.add(wallpapersModels.size() - 1, new WallpapersModel(
-                            wallUrl,///
-                            wallUrl.replace("thumb-", ""),
-                            "jpg",
-                            Integer.valueOf(sep[1])
-                    ));
+                if (currPg < numPages) {
+                    for (int i = 0; i < list.size(); i++) {
+                        String wallUrl = list.get(i).toString();
+                        String wallId = id.get(i).toString();
+                        String sep[] = wallId.split("Wallpaper ");
+                        wallpapersModels.add(wallpapersModels.size() - 1, new WallpapersModel(
+                                wallUrl,///
+                                wallUrl.replace("thumb-", ""),
+                                "jpg",
+                                Integer.valueOf(sep[1])
+                        ));
+                    }
                 }
+                else return null;
             } catch (Exception e) {
-                Log.i("ERROR 2", "E");
+                Log.i("ERROR 2", e.toString());
             }
             return null;
         }
@@ -227,6 +255,7 @@ public class CategoryDetailsFragment extends Activity {
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             categoryDetailsFragmentAdapter.notifyItemInserted(wallpapersModels.size());
+            currPg++;
         }
     }
 
@@ -244,19 +273,19 @@ public class CategoryDetailsFragment extends Activity {
                 Element wall = document.select("div.thumb-container").first();
                 Elements img = wall.getElementsByAttribute("src");
                 Elements widList = wall.getElementsByAttribute("alt");
+                Element page = document.select("ul.pagination.pagination").first();
+                Elements pageNum = page.getElementsByAttribute("href");
+                List pageText = pageNum.eachText();
+                String temp = pageText.get(pageText.size() - 2).toString();
+                numPages = Integer.parseInt(temp);
+                Log.i("PAGINATION", pageText.get(pageText.size() - 2).toString());
                 List list = img.eachAttr("src");
                 List id = widList.eachAttr("alt");
-//                Log.i("LIST ", list.toString());
-                Log.i("ID", id.toString());
-
 
                 for (int i = 0; i < list.size(); i++) {
                     String wallUrl = list.get(i).toString();
                     String wallId = id.get(i).toString();
                     String sep[] = wallId.split("Wallpaper ");
-//
-//                    Log.i("URL ", wallUrl);
-//                    Log.i("WALLID ", String.valueOf(sep[1]));
                     wallpapersModels.add(new WallpapersModel(
                             wallUrl,///
                             wallUrl.replace("thumb-", ""),

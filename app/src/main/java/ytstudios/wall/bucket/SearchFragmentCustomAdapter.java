@@ -3,16 +3,16 @@ package ytstudios.wall.bucket;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.facebook.imagepipeline.common.ResizeOptions;
-import com.facebook.imagepipeline.request.ImageRequest;
-import com.facebook.imagepipeline.request.ImageRequestBuilder;
 
 import java.util.ArrayList;
 
@@ -20,43 +20,125 @@ import java.util.ArrayList;
  * Created by Yugansh Tyagi on 15-09-2017.
  */
 
-public class SearchFragmentCustomAdapter extends RecyclerView.Adapter<SearchFragmentCustomAdapter.ViewHolder> {
+public class SearchFragmentCustomAdapter extends RecyclerView.Adapter {
 
     ArrayList<WallpapersModel> wallpapersModels;
     Context context;
     String query;
 
-    public SearchFragmentCustomAdapter(ArrayList<WallpapersModel> wallpapersModels, Context context, String query) {
+    private final int VIEW_ITEM = 1;
+    private final int VIEW_PROG = 0;
+
+    private int visibleThreshold = 5;
+    private int lastVisibleItem, totalItemCount;
+    private boolean loading;
+    private onLoadMoreListener onLoadMoreListener;
+
+    int rvPosition;
+
+    public SearchFragmentCustomAdapter(ArrayList<WallpapersModel> wallpapersModels, Context context, String query, RecyclerView recyclerView) {
         this.wallpapersModels = wallpapersModels;
         this.context = context;
         this.query = query;
-    }
-
-    @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
         Fresco.initialize(context);
 
-        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.home_wallpaper_item,parent,false);
-        return new ViewHolder(itemView, context, wallpapersModels);
+        if (recyclerView.getLayoutManager() instanceof GridLayoutManager) {
+
+            final GridLayoutManager gridLayoutManager = (GridLayoutManager) recyclerView.getLayoutManager();
+            gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+                @Override
+                public int getSpanSize(int position) {
+                    switch (getItemViewType(position)) {
+                        case VIEW_ITEM:
+                            return 1;
+                        case VIEW_PROG:
+                            if (Home_Fragment.spanCount == 2) {
+                                return 2;
+                            } else if (Home_Fragment.spanCount == 3)
+                                return 3;
+                        default:
+                            return 3;
+                    }
+                }
+            });
+
+            recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                @Override
+                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                    super.onScrolled(recyclerView, dx, dy);
+
+                    totalItemCount = gridLayoutManager.getItemCount();
+                    lastVisibleItem = gridLayoutManager.findLastVisibleItemPosition();
+
+                    if (!loading && totalItemCount <= (lastVisibleItem + visibleThreshold)) {
+                        // End has been reached
+                        // Do something
+                        if (onLoadMoreListener != null) {
+                            onLoadMoreListener.onLoadMore();
+                        }
+                        loading = true;
+                    }
+                }
+            });
+        }
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public int getItemViewType(int position) {
+        return wallpapersModels.get(position) != null ? VIEW_ITEM : VIEW_PROG;
+    }
 
-        Uri uri = Uri.parse(wallpapersModels.get(position).getWallpaperURL());
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        ImageRequest request = ImageRequestBuilder.newBuilderWithSource(uri)
-                .setResizeOptions(new ResizeOptions(320, 320))
-                .build();
-        holder.displayWallpaper.setController(
-                Fresco.newDraweeControllerBuilder()
-                        .setOldController(holder.displayWallpaper.getController())
-                        .setImageRequest(request)
-                        .build());
+        RecyclerView.ViewHolder recyclerVh;
+        switch (viewType) {
+            case VIEW_ITEM:
+                View v = LayoutInflater.from(parent.getContext()).inflate(
+                        R.layout.home_wallpaper_item, parent, false);
+                recyclerVh = new WallpapersViewHolder(v, context, wallpapersModels);
+                return recyclerVh;
+            case VIEW_PROG:
+                v = LayoutInflater.from(parent.getContext()).inflate(
+                        R.layout.load_more_progress_bar, parent, false);
+                recyclerVh = new ProgressViewHolder(v);
+                return recyclerVh;
+        }
+        return null;
+    }
+
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+
+
+        if (holder instanceof WallpapersViewHolder) {
+            Uri uri = Uri.parse(wallpapersModels.get(position).getWallpaperURL());
+            ((WallpapersViewHolder) holder).displayWallpaper.setImageURI(uri);
+            rvPosition = holder.getAdapterPosition();
+        } else
+            ((ProgressViewHolder) holder).progressBar.setIndeterminate(true);
+
+//        Uri uri = Uri.parse(wallpapersModels.get(position).getWallpaperURL());
+//
+//        ImageRequest request = ImageRequestBuilder.newBuilderWithSource(uri)
+//                .setResizeOptions(new ResizeOptions(320, 320))
+//                .build();
+//        holder.displayWallpaper.setController(
+//                Fresco.newDraweeControllerBuilder()
+//                        .setOldController(holder.displayWallpaper.getController())
+//                        .setImageRequest(request)
+//                        .build());
 
         //Glide.with(context).load(wallpapersModels.get(position).getWallpaperURL()).into(holder.displayWallpaper);
         //Picasso.with(context).load(wallpapers.get(position).getWallpaperUrl()).placeholder(R.drawable.load_animation).into(holder.wallpaper);
+    }
+
+    public void setLoaded(){
+        loading = false;
+    }
+
+    public void setOnLoadMoreListener(onLoadMoreListener onLoadMoreListener){
+        this.onLoadMoreListener = onLoadMoreListener;
     }
 
     @Override
@@ -64,32 +146,46 @@ public class SearchFragmentCustomAdapter extends RecyclerView.Adapter<SearchFrag
         return wallpapersModels.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public static class WallpapersViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         SimpleDraweeView displayWallpaper;
-        ArrayList<WallpapersModel> wallpapersModels;
+        ArrayList<WallpapersModel> wallpapersModels = new ArrayList<>();
         Context context;
 
-        public ViewHolder(View itemView, Context context, ArrayList<WallpapersModel> arrayList) {
+        public WallpapersViewHolder(View itemView, Context context, ArrayList<WallpapersModel> arrayList) {
             super(itemView);
-            displayWallpaper = itemView.findViewById(R.id.fresco_wall);
             this.context = context;
             this.wallpapersModels = arrayList;
+            displayWallpaper = itemView.findViewById(R.id.fresco_wall);
+
             itemView.setOnClickListener(this);
         }
-
 
         @Override
         public void onClick(View view) {
             int position = getAdapterPosition();
             //Toast.makeText(context, this.wallpapersModels.get(position).getWallpaperURL(), Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(this.context, FullWallpaperViewActivity.class);
-            //ActivityOptionsCompat activityOptionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(.context, R.id.fresco_wall, "sharedTransition");
+            //ActivityOptionsCompat activityOptionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(this.context);
             intent.putExtra("fullUrl", wallpapersModels.get(position).getWallpaperFullURL());
+            intent.putExtra("thumbUrl", wallpapersModels.get(position).getWallpaperURL());
             intent.putExtra("file_type", wallpapersModels.get(position).getFileType());
             intent.putExtra("id", wallpapersModels.get(position).getWallId());
-            intent.putExtra("caller", "Search");
+            intent.putExtra("caller", "Category");
+            intent.putExtra("position", position);
+            intent.putParcelableArrayListExtra("array", wallpapersModels);
             this.context.startActivity(intent);
+        }
+    }
+    public static class ProgressViewHolder extends RecyclerView.ViewHolder {
+        public ProgressBar progressBar;
+        public TextView textView;
+
+        public ProgressViewHolder(View v) {
+            super(v);
+            progressBar =  v.findViewById(R.id.progressBar);
+            textView = v.findViewById(R.id.textview);
+            textView.setPadding(0,0,0,0);
         }
     }
 }

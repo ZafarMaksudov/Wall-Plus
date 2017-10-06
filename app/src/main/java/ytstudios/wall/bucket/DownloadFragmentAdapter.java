@@ -152,12 +152,11 @@ public class DownloadFragmentAdapter extends RecyclerView.Adapter {
         @Override
         public void onClick(View view) {
             int position = getAdapterPosition();
-            makeText(context, paths.get(position), Toast.LENGTH_SHORT).show();
-//            Intent intent = new Intent();
-//            intent.setAction(Intent.ACTION_VIEW);
-//            intent.setDataAndType(Uri.parse(paths.get(position)), "image/*");
-//            intent.putExtra(Intent.EXTRA_STREAM, Uri.parse(paths.get(position)));
-//            this.context.startActivity(intent);
+            Intent intent = new Intent(context, FullWallpaperViewActivity.class);
+            intent.putExtra("paths", paths);
+            intent.putExtra("position", position);
+            intent.putExtra("caller", "Downloads");
+            this.context.startActivity(intent);
 
         }
     }
@@ -194,7 +193,7 @@ public class DownloadFragmentAdapter extends RecyclerView.Adapter {
                 Toast.makeText(context, "Wallpaper Applied Successfully", Toast.LENGTH_SHORT).show();
             } catch (Exception ex) {
                 ex.printStackTrace();
-                Toast.makeText(context, "Error applying wallpaper!", Toast.LENGTH_SHORT);
+                Toast.makeText(context, "Error applying wallpaper!", Toast.LENGTH_SHORT).show();
             }
         }
     }

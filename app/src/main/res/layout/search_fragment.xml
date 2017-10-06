@@ -26,7 +26,7 @@
                 android:drawableRight="@drawable/cancel_search"
                 android:hint="@string/search_query_hint"
                 android:imeOptions="actionSearch"
-                android:inputType="text"
+                android:inputType="textNoSuggestions|text"
                 android:maxLines="1"
                 android:padding="12dp"
                 android:textColor="@color/textColorHint"
@@ -39,7 +39,8 @@
             android:id="@+id/searchFragment_rv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/search_cardView">
+            android:layout_below="@id/search_cardView"
+            android:layout_marginBottom="60dp">
 
         </android.support.v7.widget.RecyclerView>
 
@@ -79,12 +80,12 @@
 
         <ImageView
             android:id="@+id/search_wall_placeholder"
-            android:layout_width="148dp"
-            android:layout_height="110dp"
+            android:layout_width="188dp"
+            android:layout_height="150dp"
             android:layout_below="@id/search_cardView"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="108dp"
-            android:src="@drawable/search_wall_2" />
+            android:layout_marginTop="130dp"
+            android:src="@drawable/searchwall" />
 
         <TextView
             android:id="@+id/search_net"

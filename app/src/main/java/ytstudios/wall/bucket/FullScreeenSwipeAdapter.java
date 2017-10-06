@@ -2,16 +2,17 @@ package ytstudios.wall.bucket;
 
 import android.app.Activity;
 import android.content.Context;
+import android.net.Uri;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.view.SimpleDraweeView;
 
+import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -24,6 +25,18 @@ class FullScreenSwipeAdapter extends PagerAdapter {
     ArrayList<WallpapersModel> arrayList;
     LayoutInflater layoutInflater;
 
+    ArrayList<String> path;
+
+    int position;
+
+    SimpleDraweeView draweeView;
+
+    public FullScreenSwipeAdapter(Activity activity, ArrayList<String> path, int position) {
+        this.activity = activity;
+        this.path = path;
+        this.position = position;
+    }
+
     public FullScreenSwipeAdapter(Activity activity, ArrayList<WallpapersModel> arrayList) {
         this.activity = activity;
         this.arrayList = arrayList;
@@ -32,7 +45,12 @@ class FullScreenSwipeAdapter extends PagerAdapter {
 
     @Override
     public int getCount() {
-        return this.arrayList.size();
+        if (arrayList != null) {
+            return this.arrayList.size();
+        } else {
+            return path.size();
+        }
+
     }
 
     @Override
@@ -43,21 +61,17 @@ class FullScreenSwipeAdapter extends PagerAdapter {
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
 
-        SimpleDraweeView draweeView;
-        Button downloadBtn,setWallBtn;
-
         layoutInflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View v = layoutInflater.inflate(R.layout.fullscreen_view_layout, container, false);
+        View v = layoutInflater.inflate(R.layout.fullwallpaper_view_layout, container, false);
 
         draweeView = v.findViewById(R.id.full_image_view);
-        downloadBtn = v.findViewById(R.id.downloadWallBtn);
-        setWallBtn = v.findViewById(R.id.setWallBtn);
+        if (arrayList != null) {
+            draweeView.setImageURI(arrayList.get(position).getWallpaperFullURL());
+        } else{
+            Uri imageUri= Uri.fromFile(new File(path.get(position)));
+            draweeView.setImageURI(imageUri);
+        }
 
-
-        draweeView.setImageURI(arrayList.get(position).getWallpaperFullURL());
-
-        downloadBtn.setText("DOWNLOAD");
-        setWallBtn.setText("SET");
 
         container.addView(v);
 
@@ -68,7 +82,7 @@ class FullScreenSwipeAdapter extends PagerAdapter {
 
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
-        container.removeView((CoordinatorLayout)object);
+        container.removeView((CoordinatorLayout) object);
     }
 }
 

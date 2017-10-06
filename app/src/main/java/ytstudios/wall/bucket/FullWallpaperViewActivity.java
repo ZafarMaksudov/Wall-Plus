@@ -1,20 +1,41 @@
 package ytstudios.wall.bucket;
 
 import android.app.Dialog;
+import android.app.WallpaperManager;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
-import android.view.Window;
+import android.util.Log;
+import android.view.Gravity;
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
-import com.facebook.drawee.view.SimpleDraweeView;
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+
+import static android.widget.Toast.makeText;
+import static ytstudios.wall.bucket.Home_Fragment.pageCount;
 
 /**
  * Created by Yugansh Tyagi on 15-09-2017.
@@ -22,248 +43,360 @@ import java.util.ArrayList;
 
 public class FullWallpaperViewActivity extends AppCompatActivity {
 
-    SimpleDraweeView full_imageView;
-    String encodedUrlFull, encodedUrlThumb, fileType;
-    int wallId;
-    Window window;
-    CharSequence options[] = new CharSequence[]{"Small - 1024x1024", "Medium - 2048x2048", "Large - 2732x2732"};
-
-    Button downloadWallBtn, setWallBtn;
-    CardView disableAdBlock;
-
-    private AdView bannerAd;
+    ViewPager viewPager;
+    FullScreenSwipeAdapter fullScreenSwipeAdapter;
+    ArrayList<WallpapersModel> arrayList;
 
     Toolbar toolbar;
 
-    private String ActivityCaller;
+    Button downloadWallBtn, setWallBtn;
 
-    private boolean visibility = true;
-    private boolean adblock = false;
+    String encodedUrlThumb, encodedUrlFull, fileType;
+    int wallId;
+
+    CharSequence options[] = new CharSequence[]{"Small - 1024x1024", "Medium - 2048x2048", "Large - 2732x2732"};
+
+    private boolean fullscreen = false;
+
+    CardView disableAdBlock;
+    AdView bannerAd;
+    boolean isAdblock;
 
     Dialog alertDialog;
     ProgressBar progressBar;
 
-    ViewPager viewPager;
-    FullScreenSwipeAdapter fullScreenSwipeAdapter;
-    ArrayList<WallpapersModel> arrayList;
+    private String ActivityCaller;
+
+    Toast toast;
+
+    ArrayList<String> path;
+    int pos;
+
+    WallpaperManager wallpaperManager;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        wallpaperManager = WallpaperManager.getInstance(FullWallpaperViewActivity.this);
+
         setContentView(R.layout.fullscreen_activity_view);
+
+        ActivityCaller = getIntent().getStringExtra("caller");
+        pos = getIntent().getIntExtra("position", 0);
+        Log.i("POSITION", String.valueOf(pos));
+
+        downloadWallBtn = findViewById(R.id.downloadWallBtn);
+        setWallBtn = findViewById(R.id.setWallBtn);
+        disableAdBlock = findViewById(R.id.disableAdBlock);
+
+        toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         viewPager = findViewById(R.id.view_pager);
 
-        arrayList = getIntent().getParcelableArrayListExtra("array");
-        fullScreenSwipeAdapter = new FullScreenSwipeAdapter(FullWallpaperViewActivity.this, arrayList);
+        if (ActivityCaller.equals("Downloads")) {
+            path = getIntent().getStringArrayListExtra("paths");
+            fullScreenSwipeAdapter = new FullScreenSwipeAdapter(FullWallpaperViewActivity.this, path, pos);
+            Log.i("POSITION INSIDE", String.valueOf(pos));
+            viewPager.setAdapter(fullScreenSwipeAdapter);
+            viewPager.setCurrentItem(pos);
+            viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                @Override
+                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                    String id[] = path.get(pos).split("Wallpaper");
+                    String title = "Wallpaper " + id[1];
+                    getSupportActionBar().setTitle(title);
+                    toolbar.setTitleTextColor(ContextCompat.getColor(FullWallpaperViewActivity.this, R.color.white));
+                    toolbar.setPadding(0, getStatusBarHeight(), 0, 0);
+                    toolbar.setBackgroundColor(ContextCompat.getColor(FullWallpaperViewActivity.this, R.color.translucentBlackColor));
+                    toolbar.setNavigationIcon(R.drawable.back_arrow);
+                    toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            onBackPressed();
+                        }
+                    });
+                }
 
-        viewPager.setAdapter(fullScreenSwipeAdapter);
+                @Override
+                public void onPageSelected(int position) {
+                    if(pos > position){
+                        //left
+                        pos--;
+                        Log.i("POSITION LEFT", String.valueOf(pos));
+                    }else if(pos < position){
+                        //right
+                        pos++;
+                        Log.i("POSITION RIGHT", String.valueOf(pos));
+                    }
+                }
 
-    }
-}
+                @Override
+                public void onPageScrollStateChanged(int state) {
 
-//    @Override
-//    protected void onCreate(@Nullable Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//
-//        setContentView(R.layout.full_wallpaper_view_activity);
-//
-//        ActivityCaller = getIntent().getStringExtra("caller");
-//
-//        toolbar = findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
-//        toolbar.setTitleTextColor(ContextCompat.getColor(FullWallpaperViewActivity.this, R.color.white));
-//        toolbar.setPadding(0, getStatusBarHeight(), 0, 0);
-//        toolbar.setBackgroundColor(ContextCompat.getColor(FullWallpaperViewActivity.this, R.color.translucentBlackColor));
-//        toolbar.setNavigationIcon(R.drawable.back_arrow);
-//        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                onBackPressed();
-//            }
-//        });
-//        String title = "Wallpaper " + String.valueOf(getIntent().getIntExtra("id", 0));
-//        getSupportActionBar().setTitle(title);
-//
-//        downloadWallBtn = findViewById(R.id.downloadWallBtn);
-//        setWallBtn = findViewById(R.id.setWallBtn);
-//        disableAdBlock = findViewById(R.id.disableAdBlock);
-//
-////        window = getWindow();
-////        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-////            window.getDecorView().setSystemUiVisibility(
-////                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-////                            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-////            Log.i("TRANS", "STATUS");
-////        }
-////        else if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
-////            window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-////        }
-//
-//        MobileAds.initialize(FullWallpaperViewActivity.this, getResources().getString(R.string.FULLSCREEN_BANNER_ID));
-//        bannerAd = new AdView(FullWallpaperViewActivity.this);
-//        bannerAd = findViewById(R.id.bannerAdView);
-//        final AdRequest adRequest = new AdRequest.Builder()
-//                .addTestDevice("02147518DD550E863FFAA08EA49B5F41")
-//                .addTestDevice("4F18060E4B4A11E00C6E6C3B8EEF6353")
-//                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-//                .build();
-//
-//        bannerAd.loadAd(adRequest);
-//        bannerAd.setAdListener(new AdListener() {
-//            @Override
-//            public void onAdFailedToLoad(int i) {
-//                disableAdBlock.setVisibility(View.VISIBLE);
-//                adblock = true;
-//            }
-//
-//            @Override
-//            public void onAdLoaded() {
-//                super.onAdLoaded();
-//                adblock = false;
-//                disableAdBlock.setVisibility(View.GONE);
-//            }
-//        });
-//
-//        encodedUrlFull = getIntent().getStringExtra("fullUrl");
-//        encodedUrlThumb = getIntent().getStringExtra("thumbUrl");
-//
-//        wallId = getIntent().getIntExtra("id", 0);
-//        fileType = "." + getIntent().getStringExtra("file_type");
-//
-//
-//        setWallBtn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                new setWall(getApplicationContext()).execute();
-//            }
-//        });
-//
-//        downloadWallBtn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//
-//                switch (ActivityCaller) {
-//                    case "Category":
-//                        new DownloadHandler.ImageDownloadAndSave(getApplicationContext()).execute(encodedUrlFull, "Wallpaper " + String.valueOf(wallId) + fileType);
-//                        makeText(getApplicationContext(), "Downloading " + "Wallpaper " + String.valueOf(wallId) + fileType, Toast.LENGTH_SHORT).show();
-//                        break;
-//
-//                    case "Search":
-//                        new DownloadHandler.ImageDownloadAndSave(getApplicationContext()).execute(encodedUrlFull, "Wallpaper " + String.valueOf(wallId) + fileType);
-//                        makeText(getApplicationContext(), "Downloading " + "Wallpaper " + String.valueOf(wallId) + fileType, Toast.LENGTH_SHORT).show();
-//                        break;
-//
-//                    case "Home":
-//                        try {
-//                            AlertDialog.Builder builder = new AlertDialog.Builder(FullWallpaperViewActivity.this, R.style.MyDialogTheme);
-//                            builder.setCancelable(false);
-//                            builder.setTitle("Select your option:");
-//                            builder.setItems(options, new DialogInterface.OnClickListener() {
-//                                @Override
-//                                public void onClick(DialogInterface dialog, int which) {
-//                                    switch (which) {
-//                                        case 0:
-//                                            makeText(getApplicationContext(), "Downloading Wallpaper " + String.valueOf(wallId) + "(S)" +fileType, Toast.LENGTH_SHORT).show();
-//                                            new DownloadHandler.ImageDownloadAndSave(getApplicationContext()).execute(encodedUrlFull, "Wallpaper " + String.valueOf(wallId) + fileType);
-//                                            Log.i("ENCODEDURL", encodedUrlFull);
-//                                            break;
-//                                        case 1:
-//                                            makeText(getApplicationContext(), "Downloading Wallpaper " + String.valueOf(wallId) + "(M)" +fileType, Toast.LENGTH_SHORT).show();
-//                                            encodedUrlFull = encodedUrlFull.replace("-6-", "-8-");
-//                                            new DownloadHandler.ImageDownloadAndSave(getApplicationContext()).execute(encodedUrlFull, "Wallpaper " + String.valueOf(wallId) + fileType);
-//                                            Log.i("ENCODEDURL", encodedUrlFull);
-//                                            break;
-//                                        case 2:
-//                                            makeText(getApplicationContext(), "Downloading Wallpaper " + String.valueOf(wallId) + "(L)" +fileType, Toast.LENGTH_SHORT).show();
-//                                            encodedUrlFull = encodedUrlFull.replace("-6-", "-40-");
-//                                            new DownloadHandler.ImageDownloadAndSave(getApplicationContext()).execute(encodedUrlFull, "Wallpaper " + String.valueOf(wallId) + fileType);
-//                                            Log.i("ENCODEDURL", encodedUrlFull);
-//                                            break;
-//                                    }
-//                                }
-//                            });
-//                            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-//                                @Override
-//                                public void onClick(DialogInterface dialog, int which) {
-//
-//                                }
-//                            });
-//                            builder.show();
-//                        } catch (Exception e) {
-//                            Log.i("EXCEPTION ", e.toString());
+                }
+            });
+            downloadWallBtn.setVisibility(View.GONE);
+            setWallBtn.setVisibility(View.VISIBLE);
+        } else {
+            arrayList = getIntent().getParcelableArrayListExtra("array");
+            fullScreenSwipeAdapter = new FullScreenSwipeAdapter(FullWallpaperViewActivity.this, arrayList);
+
+            viewPager.setAdapter(fullScreenSwipeAdapter);
+            viewPager.setCurrentItem(pos);
+            viewPager.setOnTouchListener(new View.OnTouchListener() {
+                private float pointX;
+                private float pointY;
+                private int tolerance = 50;
+
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    switch (event.getAction()) {
+                        case MotionEvent.ACTION_MOVE:
+                            return false; //This is important, if you return TRUE the action of swipe will not take place.
+                        case MotionEvent.ACTION_DOWN:
+                            pointX = event.getX();
+                            pointY = event.getY();
+                            Log.i("DOWN", String.valueOf(pointX));
+                            Log.i("DOWN", String.valueOf(pointY));
+                            break;
+                        case MotionEvent.ACTION_UP:
+                            boolean sameX = pointX + tolerance > event.getX() && pointX - tolerance < event.getX();
+                            boolean sameY = pointY + tolerance > event.getY() && pointY - tolerance < event.getY();
+                            Log.i("UP", String.valueOf(sameX));
+                            Log.i("UP", String.valueOf(sameY));
+                            if (sameX && sameY) {
+                                //The user "clicked" certain point in the screen or just returned to the same position an raised the finger
+                                if (fullscreen == false) {
+                                    toolbar.setVisibility(View.INVISIBLE);
+                                    disableAdBlock.setVisibility(View.INVISIBLE);
+                                    bannerAd.setVisibility(View.INVISIBLE);
+                                    downloadWallBtn.setVisibility(View.INVISIBLE);
+                                    setWallBtn.setVisibility(View.INVISIBLE);
+                                    fullscreen = true;
+                                } else if (fullscreen == true) {
+                                    toolbar.setVisibility(View.VISIBLE);
+                                    if (isAdblock) {
+                                        disableAdBlock.setVisibility(View.VISIBLE);
+                                    }
+                                    bannerAd.setVisibility(View.VISIBLE);
+                                    downloadWallBtn.setVisibility(View.VISIBLE);
+                                    setWallBtn.setVisibility(View.VISIBLE);
+                                    fullscreen = false;
+                                }
+                            }
+                    }
+                    return false;
+                }
+            });
+            viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                @Override
+                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                    String title = "Wallpaper " + String.valueOf(arrayList.get(position).getWallId());
+                    getSupportActionBar().setTitle(title);
+                    toolbar.setTitleTextColor(ContextCompat.getColor(FullWallpaperViewActivity.this, R.color.white));
+                    toolbar.setPadding(0, getStatusBarHeight(), 0, 0);
+                    toolbar.setBackgroundColor(ContextCompat.getColor(FullWallpaperViewActivity.this, R.color.translucentBlackColor));
+                    toolbar.setNavigationIcon(R.drawable.back_arrow);
+                    toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            onBackPressed();
+                        }
+                    });
+                    encodedUrlFull = arrayList.get(position).getWallpaperFullURL();
+                }
+
+                @Override
+                public void onPageSelected(int position) {
+                    if ((arrayList.size() - position <= 2)) {
+                        Log.i("LOAD MORE", "PLEASE");
+                        Log.i("PAGE COUNT", String.valueOf(pageCount));
+                        Intent intent = new Intent("LoadMore");
+                        LocalBroadcastManager.getInstance(FullWallpaperViewActivity.this).sendBroadcast(intent);
+                        Log.i("BroadCast LoadMore", "SENT");
+                        viewPager.invalidate();
+                    }
+                }
+
+                @Override
+                public void onPageScrollStateChanged(int state) {
+
+                }
+            });
+
+        }
+
+//        window = getWindow();
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//            window.getDecorView().setSystemUiVisibility(
+//                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+//                            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+//            Log.i("TRANS", "STATUS");
+//        }
+//        else if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
+//            window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+//        }
+
+        MobileAds.initialize(FullWallpaperViewActivity.this, getResources().getString(R.string.FULLSCREEN_BANNER_ID));
+        bannerAd = new AdView(FullWallpaperViewActivity.this);
+        bannerAd = findViewById(R.id.bannerAdView);
+        final AdRequest adRequest = new AdRequest.Builder()
+                .addTestDevice("02147518DD550E863FFAA08EA49B5F41")
+                .addTestDevice("4F18060E4B4A11E00C6E6C3B8EEF6353")
+                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                .build();
+
+        bannerAd.loadAd(adRequest);
+        bannerAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdFailedToLoad(int i) {
+                disableAdBlock.setVisibility(View.VISIBLE);
+                isAdblock = true;
+            }
+
+            @Override
+            public void onAdLoaded() {
+                super.onAdLoaded();
+                isAdblock = false;
+                disableAdBlock.setVisibility(View.GONE);
+            }
+        });
+
+        encodedUrlFull = getIntent().getStringExtra("fullUrl");
+        encodedUrlThumb = getIntent().getStringExtra("thumbUrl");
+
+        wallId = getIntent().getIntExtra("id", 0);
+        fileType = "." + getIntent().getStringExtra("file_type");
+
+
+        setWallBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new setWall(getApplicationContext()).execute();
+            }
+        });
+
+        downloadWallBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                switch (ActivityCaller) {
+                    case "Category":
+                        new DownloadHandler.ImageDownloadAndSave(getApplicationContext()).execute(encodedUrlFull, "Wallpaper " + String.valueOf(wallId) + fileType);
+                        toast = makeText(getApplicationContext(), "Downloading " + "Wallpaper " + String.valueOf(wallId) + fileType, Toast.LENGTH_SHORT);
+                        //toast.setGravity(Gravity.BOTTOM, 0, 330);
+                        toast.show();
+                        break;
+
+                    case "Search":
+                        new DownloadHandler.ImageDownloadAndSave(getApplicationContext()).execute(encodedUrlFull, "Wallpaper " + String.valueOf(wallId) + fileType);
+                        toast = Toast.makeText(getApplicationContext(), "Downloading " + "Wallpaper " + String.valueOf(wallId) + fileType, Toast.LENGTH_SHORT);
+                        //toast.setGravity(Gravity.BOTTOM, 0, 330);
+                        toast.show();
+                        break;
+
+                    case "Home":
+                        try {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(FullWallpaperViewActivity.this, R.style.MyDialogTheme);
+                            builder.setCancelable(false);
+                            builder.setTitle("Select your option:");
+                            builder.setItems(options, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    switch (which) {
+                                        case 0:
+                                            toast = Toast.makeText(getApplicationContext(), "Downloading " + "Wallpaper " + String.valueOf(wallId) + "(S)" + fileType, Toast.LENGTH_SHORT);
+                                            //toast.setGravity(Gravity.BOTTOM, 0, 330);
+                                            toast.show();
+                                            new DownloadHandler.ImageDownloadAndSave(getApplicationContext()).execute(encodedUrlFull, "Wallpaper " + String.valueOf(wallId) + fileType);
+                                            Log.i("ENCODEDURL", encodedUrlFull);
+                                            break;
+                                        case 1:
+                                            toast = Toast.makeText(getApplicationContext(), "Downloading " + "Wallpaper " + String.valueOf(wallId) + "(M)" + fileType, Toast.LENGTH_SHORT);
+                                            //toast.setGravity(Gravity.BOTTOM, 0, 330);
+                                            toast.show();
+                                            encodedUrlFull = encodedUrlFull.replace("-6-", "-8-");
+                                            new DownloadHandler.ImageDownloadAndSave(getApplicationContext()).execute(encodedUrlFull, "Wallpaper " + String.valueOf(wallId) + fileType);
+                                            Log.i("ENCODEDURL", encodedUrlFull);
+                                            break;
+                                        case 2:
+                                            toast = Toast.makeText(getApplicationContext(), "Downloading " + "Wallpaper " + String.valueOf(wallId) + "(L)" + fileType, Toast.LENGTH_SHORT);
+                                            //toast.setGravity(Gravity.BOTTOM, 0, 330);
+                                            toast.show();
+                                            encodedUrlFull = encodedUrlFull.replace("-6-", "-40-");
+                                            new DownloadHandler.ImageDownloadAndSave(getApplicationContext()).execute(encodedUrlFull, "Wallpaper " + String.valueOf(wallId) + fileType);
+                                            Log.i("ENCODEDURL", encodedUrlFull);
+                                            break;
+                                    }
+                                }
+                            });
+                            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                }
+                            });
+                            builder.show();
+                        } catch (Exception e) {
+                            Log.i("EXCEPTION ", e.toString());
+                        }
+                        break;
+//                    case "Downloads":
+//                        File fdelete = new File(path);
+//                        Log.i("FILE", fdelete.toString());
+//                        if (fdelete.exists()) {
+//                            fdelete.delete();
 //                        }
+//                        Intent mediaScanIntent = new Intent(
+//                                Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+//                        Uri contentUri = Uri.fromFile(fdelete); //out is your file you saved/deleted/moved/copied
+//                        mediaScanIntent.setData(contentUri);
+//                        FullWallpaperViewActivity.this.sendBroadcast(mediaScanIntent);
+//                        Intent intent = new Intent("Refresh");
+//                        LocalBroadcastManager.getInstance(FullWallpaperViewActivity.this).sendBroadcast(intent);
 //                        break;
-//                }
-//            }
-//        });
-//
-//        Fresco.initialize(this);
-//
-//        //avLoadingIndicatorView = findViewById(R.id.avi);
-//        full_imageView = findViewById(R.id.full_image_view);
-//        full_imageView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                if (visibility == true) {
-//                    downloadWallBtn.setVisibility(View.GONE);
-//                    setWallBtn.setVisibility(View.GONE);
-//                    bannerAd.setVisibility(View.GONE);
-//                    toolbar.setVisibility(View.GONE);
-//                    disableAdBlock.setVisibility(View.GONE);
-//                    getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-//                    visibility = false;
-//                } else if (visibility == false) {
-//                    downloadWallBtn.setVisibility(View.VISIBLE);
-//                    setWallBtn.setVisibility(View.VISIBLE);
-//                    if(adblock){
-//                        disableAdBlock.setVisibility(View.VISIBLE);
-//                    }
-//                    else disableAdBlock.setVisibility(View.GONE);
-//                    bannerAd.setVisibility(View.VISIBLE);
-//                    toolbar.setVisibility(View.VISIBLE);
-//                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-//
-//                    visibility = true;
-//                }
-//
-//
-//            }
-//        });
+
+                }
+            }
+        });
+
+        Fresco.initialize(this);
+
 //        this.runOnUiThread(new Runnable() {
 //            @Override
 //            public void run() {
 //                new loadWall().execute(encodedUrlFull);
 //            }
 //        });
-//
-//    }
-//
-//    @Override
-//    public void onPause() {
-//        if (bannerAd != null) {
-//            bannerAd.pause();
-//        }
-//        super.onPause();
-//    }
-//
-//    @Override
-//    public void onResume() {
-//        super.onResume();
-//        if (bannerAd != null) {
-//            bannerAd.resume();
-//        }
-//    }
-//
-//    @Override
-//    public void onDestroy() {
-//        if (bannerAd != null) {
-//            bannerAd.destroy();
-//        }
-//        super.onDestroy();
-//    }
-//
+
+    }
+
+    @Override
+    public void onPause() {
+        if (bannerAd != null) {
+            bannerAd.pause();
+        }
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (bannerAd != null) {
+            bannerAd.resume();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        if (bannerAd != null) {
+            bannerAd.destroy();
+        }
+        super.onDestroy();
+    }
+
 //
 //    class loadWall extends AsyncTask<String, Void, Uri> {
 //
@@ -285,68 +418,73 @@ public class FullWallpaperViewActivity extends AppCompatActivity {
 //        }
 //
 //    }
-//
-//    class setWall extends AsyncTask<Void, Void, Void> {
-//
-//        Context context;
-//        Bitmap result;
-//
-//        public setWall(Context context) {
-//            this.context = context;
-//            this.result = null;
-//        }
-//
-//        @Override
-//        protected Void doInBackground(Void... voids) {
-//
-//            try {
-//                result = Picasso.with(FullWallpaperViewActivity.this)
-//                        .load(encodedUrlFull)
-//                        .get();
-//            } catch (Exception e) {
-//                Log.i("PICASSO EXCEPTION", e.toString());
-//            }
-//            return null;
-//        }
-//
-//        @Override
-//        protected void onPreExecute() {
-//            alertDialog = new Dialog(FullWallpaperViewActivity.this);
-//            alertDialog.setCancelable(false);
-//            alertDialog.setContentView(R.layout.setwall_dialog_layout);
-//            progressBar = alertDialog.findViewById(R.id.settingWall);
-//            progressBar.setIndeterminate(true);
-//            alertDialog.show();
-//
-//        }
-//
-//        @Override
-//        protected void onPostExecute(Void aVoid) {
-//            WallpaperManager wallpaperManager = WallpaperManager.getInstance(FullWallpaperViewActivity.this);
-//            try {
-//                wallpaperManager.setBitmap(result);
-//                Toast toast = Toast.makeText(context, "Wallpaper Applied Successfully", Toast.LENGTH_SHORT);
-//                toast.setGravity(Gravity.BOTTOM, 0, 220);
-//                toast.show();
-//                alertDialog.hide();
-//            } catch (Exception ex) {
-//                ex.printStackTrace();
-//                Toast toast = makeText(context, "Error applying wallpaper!", Toast.LENGTH_SHORT);
-//                toast.setGravity(Gravity.BOTTOM, 0 ,220);
-//                toast.show();
-//                alertDialog.hide();
-//            }
-//        }
-//    }
-//
-//
-//    public int getStatusBarHeight() {
-//        int result = 0;
-//        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
-//        if (resourceId > 0) {
-//            result = getResources().getDimensionPixelSize(resourceId);
-//        }
-//        return result;
-//    }
-//
-//}
+
+    class setWall extends AsyncTask<Void, Void, Void> {
+
+        Context context;
+        Bitmap result;
+
+        public setWall(Context context) {
+            this.context = context;
+            this.result = null;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+
+            if (ActivityCaller.equals("Downloads")) {
+                try {
+                    result = BitmapFactory.decodeFile(path.get(pos));
+                } catch (Exception e) {
+                    Log.i("PICASSO EXCEPTION", e.toString());
+                }
+            }
+            else {
+                try {
+                    result = Picasso.with(FullWallpaperViewActivity.this)
+                            .load(encodedUrlFull)
+                            .get();
+                } catch (Exception e) {
+                    Log.i("PICASSO EXCEPTION", e.toString());
+                }
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            alertDialog = new Dialog(FullWallpaperViewActivity.this);
+            alertDialog.setCancelable(false);
+            alertDialog.setContentView(R.layout.setwall_dialog_layout);
+            progressBar = alertDialog.findViewById(R.id.settingWall);
+            progressBar.setIndeterminate(true);
+            alertDialog.show();
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            try {
+                wallpaperManager.setBitmap(result);
+                Toast toast = makeText(context, "Wallpaper Applied Successfully", Toast.LENGTH_SHORT);
+                toast.setGravity(Gravity.BOTTOM, 0, 330);
+                toast.show();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                Toast toast = makeText(context, "Error applying wallpaper!", Toast.LENGTH_SHORT);
+                toast.setGravity(Gravity.BOTTOM, 0, 330);
+                toast.show();
+            }
+            alertDialog.hide();
+        }
+    }
+
+    public int getStatusBarHeight() {
+        int result = 0;
+        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            result = getResources().getDimensionPixelSize(resourceId);
+        }
+        return result;
+    }
+}
+

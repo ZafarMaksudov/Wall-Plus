@@ -51,7 +51,9 @@ public class DownloadHandler extends AppCompatActivity{
         @Override
         protected void onPostExecute(Bitmap bitmap) {
             super.onPostExecute(bitmap);
-            Toast.makeText(this.context,"Downloaded!",Toast.LENGTH_SHORT).show();
+            Toast toast = Toast.makeText(context, "Downloaded!", Toast.LENGTH_SHORT);
+            //toast.setGravity(Gravity.BOTTOM, 0, 330);
+            toast.show();
             Intent intent = new Intent("Refresh");
             LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
         }

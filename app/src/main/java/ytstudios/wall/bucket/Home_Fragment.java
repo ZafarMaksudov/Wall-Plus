@@ -1,7 +1,9 @@
 package ytstudios.wall.bucket;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -11,6 +13,7 @@ import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -57,7 +60,7 @@ public class Home_Fragment extends Fragment {
 
     boolean isNetworkConnected;
 
-    private static int pageCount = 2;
+    public static int pageCount = 2;
 
     protected Handler handler;
 
@@ -74,6 +77,10 @@ public class Home_Fragment extends Fragment {
         View view = inflater.inflate(R.layout.home_fragment, null);
 
         API_KEY = getResources().getString(R.string.API_KEY);
+
+        LocalBroadcastManager.getInstance(getContext()).registerReceiver(broadcastReceiver,
+                new IntentFilter("LoadMore"));
+
 
         noNetImage = view.findViewById(R.id.noNet);
         noNetText = view.findViewById(R.id.noNetText);
@@ -140,7 +147,7 @@ public class Home_Fragment extends Fragment {
         }
     }
 
-    class loadMore extends AsyncTask<String, Integer, String> {
+    public class loadMore extends AsyncTask<String, Integer, String> {
 
         List list;
         List id;
@@ -427,4 +434,12 @@ public class Home_Fragment extends Fragment {
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
+
+    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            new loadMore().execute("http://papers.co/android/page/" + pageCount + "/");
+            Log.i("BroadCast LoadMore", "RECEIVED");
+        }
+    };
 }

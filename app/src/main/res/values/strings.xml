@@ -6,12 +6,16 @@
 
     <!--App Strings -->
     <string name="search">Tell me what you are searching for , \n I will do the rest!</string>
+    <string name="search404">Sorry, No wallpapers found for \n</string>
     <string name="search_query_hint">What are you looking for ?</string>
     <string name="search_query">Searching wallpapers for </string>
     <string name="downloadWallBtn">Download</string>
     <string name="setWallBtn">Set</string>
+    <string name="delete">Delete</string>
 
     <string name="applyingWall">Applying Wallpaper</string>
+
+    <string name="smashicons">https://www.flaticon.com/authors/smashicons</string>
 
 
     <!--Download Location-->

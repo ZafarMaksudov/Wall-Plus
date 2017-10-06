@@ -158,6 +158,8 @@ public class CategoryDetailsFragmentAdapter extends RecyclerView.Adapter {
             intent.putExtra("file_type", wallpapersModels.get(position).getFileType());
             intent.putExtra("id", wallpapersModels.get(position).getWallId());
             intent.putExtra("caller", "Category");
+            intent.putExtra("position", position);
+            intent.putParcelableArrayListExtra("array", wallpapersModels);
             this.context.startActivity(intent);
         }
     }
@@ -169,7 +171,7 @@ public class CategoryDetailsFragmentAdapter extends RecyclerView.Adapter {
             super(v);
             progressBar =  v.findViewById(R.id.progressBar);
             textView = v.findViewById(R.id.textview);
-            textView.setPadding(0,0,0,100);
+            textView.setPadding(0,0,0,0);
         }
     }
 }

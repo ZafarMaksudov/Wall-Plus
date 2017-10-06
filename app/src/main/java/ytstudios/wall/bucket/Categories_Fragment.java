@@ -58,12 +58,14 @@ public class Categories_Fragment extends Fragment {
     private void initializeCategories() {
         categories = new ArrayList<>();
         categories.add(new Categories_Model_Class("Abstract", R.drawable.abstractimg));
-        categories.add(new Categories_Model_Class("Amoled", R.drawable.amoled));
+        //categories.add(new Categories_Model_Class("Amoled", R.drawable.amoled));
         categories.add(new Categories_Model_Class("Animal", R.drawable.animal));
         categories.add(new Categories_Model_Class("Anime", R.drawable.anime));
         categories.add(new Categories_Model_Class("Cityscape", R.drawable.city));
-        categories.add(new Categories_Model_Class("Minimal", R.drawable.minimal));
+        categories.add(new Categories_Model_Class("Comics", R.drawable.comics));
+        //categories.add(new Categories_Model_Class("Minimal", R.drawable.minimal));
         categories.add(new Categories_Model_Class("Nature", R.drawable.nature));
+        categories.add(new Categories_Model_Class("Patterns", R.drawable.patterns));
         categories.add(new Categories_Model_Class("Vehicles", R.drawable.cars));
 
     }

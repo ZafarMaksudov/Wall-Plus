@@ -3,11 +3,13 @@ package ytstudios.wall.bucket;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -23,17 +25,13 @@ import android.widget.TextView;
 
 import com.airbnb.lottie.LottieAnimationView;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
-
-import static ytstudios.wall.bucket.Home_Fragment.API_KEY;
+import java.util.List;
 
 /**
  * Created by Yugansh Tyagi on 10-09-2017.
@@ -44,7 +42,7 @@ public class Search_Fragment extends Fragment {
     EditText searchBar;
     CardView searchView;
     ImageView imageView;
-    TextView searchNet,searchQueryText,searchQuery;
+    TextView searchNet, searchQueryText, searchQuery;
     LottieAnimationView animationView;
 
     ArrayList<WallpapersModel> wallpapersModels;
@@ -53,7 +51,11 @@ public class Search_Fragment extends Fragment {
 
     String query;
 
+    Handler handler;
+
     GridLayoutManager gridLayoutManager;
+
+    private static int numPages, currPg = 1;
 
     @Nullable
     @Override
@@ -67,17 +69,47 @@ public class Search_Fragment extends Fragment {
 
         searchView = view.findViewById(R.id.search_cardView);
 
+        handler = new Handler();
+
         recyclerView = view.findViewById(R.id.searchFragment_rv);
         gridLayoutManager = new GridLayoutManager(getContext(), 3);
         recyclerView.setLayoutManager(gridLayoutManager);
 
         searchBar = view.findViewById(R.id.search_bar);
 
-        searchFragmentCustomAdapter = new SearchFragmentCustomAdapter(wallpapersModels, getContext(), searchBar.getText().toString());
+        searchFragmentCustomAdapter = new SearchFragmentCustomAdapter(wallpapersModels, getContext(), searchBar.getText().toString(), recyclerView);
         recyclerView.setAdapter(searchFragmentCustomAdapter);
         recyclerView.addItemDecoration(new RecyclerItemDecoration(2));
 
-        imageView = view.findViewById(R.id.search_wall_placeholder) ;
+        searchFragmentCustomAdapter.setOnLoadMoreListener(new onLoadMoreListener() {
+            @Override
+            public void onLoadMore() {
+                Log.i("IN LOADMORE", "WITHOUT IF");
+                if (currPg <= numPages) {
+                    Log.i("CURRENT SET LOAD", String.valueOf(currPg));
+                    Log.i("NUM OF PAGES SET LOAD", String.valueOf(numPages));
+                    wallpapersModels.add(null);
+                    searchFragmentCustomAdapter.notifyItemInserted(wallpapersModels.size() - 1);
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            wallpapersModels.remove(wallpapersModels.size() - 1);
+                            searchFragmentCustomAdapter.notifyItemRemoved(wallpapersModels.size());
+                            Log.i("REMOVED", "NULL");
+                            //add items one by one
+                            Log.i("INIT SEARCH", "DATA");
+                            new loadMore().execute("https://mobile.alphacoders.com/by-resolution/1/1080x1920-Wallpapers/?search=" + query + "&page=" + currPg);
+                            searchFragmentCustomAdapter.setLoaded();
+                            Log.i("CURRENT ", String.valueOf(currPg));
+                            Log.i("NUM OF PAGES  ", String.valueOf(numPages));
+                            Log.i("LOAD MORE", "https://mobile.alphacoders.com/by-resolution/1/1080x1920-Wallpapers/?search=" + query + "&page=" + currPg);
+                        }
+                    }, 700);
+                }
+            }
+        });
+
+        imageView = view.findViewById(R.id.search_wall_placeholder);
         searchNet = view.findViewById(R.id.search_net);
         searchQueryText = view.findViewById(R.id.searching_query);
         animationView = view.findViewById(R.id.animation_view);
@@ -88,6 +120,8 @@ public class Search_Fragment extends Fragment {
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
 
                 query = searchBar.getText().toString();
+                currPg = 1;
+                Log.i("CURRENT ", String.valueOf(currPg));
 
                 if (i == EditorInfo.IME_ACTION_SEARCH && query.length() > 2) {
 
@@ -95,7 +129,8 @@ public class Search_Fragment extends Fragment {
                         @Override
                         public void run() {
                             //https://wall.alphacoders.com/api2.0/get.php?auth="+API_KEY+"&method=highest_rated&page=10&info_level=2
-                            new ReadJSON().execute("https://wall.alphacoders.com/api2.0/get.php?auth=" + API_KEY + "&method=search&term="+ query );
+                            //https://wall.alphacoders.com/api2.0/get.php?auth=" + API_KEY + "&method=search&term="+ query
+                            new ReadJSON().execute("https://mobile.alphacoders.com/by-resolution/1/1080x1920-Wallpapers?search=" + query);
                         }
                     });
 
@@ -113,15 +148,17 @@ public class Search_Fragment extends Fragment {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 final int DRAWABLE_RIGHT = 2;
-                if(motionEvent.getAction() == MotionEvent.ACTION_UP) {
-                    if(motionEvent.getRawX() >= (searchBar.getRight() - searchBar.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
+                if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                    if (motionEvent.getRawX() >= (searchBar.getRight() - searchBar.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
                         // your action here
                         animationView.pauseAnimation();
                         animationView.setVisibility(View.INVISIBLE);
                         searchQueryText.setVisibility(View.INVISIBLE);
                         searchQuery.setVisibility(View.INVISIBLE);
 
+                        searchNet.setText(getResources().getString(R.string.search));
                         searchNet.setVisibility(View.VISIBLE);
+                        imageView.setImageResource(R.drawable.searchwall);
                         imageView.setVisibility(View.VISIBLE);
 
                         searchBar.setText("");
@@ -138,32 +175,126 @@ public class Search_Fragment extends Fragment {
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
-        inflater.inflate(R.menu.menu,menu);
+        inflater.inflate(R.menu.menu, menu);
         return;
     }
+
+    class loadMore extends AsyncTask<String, Integer, String> {
+
+        @Override
+        protected String doInBackground(String... params) {
+            try {
+                Log.i("IN LOAD MORE", "TRUE");
+                Document document = Jsoup.connect(params[0]).get();
+                Element wall = document.select("div.thumb-container").first();
+                Elements img = wall.getElementsByAttribute("src");
+                Elements widList = wall.getElementsByAttribute("alt");
+                List list = img.eachAttr("src");
+                List id = widList.eachAttr("alt");
+
+                if (currPg <= numPages) {
+                    Log.i("IN IF CONDN", "TRUE");
+                    for (int i = 0; i < list.size(); i++) {
+                        String wallUrl = list.get(i).toString();
+                        String wallId = id.get(i).toString();
+                        String sep[] = wallId.split("Wallpaper ");
+                        wallpapersModels.add(wallpapersModels.size() - 1, new WallpapersModel(
+                                wallUrl,///
+                                wallUrl.replace("thumb-", ""),
+                                "jpg",
+                                Integer.valueOf(sep[1])
+                        ));
+                    }
+                } else return null;
+            } catch (Exception e) {
+                Log.i("ERROR 2", e.toString());
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            searchFragmentCustomAdapter.notifyDataSetChanged();
+            currPg++;
+        }
+    }
+
 
     class ReadJSON extends AsyncTask<String, Integer, String> {
 
 
         @Override
         protected String doInBackground(String... params) {
-            return readURL(params[0]);
+            try {
+                currPg = 1;
+                Log.i("NUM OF PAGES ", String.valueOf(numPages));
+                Document document = Jsoup.connect(params[0]).get();
+                Element wall = document.select("div.thumb-container").first();
+                //Log.i("RESULT", wall.toString());
+                Elements img = wall.getElementsByAttribute("src");
+                Elements widList = wall.getElementsByAttribute("alt");
+                Element page = document.select("ul.pagination.pagination").first();
+                Element result = document.select("div.searchTitle.alert.alert-warning").first();
+                if (result == null) {
+                    if (page != null) {
+                        Elements pageNum = page.getElementsByAttribute("href");
+                        List pageText = pageNum.eachText();
+                        String temp = pageText.get(pageText.size() - 2).toString();
+                        numPages = Integer.parseInt(temp);
+                        Log.i("IN READJSON CURRENT", String.valueOf(currPg));
+                        Log.i("IN READJSON", String.valueOf(numPages));
+                    } else numPages = 1;
+
+                    List list = img.eachAttr("src");
+                    List id = widList.eachAttr("alt");
+                    Log.i("ARRAYLIST", list.toString());
+                    Log.i("ID", id.toString());
+
+                    for (int i = 0; i < list.size(); i++) {
+                        String wallUrl = list.get(i).toString();
+                        String wallId = id.get(i).toString();
+                        String sep[] = wallId.split("Wallpaper ");
+                        wallpapersModels.add(new WallpapersModel(
+                                wallUrl,///
+                                wallUrl.replace("thumb-", ""),
+                                "jpg",
+                                Integer.valueOf(sep[1])
+                        ));
+                    }
+                } else {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            imageView.setImageResource(R.drawable.searchwall404);
+                            imageView.setVisibility(View.VISIBLE);
+                            searchNet.setText(getResources().getString(R.string.search404) + query);
+                            searchNet.setVisibility(View.VISIBLE);
+                        }
+                    });
+                }
+                //Log.i("RESULT", result.toString());
+                Log.i("DATA OF SITE ", wallpapersModels.toString());
+            } catch (Exception e) {
+                Log.i("ERROR LOLO", e.toString());
+            }
+            return null;
         }
 
         @Override
         protected void onPreExecute() {
+            wallpapersModels.clear();
             recyclerView.setVisibility(View.INVISIBLE);
 
             animationView.setVisibility(View.VISIBLE);
-            searchQueryText.setVisibility(View.VISIBLE);
 
             imageView.setVisibility(View.INVISIBLE);
             searchNet.setVisibility(View.INVISIBLE);
 
             searchQueryText.setVisibility(View.VISIBLE);
-            searchQueryText.setText("Searching wallpapers!");
+            searchQueryText.setText(getResources().getString(R.string.search_query));
             searchQuery.setText(query.toUpperCase());
             searchQuery.setVisibility(View.VISIBLE);
 
@@ -174,56 +305,34 @@ public class Search_Fragment extends Fragment {
 
         @Override
         protected void onPostExecute(String content) {
-            wallpapersModels.clear();
             recyclerView.setVisibility(View.VISIBLE);
             recyclerView.scrollToPosition(0);
             animationView.pauseAnimation();
             animationView.setVisibility(View.INVISIBLE);
             searchQueryText.setVisibility(View.INVISIBLE);
             searchQuery.setVisibility(View.INVISIBLE);
-
-            try {
-                JSONObject jsonObject = new JSONObject(content);
-                JSONArray jsonArray =  jsonObject.getJSONArray("wallpapers");
-
-                for(int i =0;i<jsonArray.length(); i++){
-                    JSONObject wallpaperObject = jsonArray.getJSONObject(i);
-                    wallpapersModels.add(new WallpapersModel(
-                            wallpaperObject.getString("url_thumb"),
-                            wallpaperObject.getString("url_image"),
-                            wallpaperObject.getString("file_type"),
-                            wallpaperObject.getInt("id")
-
-                    ));
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+//            try {
+//                JSONObject jsonObject = new JSONObject(content);
+//                JSONArray jsonArray =  jsonObject.getJSONArray("wallpapers");
+//
+//                for(int i =0;i<jsonArray.length(); i++){
+//                    JSONObject wallpaperObject = jsonArray.getJSONObject(i);
+//                    wallpapersModels.add(new WallpapersModel(
+//                            wallpaperObject.getString("url_thumb"),
+//                            wallpaperObject.getString("url_image"),
+//                            wallpaperObject.getString("file_type"),
+//                            wallpaperObject.getInt("id")
+//
+//                    ));
+//                }
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
             searchFragmentCustomAdapter.notifyDataSetChanged();
+            currPg++;
+            Log.i("POST EXECUTE", "ME HUN MAI");
+            searchFragmentCustomAdapter.setLoaded();
         }
-
-
-    }
-
-    private static String readURL(String theUrl) {
-        StringBuilder content = new StringBuilder();
-        try {
-            // create a url object
-            URL url = new URL(theUrl);
-            // create a urlconnection object
-            URLConnection urlConnection = url.openConnection();
-            // wrap the urlconnection in a bufferedreader
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
-            String line;
-            // read from the urlconnection via the bufferedreader
-            while ((line = bufferedReader.readLine()) != null) {
-                content.append(line + "\n");
-            }
-            bufferedReader.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return content.toString();
     }
 }
 
