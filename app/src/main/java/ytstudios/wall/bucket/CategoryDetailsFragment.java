@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
+import android.widget.ProgressBar;
 
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
@@ -51,6 +52,8 @@ public class CategoryDetailsFragment extends Activity {
     AdView bannerAd;
     CardView disableAdBlock;
 
+    ProgressBar  progressBar;
+
     private static int numPages, currPg = 1;
 
     @Override
@@ -72,6 +75,8 @@ public class CategoryDetailsFragment extends Activity {
                 onBackPressed();
             }
         });
+
+        progressBar = findViewById(R.id.progressBar);
 
         categoryName = getIntent().getStringExtra("categoryName");
         toolbar.setTitle(categoryName);
@@ -135,7 +140,7 @@ public class CategoryDetailsFragment extends Activity {
         categoryDetailsFragmentAdapter.setOnLoadMoreListener(new onLoadMoreListener() {
             @Override
             public void onLoadMore() {
-                if (currPg < numPages){
+                if (currPg <= numPages){
                     pageCount++;
                     //add null , so the adapter will check view_type and show progress bar at bottom
                     wallpapersModels.add(null);
@@ -231,7 +236,7 @@ public class CategoryDetailsFragment extends Activity {
                 List list = img.eachAttr("src");
                 List id = widList.eachAttr("alt");
 
-                if (currPg < numPages) {
+                if (currPg <= numPages) {
                     for (int i = 0; i < list.size(); i++) {
                         String wallUrl = list.get(i).toString();
                         String wallId = id.get(i).toString();
@@ -265,6 +270,12 @@ public class CategoryDetailsFragment extends Activity {
 
     class Read extends AsyncTask<String, Integer, String> {
 
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressBar.setIndeterminate(true);
+            progressBar.setVisibility(View.VISIBLE);
+        }
 
         @Override
         protected String doInBackground(String... params) {
@@ -303,6 +314,8 @@ public class CategoryDetailsFragment extends Activity {
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             categoryDetailsFragmentAdapter.notifyDataSetChanged();
+            progressBar.setVisibility(View.GONE);
+            currPg++;
         }
     }
 }

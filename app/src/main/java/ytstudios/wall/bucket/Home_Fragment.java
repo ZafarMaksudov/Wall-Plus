@@ -25,6 +25,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -70,6 +71,8 @@ public class Home_Fragment extends Fragment {
 
     public static int wallpaperNumber = 0;
 
+    ProgressBar progressBar;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -80,6 +83,8 @@ public class Home_Fragment extends Fragment {
 
         LocalBroadcastManager.getInstance(getContext()).registerReceiver(broadcastReceiver,
                 new IntentFilter("LoadMore"));
+
+        progressBar = view.findViewById(R.id.progressBar);
 
 
         noNetImage = view.findViewById(R.id.noNet);
@@ -278,6 +283,7 @@ public class Home_Fragment extends Fragment {
 
         List list;
 
+
         @Override
         protected String doInBackground(String... params) {
                 try {
@@ -356,6 +362,8 @@ public class Home_Fragment extends Fragment {
         @Override
         protected void onPreExecute() {
             Toast.makeText(getContext(), "Loading Wallpapers!", Toast.LENGTH_SHORT).show();
+            progressBar.setIndeterminate(true);
+            progressBar.setVisibility(View.VISIBLE);
         }
 
         @Override
@@ -363,6 +371,7 @@ public class Home_Fragment extends Fragment {
             super.onPostExecute(s);
             //Log.i("COUNT ", String.valueOf(count));
             homeFragmentCustomAdapter.notifyDataSetChanged();
+            progressBar.setVisibility(View.GONE);
         }
     }
 
@@ -372,11 +381,6 @@ public class Home_Fragment extends Fragment {
         @Override
         protected String doInBackground(String... params) {
             return readURL(params[0]);
-        }
-
-        @Override
-        protected void onPreExecute() {
-            Toast.makeText(getContext(), "Loading Wallpapers!", Toast.LENGTH_SHORT).show();
         }
 
         @Override

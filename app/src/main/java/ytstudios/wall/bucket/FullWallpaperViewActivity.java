@@ -21,6 +21,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -174,6 +175,7 @@ public class FullWallpaperViewActivity extends AppCompatActivity {
                                     bannerAd.setVisibility(View.INVISIBLE);
                                     downloadWallBtn.setVisibility(View.INVISIBLE);
                                     setWallBtn.setVisibility(View.INVISIBLE);
+                                    getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
                                     fullscreen = true;
                                 } else if (fullscreen == true) {
                                     toolbar.setVisibility(View.VISIBLE);
@@ -183,6 +185,7 @@ public class FullWallpaperViewActivity extends AppCompatActivity {
                                     bannerAd.setVisibility(View.VISIBLE);
                                     downloadWallBtn.setVisibility(View.VISIBLE);
                                     setWallBtn.setVisibility(View.VISIBLE);
+                                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
                                     fullscreen = false;
                                 }
                             }
