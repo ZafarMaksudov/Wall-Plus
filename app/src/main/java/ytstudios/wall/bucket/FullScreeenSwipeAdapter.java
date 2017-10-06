@@ -10,7 +10,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.drawable.ProgressBarDrawable;
+import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.imagepipeline.request.ImageRequestBuilder;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -65,19 +69,37 @@ class FullScreenSwipeAdapter extends PagerAdapter {
         View v = layoutInflater.inflate(R.layout.fullwallpaper_view_layout, container, false);
 
         draweeView = v.findViewById(R.id.full_image_view);
+
         if (arrayList != null) {
-            draweeView.setImageURI(arrayList.get(position).getWallpaperFullURL());
+            DraweeController controller = Fresco.newDraweeControllerBuilder()
+                    .setLowResImageRequest(ImageRequest.fromUri(arrayList.get(position).getWallpaperURL()))
+                    .setImageRequest(ImageRequest.fromUri(arrayList.get(position).getWallpaperFullURL()))
+                    .setOldController(draweeView.getController())
+                    .build();
+            draweeView.setController(controller);
+            draweeView.setController(controller);
         } else{
             Uri imageUri= Uri.fromFile(new File(path.get(position)));
-            draweeView.setImageURI(imageUri);
+            ImageRequest request = ImageRequestBuilder.newBuilderWithSource(imageUri)
+                    .setLocalThumbnailPreviewsEnabled(true)
+                    .build();
+
+            DraweeController controller = Fresco.newDraweeControllerBuilder()
+                    .setImageRequest(request)
+                    .setOldController(draweeView.getController())
+                    .build();
+            ProgressBarDrawable progressBarDrawable = new ProgressBarDrawable();
+            progressBarDrawable.setPadding(50);
+            progressBarDrawable.setColor(R.color.colorBackground);
+            draweeView.getHierarchy().setProgressBarImage(progressBarDrawable);
+            draweeView.setController(controller);
+            //draweeView.setImageURI(imageUri);
         }
 
 
         container.addView(v);
 
         return v;
-
-
     }
 
     @Override

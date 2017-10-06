@@ -2,6 +2,7 @@ package ytstudios.wall.bucket;
 
 import android.app.Dialog;
 import android.app.WallpaperManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -26,7 +27,6 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.facebook.drawee.backends.pipeline.Fresco;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -73,11 +73,14 @@ public class FullWallpaperViewActivity extends AppCompatActivity {
     ArrayList<String> path;
     int pos;
 
-    WallpaperManager wallpaperManager;
+   public WallpaperManager wallpaperManager;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+//        LocalBroadcastManager.getInstance(FullWallpaperViewActivity.this.registerReceiver(broadcastReceiver,
+//                new IntentFilter("Update"));
 
         wallpaperManager = WallpaperManager.getInstance(FullWallpaperViewActivity.this);
 
@@ -95,6 +98,13 @@ public class FullWallpaperViewActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         viewPager = findViewById(R.id.view_pager);
+
+
+        encodedUrlFull = getIntent().getStringExtra("fullUrl");
+        encodedUrlThumb = getIntent().getStringExtra("thumbUrl");
+        wallId = getIntent().getIntExtra("id", 0);
+        fileType = "." + getIntent().getStringExtra("file_type");
+
 
         if (ActivityCaller.equals("Downloads")) {
             path = getIntent().getStringArrayListExtra("paths");
@@ -143,6 +153,7 @@ public class FullWallpaperViewActivity extends AppCompatActivity {
         } else {
             arrayList = getIntent().getParcelableArrayListExtra("array");
             fullScreenSwipeAdapter = new FullScreenSwipeAdapter(FullWallpaperViewActivity.this, arrayList);
+            Log.i("ARRAYLIST SIZE", String.valueOf(arrayList.size()));
 
             viewPager.setAdapter(fullScreenSwipeAdapter);
             viewPager.setCurrentItem(pos);
@@ -150,6 +161,8 @@ public class FullWallpaperViewActivity extends AppCompatActivity {
                 private float pointX;
                 private float pointY;
                 private int tolerance = 50;
+//                private long previousTouchTime;
+//                private boolean doubleTap = false;
 
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
@@ -161,6 +174,22 @@ public class FullWallpaperViewActivity extends AppCompatActivity {
                             pointY = event.getY();
                             Log.i("DOWN", String.valueOf(pointX));
                             Log.i("DOWN", String.valueOf(pointY));
+//                            long temp = System.currentTimeMillis();
+//                            if (previousTouchTime != 0)
+//                            {
+//                                Log.i("MyView", "Time Between Clicks=" + (temp - previousTouchTime));
+//
+//                                if((temp - previousTouchTime) < 250){
+//                                    Log.i("DOUBLE TAP", "DETECTED");
+//                                    doubleTap = true;
+//                                }
+//                                else doubleTap = false;
+//                            }
+//                            else
+//                            {
+//                                Log.i("MyView", "First Click");
+//                            }
+//                            previousTouchTime = temp;
                             break;
                         case MotionEvent.ACTION_UP:
                             boolean sameX = pointX + tolerance > event.getX() && pointX - tolerance < event.getX();
@@ -193,6 +222,7 @@ public class FullWallpaperViewActivity extends AppCompatActivity {
                     return false;
                 }
             });
+
             viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                 @Override
                 public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -208,7 +238,6 @@ public class FullWallpaperViewActivity extends AppCompatActivity {
                             onBackPressed();
                         }
                     });
-                    encodedUrlFull = arrayList.get(position).getWallpaperFullURL();
                 }
 
                 @Override
@@ -221,6 +250,10 @@ public class FullWallpaperViewActivity extends AppCompatActivity {
                         Log.i("BroadCast LoadMore", "SENT");
                         viewPager.invalidate();
                     }
+                    encodedUrlFull = arrayList.get(position).getWallpaperFullURL();
+                    wallId = arrayList.get(position).getWallId();
+                    Log.i("Position", String.valueOf(pos));
+                    Log.i("URL", encodedUrlFull);
                 }
 
                 @Override
@@ -266,13 +299,6 @@ public class FullWallpaperViewActivity extends AppCompatActivity {
                 disableAdBlock.setVisibility(View.GONE);
             }
         });
-
-        encodedUrlFull = getIntent().getStringExtra("fullUrl");
-        encodedUrlThumb = getIntent().getStringExtra("thumbUrl");
-
-        wallId = getIntent().getIntExtra("id", 0);
-        fileType = "." + getIntent().getStringExtra("file_type");
-
 
         setWallBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -364,8 +390,7 @@ public class FullWallpaperViewActivity extends AppCompatActivity {
                 }
             }
         });
-
-        Fresco.initialize(this);
+        //Fresco.initialize(this);
 
 //        this.runOnUiThread(new Runnable() {
 //            @Override
@@ -488,6 +513,18 @@ public class FullWallpaperViewActivity extends AppCompatActivity {
             result = getResources().getDimensionPixelSize(resourceId);
         }
         return result;
+    }
+
+    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.i("BroadCast LoadMore", "RECEIVED");
+        }
+    };
+
+    public void updateData(ArrayList<WallpapersModel> arrayList){
+        this.arrayList = arrayList;
+        Log.i("UPDATED", String.valueOf(this.arrayList.size()));
     }
 }
 

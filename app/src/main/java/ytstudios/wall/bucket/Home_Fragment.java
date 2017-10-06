@@ -286,6 +286,8 @@ public class Home_Fragment extends Fragment {
 
         @Override
         protected String doInBackground(String... params) {
+
+            //***************PAPERS
                 try {
 
                     Document document = Jsoup.connect(params[0]).get();
@@ -316,6 +318,7 @@ public class Home_Fragment extends Fragment {
                 }
                 return null;
         }
+        //************************************
         //Elements url = wall.getElementsByAttribute("src");
         //Log.i("URL 1  ", url.toString());
 //                list = url.eachAttr("src");
@@ -444,6 +447,7 @@ public class Home_Fragment extends Fragment {
         public void onReceive(Context context, Intent intent) {
             new loadMore().execute("http://papers.co/android/page/" + pageCount + "/");
             Log.i("BroadCast LoadMore", "RECEIVED");
+            homeFragmentCustomAdapter.notifyDataSetChanged();
         }
     };
 }
