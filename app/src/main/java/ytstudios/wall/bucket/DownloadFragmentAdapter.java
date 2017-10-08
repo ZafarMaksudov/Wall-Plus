@@ -8,6 +8,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -21,11 +22,12 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.io.File;
 import java.util.ArrayList;
 
-import static android.widget.Toast.makeText;
+import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
 
 /**
  * Created by Yugansh Tyagi on 29-09-2017.
@@ -60,7 +62,6 @@ public class DownloadFragmentAdapter extends RecyclerView.Adapter {
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
 
-        Log.i("Position  ", paths.get(position));
         int width = displayMetrics.widthPixels / 2;
         int height = 220;
 
@@ -68,12 +69,13 @@ public class DownloadFragmentAdapter extends RecyclerView.Adapter {
         RequestOptions myOptions = new RequestOptions()
                 .centerCrop()
                 .override(width, height);
-        Glide.with(context).load(uriImage).apply(myOptions).into(((DownloadsHolder) holder).downloadedImage);
+        Glide.with(context).load(uriImage).apply(myOptions).transition(withCrossFade()).into(((DownloadsHolder) holder).downloadedImage);
 
         ((DownloadsHolder) holder).deleteDownload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                makeText(context, "Deleted!", Toast.LENGTH_SHORT).show();
+
+                Toast.makeText(context, "Deleted!", Toast.LENGTH_SHORT).show();
                 Animation animation = AnimationUtils.loadAnimation(context, R.anim.zoom_out);
                 Animation animation1 = AnimationUtils.loadAnimation(context, R.anim.fadeout);
 
@@ -85,7 +87,6 @@ public class DownloadFragmentAdapter extends RecyclerView.Adapter {
 
                     @Override
                     public void onAnimationEnd(Animation animation) {
-                        Log.i("ANIMATION", "END");
                         File fdelete = new File(paths.get(position));
                         if (fdelete.exists()) {
                             fdelete.delete();
@@ -122,17 +123,16 @@ public class DownloadFragmentAdapter extends RecyclerView.Adapter {
     @Override
     public int getItemCount() {
         try {
-            Log.i("Returned ", String.valueOf(paths.size()));
             return paths.size();
         } catch (Exception e) {
-            Log.i("NO Downloads", "0");
         }
         return 0;
     }
 
     public static class DownloadsHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        ImageView downloadedImage, deleteDownload, setAsWall;
+        SimpleDraweeView downloadedImage;
+        ImageView deleteDownload, setAsWall;
         View view;
         Context context;
         ArrayList<String> paths;
@@ -166,6 +166,7 @@ public class DownloadFragmentAdapter extends RecyclerView.Adapter {
         Context context;
         Bitmap result;
         int position;
+        AlertDialog alertDialog;
 
         public setWall(Context context, int position) {
             this.context = context;
@@ -175,26 +176,39 @@ public class DownloadFragmentAdapter extends RecyclerView.Adapter {
 
         @Override
         protected Void doInBackground(Void... voids) {
-            result = BitmapFactory.decodeFile(paths.get(position));
+
+            try {
+                result = BitmapFactory.decodeFile(paths.get(position));
+            } catch (Exception e) {
+                Log.i("PICASSO EXCEPTION", e.toString());
+                return null;
+            }
             return null;
         }
 
-        @Override
-        protected void onPreExecute() {
-            Toast.makeText(context, "Applying Wallpaper", Toast.LENGTH_SHORT).show();
+            @Override
+            protected void onPreExecute () {
+                Toast.makeText(context, "Applying Wallpaper!", Toast.LENGTH_SHORT).show();
+//                AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(context);
+//                builder.setCancelable(false);
+//                builder.setView(R.layout.setwall_dialog_layout);
+//                alertDialog = builder.create();
+//                ProgressBar progressBar = alertDialog.findViewById(R.id.settingWall);
+//                progressBar.setIndeterminate(true);
+//                alertDialog.show();
+            }
 
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            WallpaperManager wallpaperManager = WallpaperManager.getInstance(context);
-            try {
-                wallpaperManager.setBitmap(result);
-                Toast.makeText(context, "Wallpaper Applied Successfully", Toast.LENGTH_SHORT).show();
-            } catch (Exception ex) {
-                ex.printStackTrace();
-                Toast.makeText(context, "Error applying wallpaper!", Toast.LENGTH_SHORT).show();
+            @Override
+            protected void onPostExecute (Void aVoid){
+                try {
+                    WallpaperManager wallpaperManager = WallpaperManager.getInstance(context);
+                    wallpaperManager.setBitmap(result);
+                    Toast.makeText(context, "Wallpaper Applied Successfully", Toast.LENGTH_SHORT).show();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    Toast.makeText(context, "Error applying wallpaper!", Toast.LENGTH_SHORT).show();
+                }
+                //alertDialog.hide();
             }
         }
     }
-}

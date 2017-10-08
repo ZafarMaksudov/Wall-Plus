@@ -13,6 +13,16 @@ public class WallpapersModel implements Parcelable {
     private String  wallpaperFullURL;
     private String fileType;
     private int wallId;
+    private int isFavorite;
+
+    public WallpapersModel(String wallpaperURL, String wallpaperFullURL, String fileType, int wallId, int isFavorite) {
+        this.wallpaperURL = wallpaperURL;
+        this.wallpaperFullURL = wallpaperFullURL;
+        this.fileType = fileType;
+        this.wallId = wallId;
+        this.isFavorite = isFavorite;
+
+    }
 
     public WallpapersModel(String wallpaperURL, String wallpaperFullURL, String fileType, int wallId) {
         this.wallpaperURL = wallpaperURL;
@@ -27,6 +37,7 @@ public class WallpapersModel implements Parcelable {
         wallpaperFullURL = parcel.readString();
         fileType = parcel.readString();
         wallId = parcel.readInt();
+        isFavorite = parcel.readInt();
     }
 
     public static final Parcelable.Creator<WallpapersModel> CREATOR = new Parcelable.Creator<WallpapersModel>() {
@@ -50,6 +61,15 @@ public class WallpapersModel implements Parcelable {
         parcel.writeString(wallpaperFullURL);
         parcel.writeString(fileType);
         parcel.writeInt(wallId);
+        parcel.writeInt(isFavorite);
+    }
+
+    public int  getFavorite() {
+        return isFavorite;
+    }
+
+    public void setIsFavorite(int isFavorite) {
+        this.isFavorite = isFavorite;
     }
 
     public String getWallpaperFullURL() {

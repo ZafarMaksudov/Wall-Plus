@@ -1,6 +1,8 @@
 package ytstudios.wall.bucket;
 
 import android.content.pm.ActivityInfo;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.v4.app.Fragment;
@@ -10,11 +12,14 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 
 import com.google.android.gms.ads.AdView;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabSelectListener;
+
+import static ytstudios.wall.bucket.FavDatabaseHelper.DATABASE_NAME;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -25,10 +30,15 @@ public class MainActivity extends AppCompatActivity {
     Search_Fragment search_fragment;
     Downloaded_Fragment downloaded_fragment;
     Home_Fragment home_fragment;
-    Favorite_Fragment favorite_fragment;
+    FavoriteFragment favorite_fragment;
 
     private AdView bannerAd;
     CardView disableAdBlock;
+
+    public static FavDatabaseHelper favDatabaseHelper;
+
+    public static  String DATABASE_FULL_PATH = null;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +49,22 @@ public class MainActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Explore");
+
+        try {
+            DATABASE_FULL_PATH = MainActivity.this.getDatabasePath(DATABASE_NAME).toString();
+            Log.i("PATH", DATABASE_FULL_PATH);
+        }catch (Exception e){
+
+        }
+        boolean checkDb = checkDataBase();
+
+        favDatabaseHelper = new FavDatabaseHelper(MainActivity.this);
+
+        if(!checkDb){
+            Log.i("DATABASE ", "DOES'T EXIST");
+            favDatabaseHelper = new FavDatabaseHelper(MainActivity.this);
+            Log.i("DATABASE ", "CREATED");
+        }
 
 //        disableAdBlock = findViewById(R.id.disableAdBlock);
 //        MobileAds.initialize(MainActivity.this, getResources().getString(R.string.FULLSCREEN_BANNER_ID));
@@ -163,7 +189,7 @@ public class MainActivity extends AppCompatActivity {
             }
             else if (position == 3) {
                 if (favorite_fragment == null) {
-                    favorite_fragment = new Favorite_Fragment();
+                    favorite_fragment = new FavoriteFragment();
                     return favorite_fragment;
                 }
                 return favorite_fragment;
@@ -188,6 +214,19 @@ public class MainActivity extends AppCompatActivity {
 
     public void setActionBarTitle(String title) {
         getSupportActionBar().setTitle(title);
+    }
+
+    private boolean checkDataBase() {
+        SQLiteDatabase checkDB = null;
+        try {
+            checkDB = SQLiteDatabase.openDatabase(DATABASE_FULL_PATH, null, SQLiteDatabase.OPEN_READONLY);
+            checkDB.close();
+            Log.i("DATABASE", "EXISTS");
+        } catch (SQLiteException e) {
+            // database doesn't exist yet.
+            Log.i("DATABASE", "DOES'T EXISTS");
+        }
+        return checkDB != null;
     }
 
 }

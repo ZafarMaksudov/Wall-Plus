@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.drawee.drawable.ProgressBarDrawable;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.imagepipeline.request.ImageRequest;
@@ -71,29 +70,29 @@ class FullScreenSwipeAdapter extends PagerAdapter {
         draweeView = v.findViewById(R.id.full_image_view);
 
         if (arrayList != null) {
-            DraweeController controller = Fresco.newDraweeControllerBuilder()
-                    .setLowResImageRequest(ImageRequest.fromUri(arrayList.get(position).getWallpaperURL()))
-                    .setImageRequest(ImageRequest.fromUri(arrayList.get(position).getWallpaperFullURL()))
-                    .setOldController(draweeView.getController())
-                    .build();
-            draweeView.setController(controller);
-            draweeView.setController(controller);
+            try {
+                DraweeController controller = Fresco.newDraweeControllerBuilder()
+                        .setLowResImageRequest(ImageRequest.fromUri(arrayList.get(position).getWallpaperURL()))
+                        .setImageRequest(ImageRequest.fromUri(arrayList.get(position).getWallpaperFullURL()))
+                        .setOldController(draweeView.getController())
+                        .build();
+                draweeView.setController(controller);
+                draweeView.setController(controller);
+            }catch (Exception e){}
         } else{
-            Uri imageUri= Uri.fromFile(new File(path.get(position)));
-            ImageRequest request = ImageRequestBuilder.newBuilderWithSource(imageUri)
-                    .setLocalThumbnailPreviewsEnabled(true)
-                    .build();
+            try {
+                Uri imageUri= Uri.fromFile(new File(path.get(position)));
+                ImageRequest request = ImageRequestBuilder.newBuilderWithSource(imageUri)
+                        .setLocalThumbnailPreviewsEnabled(true)
+                        .build();
 
-            DraweeController controller = Fresco.newDraweeControllerBuilder()
-                    .setImageRequest(request)
-                    .setOldController(draweeView.getController())
-                    .build();
-            ProgressBarDrawable progressBarDrawable = new ProgressBarDrawable();
-            progressBarDrawable.setPadding(50);
-            progressBarDrawable.setColor(R.color.colorBackground);
-            draweeView.getHierarchy().setProgressBarImage(progressBarDrawable);
-            draweeView.setController(controller);
-            //draweeView.setImageURI(imageUri);
+                DraweeController controller = Fresco.newDraweeControllerBuilder()
+                        .setImageRequest(request)
+                        .setOldController(draweeView.getController())
+                        .build();
+                draweeView.setController(controller);
+                //draweeView.setImageURI(imageUri);
+            }catch (Exception e){}
         }
 
 

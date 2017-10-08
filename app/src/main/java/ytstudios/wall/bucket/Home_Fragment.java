@@ -257,6 +257,7 @@ public class Home_Fragment extends Fragment {
                 return true;
             case R.id.refresh:
                 pageCount = 2;
+                recyclerView.setVisibility(View.INVISIBLE);
                 initData();
                 return true;
             default:
@@ -310,7 +311,8 @@ public class Home_Fragment extends Fragment {
                                 string,///
                                 sep[1],
                                 "jpg",
-                                wallpaperNumber
+                                wallpaperNumber,
+                                0
                         ));
                     }
                 }catch (Exception e){
@@ -375,6 +377,7 @@ public class Home_Fragment extends Fragment {
             //Log.i("COUNT ", String.valueOf(count));
             homeFragmentCustomAdapter.notifyDataSetChanged();
             progressBar.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
         }
     }
 
@@ -435,7 +438,7 @@ public class Home_Fragment extends Fragment {
         return content.toString();
     }
 
-    private boolean isNetworkAvailable() {
+    public boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();

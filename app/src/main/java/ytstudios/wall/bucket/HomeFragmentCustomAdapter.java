@@ -29,7 +29,7 @@ public class HomeFragmentCustomAdapter extends RecyclerView.Adapter {
     private final int VIEW_ITEM = 1;
     private final int VIEW_PROG = 0;
 
-    private int visibleThreshold = 7;
+    private int visibleThreshold = 10;
     private int lastVisibleItem, totalItemCount;
     private boolean loading;
     private onLoadMoreListener onLoadMoreListener;

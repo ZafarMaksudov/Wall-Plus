@@ -6,8 +6,11 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -23,7 +26,10 @@ import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -47,6 +53,7 @@ public class FullWallpaperViewActivity extends AppCompatActivity {
     ViewPager viewPager;
     FullScreenSwipeAdapter fullScreenSwipeAdapter;
     ArrayList<WallpapersModel> arrayList;
+    ArrayList<WallpapersModel> favModel;
 
     Toolbar toolbar;
 
@@ -73,7 +80,11 @@ public class FullWallpaperViewActivity extends AppCompatActivity {
     ArrayList<String> path;
     int pos;
 
-   public WallpaperManager wallpaperManager;
+    public WallpaperManager wallpaperManager;
+
+    private boolean isFavorite = false;
+
+    ImageView zoomHeart;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -85,6 +96,9 @@ public class FullWallpaperViewActivity extends AppCompatActivity {
         wallpaperManager = WallpaperManager.getInstance(FullWallpaperViewActivity.this);
 
         setContentView(R.layout.fullscreen_activity_view);
+
+        zoomHeart = findViewById(R.id.zoom_heart);
+        final Animation animation = AnimationUtils.loadAnimation(FullWallpaperViewActivity.this, R.anim.bounce);
 
         ActivityCaller = getIntent().getStringExtra("caller");
         pos = getIntent().getIntExtra("position", 0);
@@ -132,11 +146,11 @@ public class FullWallpaperViewActivity extends AppCompatActivity {
 
                 @Override
                 public void onPageSelected(int position) {
-                    if(pos > position){
+                    if (pos > position) {
                         //left
                         pos--;
                         Log.i("POSITION LEFT", String.valueOf(pos));
-                    }else if(pos < position){
+                    } else if (pos < position) {
                         //right
                         pos++;
                         Log.i("POSITION RIGHT", String.valueOf(pos));
@@ -161,11 +175,10 @@ public class FullWallpaperViewActivity extends AppCompatActivity {
                 private float pointX;
                 private float pointY;
                 private int tolerance = 50;
-//                private long previousTouchTime;
-//                private boolean doubleTap = false;
+                private long previousTouchTime;
 
                 @Override
-                public boolean onTouch(View v, MotionEvent event) {
+                public boolean onTouch(View v, final MotionEvent event) {
                     switch (event.getAction()) {
                         case MotionEvent.ACTION_MOVE:
                             return false; //This is important, if you return TRUE the action of swipe will not take place.
@@ -174,22 +187,67 @@ public class FullWallpaperViewActivity extends AppCompatActivity {
                             pointY = event.getY();
                             Log.i("DOWN", String.valueOf(pointX));
                             Log.i("DOWN", String.valueOf(pointY));
-//                            long temp = System.currentTimeMillis();
-//                            if (previousTouchTime != 0)
-//                            {
-//                                Log.i("MyView", "Time Between Clicks=" + (temp - previousTouchTime));
-//
-//                                if((temp - previousTouchTime) < 250){
-//                                    Log.i("DOUBLE TAP", "DETECTED");
-//                                    doubleTap = true;
-//                                }
-//                                else doubleTap = false;
-//                            }
-//                            else
-//                            {
-//                                Log.i("MyView", "First Click");
-//                            }
-//                            previousTouchTime = temp;
+                            long temp = System.currentTimeMillis();
+                            if (previousTouchTime != 0) {
+                                Log.i("MyView", "Time Between Clicks=" + (temp - previousTouchTime));
+
+                                if ((temp - previousTouchTime) < 250) {
+                                    Log.i("DOUBLE TAP", "DETECTED");
+                                    zoomHeart.setVisibility(View.VISIBLE);
+                                    zoomHeart.startAnimation(animation);
+                                    animation.setAnimationListener(new Animation.AnimationListener() {
+                                        @Override
+                                        public void onAnimationStart(Animation animation) {
+
+                                        }
+
+                                        @Override
+                                        public void onAnimationEnd(Animation animation) {
+                                            Animation zoomOut = AnimationUtils.loadAnimation(FullWallpaperViewActivity.this, R.anim.zoom_out);
+                                            zoomHeart.startAnimation(zoomOut);
+                                            zoomHeart.setVisibility(View.GONE);
+                                            boolean exist = MainActivity.favDatabaseHelper.checkExist(arrayList.get(pos).getWallpaperFullURL());
+                                            Log.i("EXIST", String.valueOf(exist));
+                                            if (!exist) {
+                                                boolean inserted = MainActivity.favDatabaseHelper.addFavToDatabase(
+                                                        arrayList.get(pos).getWallpaperURL(),
+                                                        arrayList.get(pos).getWallpaperFullURL(),
+                                                        arrayList.get(pos).getFileType(),
+                                                        arrayList.get(pos).getWallId(),
+                                                        arrayList.get(pos).getFavorite());
+                                                Log.i("VALUE OF POS", String.valueOf(pos));
+                                                Log.i("IS INSERTED", String.valueOf(inserted));
+                                                Cursor cursor = MainActivity.favDatabaseHelper.readFavFromDatabase();
+                                                favModel = new ArrayList<>();
+                                                try {
+                                                    if (cursor.moveToNext()) {
+                                                        Log.i("RUNNING", "CURSOR");
+                                                        favModel.add(new WallpapersModel(
+                                                                cursor.getString(0),
+                                                                cursor.getString(1),
+                                                                cursor.getString(2),
+                                                                Integer.parseInt(cursor.getString(3))
+                                                        ));
+                                                        //Log.i("Favorite", cursor.getString(4));
+                                                    }
+                                                } catch (Exception e) {
+                                                    Log.i("DATABASE EXCEPTION", e.toString());
+                                                }
+                                                Intent intent = new Intent("ReadDatabase");
+                                                LocalBroadcastManager.getInstance(FullWallpaperViewActivity.this).sendBroadcast(intent);
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onAnimationRepeat(Animation animation) {
+
+                                        }
+                                    });
+                                }
+                            } else {
+                                Log.i("MyView", "First Click");
+                            }
+                            previousTouchTime = temp;
                             break;
                         case MotionEvent.ACTION_UP:
                             boolean sameX = pointX + tolerance > event.getX() && pointX - tolerance < event.getX();
@@ -201,7 +259,7 @@ public class FullWallpaperViewActivity extends AppCompatActivity {
                                 if (fullscreen == false) {
                                     toolbar.setVisibility(View.INVISIBLE);
                                     disableAdBlock.setVisibility(View.INVISIBLE);
-                                    bannerAd.setVisibility(View.INVISIBLE);
+                                    bannerAd.setVisibility(View.VISIBLE);
                                     downloadWallBtn.setVisibility(View.INVISIBLE);
                                     setWallBtn.setVisibility(View.INVISIBLE);
                                     getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -249,6 +307,15 @@ public class FullWallpaperViewActivity extends AppCompatActivity {
                         LocalBroadcastManager.getInstance(FullWallpaperViewActivity.this).sendBroadcast(intent);
                         Log.i("BroadCast LoadMore", "SENT");
                         viewPager.invalidate();
+                    }
+                    if (pos > position) {
+                        //left
+                        pos--;
+                        Log.i("POSITION LEFT", String.valueOf(pos));
+                    } else if (pos < position) {
+                        //right
+                        pos++;
+                        Log.i("POSITION RIGHT", String.valueOf(pos));
                     }
                     encodedUrlFull = arrayList.get(position).getWallpaperFullURL();
                     wallId = arrayList.get(position).getWallId();
@@ -303,7 +370,11 @@ public class FullWallpaperViewActivity extends AppCompatActivity {
         setWallBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new setWall(getApplicationContext()).execute();
+                if (isNetworkAvailable()) {
+                    new setWall(getApplicationContext()).execute();
+                } else {
+                    Toast.makeText(getApplicationContext(), "No Internet Connection!", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -372,20 +443,17 @@ public class FullWallpaperViewActivity extends AppCompatActivity {
                             Log.i("EXCEPTION ", e.toString());
                         }
                         break;
-//                    case "Downloads":
-//                        File fdelete = new File(path);
-//                        Log.i("FILE", fdelete.toString());
-//                        if (fdelete.exists()) {
-//                            fdelete.delete();
-//                        }
-//                        Intent mediaScanIntent = new Intent(
-//                                Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-//                        Uri contentUri = Uri.fromFile(fdelete); //out is your file you saved/deleted/moved/copied
-//                        mediaScanIntent.setData(contentUri);
-//                        FullWallpaperViewActivity.this.sendBroadcast(mediaScanIntent);
-//                        Intent intent = new Intent("Refresh");
-//                        LocalBroadcastManager.getInstance(FullWallpaperViewActivity.this).sendBroadcast(intent);
-//                        break;
+
+                    case "Favorites":
+                        boolean isNetworkConnected = isNetworkAvailable();
+                        if (isNetworkConnected) {
+                            encodedUrlFull = FavoriteFragment.arrayList.get(pos).getWallpaperFullURL();
+                            Toast.makeText(getApplicationContext(), "Downloading Wallpaper " + String.valueOf(wallId) + "(M)." + FavoriteFragment.arrayList.get(pos).getFileType(), Toast.LENGTH_SHORT).show();
+                            new DownloadHandler.ImageDownloadAndSave(getApplicationContext()).execute(encodedUrlFull, "Wallpaper " + String.valueOf(FavoriteFragment.arrayList.get(pos).getWallId()) + FavoriteFragment.arrayList.get(pos).getFileType());
+                        } else {
+                            Toast.makeText(getApplicationContext(), "No Internet connection!", Toast.LENGTH_SHORT).show();
+                        }
+                        break;
 
                 }
             }
@@ -457,6 +525,7 @@ public class FullWallpaperViewActivity extends AppCompatActivity {
             this.result = null;
         }
 
+
         @Override
         protected Void doInBackground(Void... voids) {
 
@@ -466,9 +535,9 @@ public class FullWallpaperViewActivity extends AppCompatActivity {
                 } catch (Exception e) {
                     Log.i("PICASSO EXCEPTION", e.toString());
                 }
-            }
-            else {
+            } else {
                 try {
+                    Log.i("URL", encodedUrlFull);
                     result = Picasso.with(FullWallpaperViewActivity.this)
                             .load(encodedUrlFull)
                             .get();
@@ -504,7 +573,54 @@ public class FullWallpaperViewActivity extends AppCompatActivity {
             }
             alertDialog.hide();
         }
+
     }
+
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        Log.i("CREATED ", "OPTIONS MENU");
+//        MenuInflater inflater = getMenuInflater();
+//        inflater.inflate(R.menu.fav_menu, menu);
+////        MenuItem item = menu.findItem(R.id.add_fav);
+////        if (arrayList.get(pos).getFavorite() == 0){
+////            item.setIcon(R.drawable.fav_heart_white);
+////            Log.i("VALUE OF FAV",String.valueOf(arrayList.get(pos).getFavorite()));
+////        }
+////        else if(arrayList.get(pos).getFavorite() == 1){
+////            item.setIcon(R.drawable.fav_heart_red);
+////            Log.i("VALUE OF FAV",String.valueOf(arrayList.get(pos).getFavorite()));
+////        }
+//        return true;
+//    }
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        if (arrayList.get(pos).getFavorite() == 0) {
+//            //Toast.makeText(getApplicationContext(), "Added to Favorites!", Toast.LENGTH_SHORT).show();
+//            item.setIcon(R.drawable.fav_heart_red);
+//            boolean inserted = favDatabaseHelper.addFavToDatabase(
+//                                    arrayList.get(pos).getWallpaperURL(),
+//                                    arrayList.get(pos).getWallpaperFullURL(),
+//                                    arrayList.get(pos).getFileType(),
+//                                    arrayList.get(pos).getWallId(),
+//                                    arrayList.get(pos).getFavorite());
+//            Log.i("IS INSERTED", String.valueOf(inserted));
+//            Cursor cursor = favDatabaseHelper.readFavFromDatabase();
+//            if(cursor.moveToNext()){
+//                Log.i("CURSOR", String.valueOf(cursor.moveToNext()));
+//                Log.i("smallURL", cursor.getString(0));
+//                Log.i("fullURL", cursor.getString(1));
+//                Log.i("filetype", cursor.getString(2));
+//                Log.i("wallID", cursor.getString(3));
+//                //Log.i("Favorite", cursor.getString(4));
+//            }
+//            isFavorite = true;
+//        } else {
+//            //Toast.makeText(getApplicationContext(), "Removed from Favorites!", Toast.LENGTH_SHORT).show();
+//            item.setIcon(R.drawable.fav_heart_white);
+//            isFavorite = false;
+//        }
+//        return true;
+//    }
 
     public int getStatusBarHeight() {
         int result = 0;
@@ -522,9 +638,16 @@ public class FullWallpaperViewActivity extends AppCompatActivity {
         }
     };
 
-    public void updateData(ArrayList<WallpapersModel> arrayList){
+    public void updateData(ArrayList<WallpapersModel> arrayList) {
         this.arrayList = arrayList;
         Log.i("UPDATED", String.valueOf(this.arrayList.size()));
+    }
+
+    public boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 }
 
