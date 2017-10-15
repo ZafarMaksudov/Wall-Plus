@@ -1,6 +1,5 @@
 # Wall+
-Wall+ is a Simple Wallpaper Downloading App for Android that provide you with
-the best Android wallpapers available for your **Device Resolution!**
+Wall+ is a Simple Wallpaper Downloading App for Android that furnish you with the best Android backdrops accessible for your **Device Resolution!**
 
 # ScreenShots of App
 | Home | Categories | Search | Favorites | Downloaded |
