@@ -1,6 +1,8 @@
 package ytstudios.wall.bucket;
 
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -57,6 +59,7 @@ public class Search_Fragment extends Fragment {
 
     private static int numPages, currPg = 1;
 
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -76,6 +79,36 @@ public class Search_Fragment extends Fragment {
         recyclerView.setLayoutManager(gridLayoutManager);
 
         searchBar = view.findViewById(R.id.search_bar);
+
+//        disableAdBlock = view.findViewById(R.id.disableAdBlock);
+//        disableAdBlock.bringToFront();
+//        MobileAds.initialize(getActivity(), getResources().getString(R.string.CATEGORY_BANNED_ID));
+//        bannerAd = new AdView(getActivity());
+//        bannerAd = view.findViewById(R.id.bannerAdView);
+//        bannerAd.bringToFront();
+//        final AdRequest adRequest = new AdRequest.Builder()
+//                .addTestDevice("02147518DD550E863FFAA08EA49B5F41")
+//                .addTestDevice("4F18060E4B4A11E00C6E6C3B8EEF6353")
+//                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+//                .build();
+//
+//        bannerAd.loadAd(adRequest);
+//        bannerAd.setAdListener(new AdListener() {
+//            @Override
+//            public void onAdFailedToLoad(int i) {
+//                disableAdBlock.setVisibility(View.VISIBLE);
+//                isAdblock = true;
+//                Log.i("Searc fragment", "NOT LOADED");
+//            }
+//
+//            @Override
+//            public void onAdLoaded() {
+//                super.onAdLoaded();
+//                isAdblock = false;
+//                disableAdBlock.setVisibility(View.GONE);
+//                Log.i("Searc fragment", "ADLOADED");
+//            }
+//        });
 
         searchFragmentCustomAdapter = new SearchFragmentCustomAdapter(wallpapersModels, getContext(), searchBar.getText().toString(), recyclerView);
         recyclerView.setAdapter(searchFragmentCustomAdapter);
@@ -228,58 +261,70 @@ public class Search_Fragment extends Fragment {
 
         @Override
         protected String doInBackground(String... params) {
-            try {
-                currPg = 1;
-                Log.i("NUM OF PAGES ", String.valueOf(numPages));
-                Document document = Jsoup.connect(params[0]).get();
-                Element wall = document.select("div.thumb-container").first();
-                //Log.i("RESULT", wall.toString());
-                Elements img = wall.getElementsByAttribute("src");
-                Elements widList = wall.getElementsByAttribute("alt");
-                Element page = document.select("ul.pagination.pagination").first();
-                Element result = document.select("div.searchTitle.alert.alert-warning").first();
-                if (result == null) {
-                    if (page != null) {
-                        Elements pageNum = page.getElementsByAttribute("href");
-                        List pageText = pageNum.eachText();
-                        String temp = pageText.get(pageText.size() - 2).toString();
-                        numPages = Integer.parseInt(temp);
-                        Log.i("IN READJSON CURRENT", String.valueOf(currPg));
-                        Log.i("IN READJSON", String.valueOf(numPages));
-                    } else numPages = 1;
+            if (isNetworkAvailable()) {
+                try {
+                    currPg = 1;
+                    Log.i("NUM OF PAGES ", String.valueOf(numPages));
+                    Document document = Jsoup.connect(params[0]).get();
+                    Element wall = document.select("div.thumb-container").first();
+                    //Log.i("RESULT", wall.toString());
+                    Elements img = wall.getElementsByAttribute("src");
+                    Elements widList = wall.getElementsByAttribute("alt");
+                    Element page = document.select("ul.pagination.pagination").first();
+                    Element result = document.select("div.searchTitle.alert.alert-warning").first();
+                    if (result == null) {
+                        if (page != null) {
+                            Elements pageNum = page.getElementsByAttribute("href");
+                            List pageText = pageNum.eachText();
+                            String temp = pageText.get(pageText.size() - 2).toString();
+                            numPages = Integer.parseInt(temp);
+                            Log.i("IN READJSON CURRENT", String.valueOf(currPg));
+                            Log.i("IN READJSON", String.valueOf(numPages));
+                        } else numPages = 1;
 
-                    List list = img.eachAttr("src");
-                    List id = widList.eachAttr("alt");
-                    Log.i("ARRAYLIST", list.toString());
-                    Log.i("ID", id.toString());
+                        List list = img.eachAttr("src");
+                        List id = widList.eachAttr("alt");
+                        Log.i("ARRAYLIST", list.toString());
+                        Log.i("ID", id.toString());
 
-                    for (int i = 0; i < list.size(); i++) {
-                        String wallUrl = list.get(i).toString();
-                        String wallId = id.get(i).toString();
-                        String sep[] = wallId.split("Wallpaper ");
-                        wallpapersModels.add(new WallpapersModel(
-                                wallUrl,///
-                                wallUrl.replace("thumb-", ""),
-                                "jpg",
-                                Integer.valueOf(sep[1])
-                        ));
-                    }
-                } else {
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            imageView.setImageResource(R.drawable.searchwall404);
-                            imageView.setVisibility(View.VISIBLE);
-                            searchNet.setText(getResources().getString(R.string.search404) + query);
-                            searchNet.setVisibility(View.VISIBLE);
+                        for (int i = 0; i < list.size(); i++) {
+                            String wallUrl = list.get(i).toString();
+                            String wallId = id.get(i).toString();
+                            String sep[] = wallId.split("Wallpaper ");
+                            wallpapersModels.add(new WallpapersModel(
+                                    wallUrl,///
+                                    wallUrl.replace("thumb-", ""),
+                                    "jpg",
+                                    Integer.valueOf(sep[1])
+                            ));
                         }
-                    });
+                    } else {
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                imageView.setImageResource(R.drawable.searchwall404);
+                                imageView.setVisibility(View.VISIBLE);
+                                searchNet.setText(getResources().getString(R.string.search404) + query);
+                                searchNet.setVisibility(View.VISIBLE);
+                            }
+                        });
+                    }
+                } catch (Exception e) {
+                    Log.i("ERROR LOLO", e.toString());
                 }
-                //Log.i("RESULT", result.toString());
-                Log.i("DATA OF SITE ", wallpapersModels.toString());
-            } catch (Exception e) {
-                Log.i("ERROR LOLO", e.toString());
+            } else {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        imageView.setImageResource(R.drawable.nonetwork);
+                        imageView.setVisibility(View.VISIBLE);
+                        searchNet.setText("No Internet connection!");
+                        searchNet.setVisibility(View.VISIBLE);
+                    }
+                });
             }
+            //Log.i("RESULT", result.toString());
+            Log.i("DATA OF SITE ", wallpapersModels.toString());
             return null;
         }
 
@@ -333,6 +378,13 @@ public class Search_Fragment extends Fragment {
             Log.i("POST EXECUTE", "ME HUN MAI");
             searchFragmentCustomAdapter.setLoaded();
         }
+    }
+
+    public boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 }
 

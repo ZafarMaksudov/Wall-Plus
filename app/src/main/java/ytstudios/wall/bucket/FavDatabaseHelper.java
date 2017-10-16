@@ -67,7 +67,7 @@ public class FavDatabaseHelper extends SQLiteOpenHelper {
     }
 
     public void deleteAllFavs() throws SQLException{
-        SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
         sqLiteDatabase.execSQL("Drop table if exists " + TABLE_NAME);
         sqLiteDatabase.execSQL("create table if not exists " + TABLE_NAME + "(wallUrl String Not Null, wallFullUrl String Not Null, filetype String,  wallId Int, isFavorite Int)");
     }

@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -22,7 +23,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -88,6 +88,7 @@ public class FullWallpaperViewActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         super.onCreate(savedInstanceState);
 
 //        LocalBroadcastManager.getInstance(FullWallpaperViewActivity.this.registerReceiver(broadcastReceiver,
@@ -98,7 +99,9 @@ public class FullWallpaperViewActivity extends AppCompatActivity {
         setContentView(R.layout.fullscreen_activity_view);
 
         zoomHeart = findViewById(R.id.zoom_heart);
-        final Animation animation = AnimationUtils.loadAnimation(FullWallpaperViewActivity.this, R.anim.bounce);
+        final Animation bounce = AnimationUtils.loadAnimation(FullWallpaperViewActivity.this, R.anim.bounce);
+        final Animation zoomOut = AnimationUtils.loadAnimation(FullWallpaperViewActivity.this, R.anim.fadeout);
+        final Animation breathe = AnimationUtils.loadAnimation(FullWallpaperViewActivity.this, R.anim.breathe);
 
         ActivityCaller = getIntent().getStringExtra("caller");
         pos = getIntent().getIntExtra("position", 0);
@@ -155,6 +158,7 @@ public class FullWallpaperViewActivity extends AppCompatActivity {
                         pos++;
                         Log.i("POSITION RIGHT", String.valueOf(pos));
                     }
+
                 }
 
                 @Override
@@ -194,8 +198,9 @@ public class FullWallpaperViewActivity extends AppCompatActivity {
                                 if ((temp - previousTouchTime) < 250) {
                                     Log.i("DOUBLE TAP", "DETECTED");
                                     zoomHeart.setVisibility(View.VISIBLE);
-                                    zoomHeart.startAnimation(animation);
-                                    animation.setAnimationListener(new Animation.AnimationListener() {
+                                    zoomHeart.startAnimation(bounce);
+                                    Log.i("ANIMATION", "Bounce");
+                                    bounce.setAnimationListener(new Animation.AnimationListener() {
                                         @Override
                                         public void onAnimationStart(Animation animation) {
 
@@ -203,9 +208,8 @@ public class FullWallpaperViewActivity extends AppCompatActivity {
 
                                         @Override
                                         public void onAnimationEnd(Animation animation) {
-                                            Animation zoomOut = AnimationUtils.loadAnimation(FullWallpaperViewActivity.this, R.anim.zoom_out);
-                                            zoomHeart.startAnimation(zoomOut);
-                                            zoomHeart.setVisibility(View.GONE);
+                                            zoomHeart.startAnimation(breathe);
+                                            Log.i("ANIMATION", "Breathe");
                                             boolean exist = MainActivity.favDatabaseHelper.checkExist(arrayList.get(pos).getWallpaperFullURL());
                                             Log.i("EXIST", String.valueOf(exist));
                                             if (!exist) {
@@ -243,6 +247,23 @@ public class FullWallpaperViewActivity extends AppCompatActivity {
 
                                         }
                                     });
+                                    breathe.setAnimationListener(new Animation.AnimationListener() {
+                                        @Override
+                                        public void onAnimationStart(Animation animation) {
+
+                                        }
+
+                                        @Override
+                                        public void onAnimationEnd(Animation animation) {
+                                            zoomHeart.setAnimation(zoomOut);
+                                            Log.i("ANIMATION", "FADE OUT");
+                                        }
+
+                                        @Override
+                                        public void onAnimationRepeat(Animation animation) {
+
+                                        }
+                                    });
                                 }
                             } else {
                                 Log.i("MyView", "First Click");
@@ -259,7 +280,7 @@ public class FullWallpaperViewActivity extends AppCompatActivity {
                                 if (fullscreen == false) {
                                     toolbar.setVisibility(View.INVISIBLE);
                                     disableAdBlock.setVisibility(View.INVISIBLE);
-                                    bannerAd.setVisibility(View.VISIBLE);
+                                    bannerAd.setVisibility(View.INVISIBLE);
                                     downloadWallBtn.setVisibility(View.INVISIBLE);
                                     setWallBtn.setVisibility(View.INVISIBLE);
                                     getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -331,17 +352,6 @@ public class FullWallpaperViewActivity extends AppCompatActivity {
 
         }
 
-//        window = getWindow();
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//            window.getDecorView().setSystemUiVisibility(
-//                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-//                            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-//            Log.i("TRANS", "STATUS");
-//        }
-//        else if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
-//            window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-//        }
-
         MobileAds.initialize(FullWallpaperViewActivity.this, getResources().getString(R.string.FULLSCREEN_BANNER_ID));
         bannerAd = new AdView(FullWallpaperViewActivity.this);
         bannerAd = findViewById(R.id.bannerAdView);
@@ -371,6 +381,8 @@ public class FullWallpaperViewActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (isNetworkAvailable()) {
+                    new setWall(getApplicationContext()).execute();
+                } else if (ActivityCaller.equals("Downloads")) {
                     new setWall(getApplicationContext()).execute();
                 } else {
                     Toast.makeText(getApplicationContext(), "No Internet Connection!", Toast.LENGTH_SHORT).show();
@@ -563,12 +575,10 @@ public class FullWallpaperViewActivity extends AppCompatActivity {
             try {
                 wallpaperManager.setBitmap(result);
                 Toast toast = makeText(context, "Wallpaper Applied Successfully", Toast.LENGTH_SHORT);
-                toast.setGravity(Gravity.BOTTOM, 0, 330);
                 toast.show();
             } catch (Exception ex) {
                 ex.printStackTrace();
                 Toast toast = makeText(context, "Error applying wallpaper!", Toast.LENGTH_SHORT);
-                toast.setGravity(Gravity.BOTTOM, 0, 330);
                 toast.show();
             }
             alertDialog.hide();

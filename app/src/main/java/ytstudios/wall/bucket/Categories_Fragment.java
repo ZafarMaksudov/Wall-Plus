@@ -1,5 +1,6 @@
 package ytstudios.wall.bucket;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -52,7 +53,13 @@ public class Categories_Fragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        return super.onOptionsItemSelected(item);
+        switch (item.getItemId()){
+            case R.id.menu_about:
+                Intent intent = new Intent(getActivity(), AboutActivity.class);
+                startActivity(intent);
+                break;
+        }
+        return true;
     }
 
     private void initializeCategories() {

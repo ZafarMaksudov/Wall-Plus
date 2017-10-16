@@ -2,6 +2,7 @@ package ytstudios.wall.bucket;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,6 +14,7 @@ import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.imagepipeline.request.ImageRequestBuilder;
 
 import java.util.ArrayList;
 
@@ -42,10 +44,13 @@ public class FavoriteFragmentAdapter extends RecyclerView.Adapter {
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         if (wallpapersModels != null) {
+
+            Uri uri = Uri.parse(wallpapersModels.get(position).getWallpaperURL());
+            ImageRequest request = ImageRequestBuilder.newBuilderWithSource(uri)
+                    .build();
             DraweeController controller = Fresco.newDraweeControllerBuilder()
+                    .setImageRequest(request)
                     .setLowResImageRequest(ImageRequest.fromUri(wallpapersModels.get(position).getWallpaperURL()))
-                    .setImageRequest(ImageRequest.fromUri(wallpapersModels.get(position).getWallpaperFullURL()))
-                    .setOldController(((FavoriteFragmentHolder)holder).downloadedImage.getController())
                     .build();
             ((FavoriteFragmentHolder)holder).downloadedImage.setController(controller);
 
@@ -93,6 +98,7 @@ public class FavoriteFragmentAdapter extends RecyclerView.Adapter {
             intent.putExtra("id", wallpapersModels.get(position).getWallId());
             intent.putExtra("fullUrl", wallpapersModels.get(position).getWallpaperFullURL());
             intent.putParcelableArrayListExtra("array", wallpapersModels);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             this.context.startActivity(intent);
 
         }

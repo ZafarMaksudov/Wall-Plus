@@ -171,8 +171,8 @@ public class CategoryDetailsFragment extends Activity {
         bannerAd = new AdView(context);
         bannerAd = findViewById(R.id.bannerAdView);
         AdRequest adRequest = new AdRequest.Builder()
-                .addTestDevice("02147518DD550E863FFAA08EA49B5F41")
-                .addTestDevice("4F18060E4B4A11E00C6E6C3B8EEF6353")
+                //.addTestDevice("02147518DD550E863FFAA08EA49B5F41")
+                //.addTestDevice("4F18060E4B4A11E00C6E6C3B8EEF6353")
                 .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
                 .build();
 
@@ -180,7 +180,12 @@ public class CategoryDetailsFragment extends Activity {
         bannerAd.setAdListener(new AdListener() {
             @Override
             public void onAdFailedToLoad(int i) {
-                disableAdBlock.setVisibility(View.VISIBLE);
+                Log.i("I KI VALUE ", String.valueOf(i));
+                if(i == 3){
+                    disableAdBlock.setVisibility(View.INVISIBLE);
+                }else{
+                    disableAdBlock.setVisibility(View.VISIBLE);
+                }
             }
 
             @Override

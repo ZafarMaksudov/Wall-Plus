@@ -7,7 +7,6 @@ import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
@@ -18,6 +17,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -79,24 +79,24 @@ public class Downloaded_Fragment extends Fragment {
             Log.i("EXCEPTION ", e.toString());
         }
 
-        downloadFragmentAdapter = new DownloadFragmentAdapter(getActivity().getApplicationContext(), filePaths, fileNames);
+        downloadFragmentAdapter = new DownloadFragmentAdapter(getActivity().getApplicationContext(), filePaths, fileNames, getActivity());
 
-        swipeRefreshLayout = view.findViewById(R.id.swipeRefresh);
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                swipeRefreshLayout.setRefreshing(true);
-                (new Handler()).postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        new refreshDownloads().execute();
-                        swipeRefreshLayout.setRefreshing(false);
-                    }
-                }, 1000);
-                recyclerView.invalidate();
-                Log.i("DATA CHANGED", "DATA SET CHANGED");
-            }
-        });
+//        swipeRefreshLayout = view.findViewById(R.id.swipeRefresh);
+//        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+//            @Override
+//            public void onRefresh() {
+//                swipeRefreshLayout.setRefreshing(true);
+//                (new Handler()).postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        new refreshDownloads().execute();
+//                        swipeRefreshLayout.setRefreshing(false);
+//                    }
+//                }, 1000);
+//                recyclerView.invalidate();
+//                Log.i("DATA CHANGED", "DATA SET CHANGED");
+//            }
+//        });
 
         gridLayoutManager = new GridLayoutManager(context, 2);
         recyclerView = view.findViewById(R.id.downloaded_rv);
@@ -115,6 +115,16 @@ public class Downloaded_Fragment extends Fragment {
         return;
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        switch (item.getItemId()){
+            case R.id.menu_about:
+                Intent intent = new Intent(getActivity(), AboutActivity.class);
+                startActivity(intent);
+                break;
+        }
+        return true;
+    }
 
     public class refreshDownloads extends AsyncTask<Void, Void, Void> {
 

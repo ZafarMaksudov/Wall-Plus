@@ -5,20 +5,14 @@
     android:background="@color/colorBackground"
     android:orientation="vertical">
 
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/swipeRefresh"
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/downloaded_rv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="64dp"
-        android:layout_marginTop="58dp">
+        android:layout_marginTop="55dp"
+        android:layout_marginBottom="60dp">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/downloaded_rv"
-            android:layout_marginTop="10dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
     </android.support.v7.widget.RecyclerView>
 
-</android.support.v4.widget.SwipeRefreshLayout>
-
-    </LinearLayout>
+</LinearLayout>

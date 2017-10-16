@@ -76,7 +76,7 @@ class FullScreenSwipeAdapter extends PagerAdapter {
                         .setImageRequest(ImageRequest.fromUri(arrayList.get(position).getWallpaperFullURL()))
                         .setOldController(draweeView.getController())
                         .build();
-                draweeView.setController(controller);
+                draweeView.getHierarchy().setProgressBarImage(new FrescoCircularImageLoader());
                 draweeView.setController(controller);
             }catch (Exception e){}
         } else{
@@ -91,7 +91,6 @@ class FullScreenSwipeAdapter extends PagerAdapter {
                         .setOldController(draweeView.getController())
                         .build();
                 draweeView.setController(controller);
-                //draweeView.setImageURI(imageUri);
             }catch (Exception e){}
         }
 

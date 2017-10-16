@@ -160,7 +160,8 @@ public class CategoryDetailsFragmentAdapter extends RecyclerView.Adapter {
             intent.putExtra("caller", "Category");
             intent.putExtra("position", position);
             intent.putParcelableArrayListExtra("array", wallpapersModels);
-            this.context.startActivity(intent);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
         }
     }
     public static class ProgressViewHolder extends RecyclerView.ViewHolder {

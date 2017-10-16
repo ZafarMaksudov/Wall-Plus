@@ -1,23 +1,29 @@
 package ytstudios.wall.bucket;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
-import com.google.android.gms.ads.AdView;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabSelectListener;
+
+import hotchemi.android.rate.AppRate;
+import hotchemi.android.rate.OnClickButtonListener;
 
 import static ytstudios.wall.bucket.FavDatabaseHelper.DATABASE_NAME;
 
@@ -32,13 +38,15 @@ public class MainActivity extends AppCompatActivity {
     Home_Fragment home_fragment;
     FavoriteFragment favorite_fragment;
 
-    private AdView bannerAd;
-    CardView disableAdBlock;
+    Context context;
 
     public static FavDatabaseHelper favDatabaseHelper;
 
-    public static  String DATABASE_FULL_PATH = null;
+    public static String DATABASE_FULL_PATH = null;
 
+//    CardView disableAdBlock;
+//    AdView bannerAd;
+//    boolean isAdblock;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,28 +54,62 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        context = getApplicationContext();
+
+        try{
+            AppRate.with(MainActivity.this)
+                .setInstallDays(0) // default 10, 0 means install day.
+                    .setLaunchTimes(9) // default 10
+                    .setRemindInterval(2) // default 1
+                    .setShowLaterButton(true) // default true
+                    .setDebug(false) // default false
+                    .setOnClickButtonListener(new OnClickButtonListener() { // callback listener.
+                        @Override
+                        public void onClickButton(int which) {
+                            Log.d(MainActivity.class.getName(), Integer.toString(which));
+                        }
+                    })
+                    .monitor();
+
+            // Show a dialog if meets conditions
+            AppRate.showRateDialogIfMeetsConditions(MainActivity.this);
+        }catch (Exception e){
+            Log.i("PlayStore Exception", e.toString());
+            Toast.makeText(MainActivity.this, "Error Opening PlayStore!", Toast.LENGTH_SHORT).show();
+        }
+
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Explore");
 
+        SharedPreferences preferences = getSharedPreferences(getResources().getString(R.string.preferencesName), MODE_PRIVATE);
+        boolean firstRun = preferences.getBoolean("firstRun", true);
+        if (firstRun) {
+            Log.i("Preferences", String.valueOf(preferences.getBoolean("firstRun", true)));
+            // here run your first-time instructions, for example :
+            Intent intro = new Intent(MainActivity.this, IntroActivity.class);
+            startActivityForResult(intro, 1);
+
+        }
+
         try {
             DATABASE_FULL_PATH = MainActivity.this.getDatabasePath(DATABASE_NAME).toString();
             Log.i("PATH", DATABASE_FULL_PATH);
-        }catch (Exception e){
+        } catch (Exception e) {
 
         }
         boolean checkDb = checkDataBase();
 
         favDatabaseHelper = new FavDatabaseHelper(MainActivity.this);
 
-        if(!checkDb){
+        if (!checkDb) {
             Log.i("DATABASE ", "DOES'T EXIST");
             favDatabaseHelper = new FavDatabaseHelper(MainActivity.this);
             Log.i("DATABASE ", "CREATED");
         }
 
 //        disableAdBlock = findViewById(R.id.disableAdBlock);
-//        MobileAds.initialize(MainActivity.this, getResources().getString(R.string.FULLSCREEN_BANNER_ID));
+//        MobileAds.initialize(MainActivity.this, getResources().getString(R.string.CATEGORY_BANNED_ID));
 //        bannerAd = new AdView(MainActivity.this);
 //        bannerAd = findViewById(R.id.bannerAdView);
 //        final AdRequest adRequest = new AdRequest.Builder()
@@ -81,12 +123,14 @@ public class MainActivity extends AppCompatActivity {
 //            @Override
 //            public void onAdFailedToLoad(int i) {
 //                disableAdBlock.setVisibility(View.VISIBLE);
+//                Log.i("MAIN ACTIVITY", "**************************AD NOT LOADED");
 //            }
 //
 //            @Override
 //            public void onAdLoaded() {
 //                super.onAdLoaded();
 //                disableAdBlock.setVisibility(View.GONE);
+//                Log.i("MAIN ACTIVITY", "***************************AD Loaded");
 //            }
 //        });
 
@@ -137,27 +181,36 @@ public class MainActivity extends AppCompatActivity {
         bottomBar.setOnTabSelectListener(new OnTabSelectListener() {
             @Override
             public void onTabSelected(@IdRes int tabId) {
-                switch (tabId){
+                switch (tabId) {
                     case R.id.tab_search:
-                        viewPager.setCurrentItem(0,true);
+                        viewPager.setCurrentItem(0, true);
                         return;
                     case R.id.tab_categories:
-                        viewPager.setCurrentItem(1,true);
+                        viewPager.setCurrentItem(1, true);
                         return;
                     case R.id.tab_home:
-                        viewPager.setCurrentItem(2,true);
+                        viewPager.setCurrentItem(2, true);
                         return;
                     case R.id.tab_fav:
-                        viewPager.setCurrentItem(3,true);
+                        viewPager.setCurrentItem(3, true);
                         return;
                     case R.id.tab_downloaded:
-                        viewPager.setCurrentItem(4,true);
+                        viewPager.setCurrentItem(4, true);
                         return;
                 }
             }
         });
 
     }
+
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.i("In Result ", "TRUE");
+        if (requestCode == 1) {
+            Log.i("In Result REQUEST CODE", "TRUE");
+        }
+    }
+
 
     public class setViewAdapter extends FragmentPagerAdapter {
         public setViewAdapter(FragmentManager fm) {
@@ -172,36 +225,31 @@ public class MainActivity extends AppCompatActivity {
                     return search_fragment;
                 }
                 return search_fragment;
-            }
-            else if (position == 1) {
+            } else if (position == 1) {
                 if (categories_fragment == null) {
                     categories_fragment = new Categories_Fragment();
                     return categories_fragment;
                 }
                 return categories_fragment;
-            }
-            else if (position == 2) {
+            } else if (position == 2) {
                 if (home_fragment == null) {
                     home_fragment = new Home_Fragment();
                     return home_fragment;
                 }
                 return home_fragment;
-            }
-            else if (position == 3) {
+            } else if (position == 3) {
                 if (favorite_fragment == null) {
                     favorite_fragment = new FavoriteFragment();
                     return favorite_fragment;
                 }
                 return favorite_fragment;
-            }
-            else if (position == 4) {
+            } else if (position == 4) {
                 if (downloaded_fragment == null) {
                     downloaded_fragment = new Downloaded_Fragment();
                     return downloaded_fragment;
                 }
                 return new Downloaded_Fragment();
-            }
-            else
+            } else
                 return null;
         }
 
@@ -210,6 +258,12 @@ public class MainActivity extends AppCompatActivity {
             return 5;
         }
 
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        Log.i("Request COde ", String.valueOf(requestCode));
     }
 
     public void setActionBarTitle(String title) {
@@ -229,4 +283,12 @@ public class MainActivity extends AppCompatActivity {
         return checkDB != null;
     }
 
+//    public class NetworkReceiver extends BroadcastReceiver {
+//
+//        @Override
+//        public void onReceive(Context context, Intent intent) {
+//            Intent init = new Intent("InitData");
+//            LocalBroadcastManager.getInstance(MainActivity.this).sendBroadcast(init);
+//        }
+//    }
 }

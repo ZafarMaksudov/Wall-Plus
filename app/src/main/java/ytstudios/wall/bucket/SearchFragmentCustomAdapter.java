@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,8 +29,9 @@ public class SearchFragmentCustomAdapter extends RecyclerView.Adapter {
 
     private final int VIEW_ITEM = 1;
     private final int VIEW_PROG = 0;
+    private final int VIEW_NATIVE_AD = 2;
 
-    private int visibleThreshold = 5;
+    private int visibleThreshold = 3;
     private int lastVisibleItem, totalItemCount;
     private boolean loading;
     private onLoadMoreListener onLoadMoreListener;
@@ -111,26 +113,18 @@ public class SearchFragmentCustomAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
 
+        Log.i("**********POSITION", String.valueOf(position));
         if (holder instanceof WallpapersViewHolder) {
             Uri uri = Uri.parse(wallpapersModels.get(position).getWallpaperURL());
             ((WallpapersViewHolder) holder).displayWallpaper.setImageURI(uri);
             rvPosition = holder.getAdapterPosition();
-        } else
+            Log.i("INSTANCE OF ", "WALLPAPER");
+        }
+        else if(holder instanceof ProgressViewHolder)
+        {
             ((ProgressViewHolder) holder).progressBar.setIndeterminate(true);
-
-//        Uri uri = Uri.parse(wallpapersModels.get(position).getWallpaperURL());
-//
-//        ImageRequest request = ImageRequestBuilder.newBuilderWithSource(uri)
-//                .setResizeOptions(new ResizeOptions(320, 320))
-//                .build();
-//        holder.displayWallpaper.setController(
-//                Fresco.newDraweeControllerBuilder()
-//                        .setOldController(holder.displayWallpaper.getController())
-//                        .setImageRequest(request)
-//                        .build());
-
-        //Glide.with(context).load(wallpapersModels.get(position).getWallpaperURL()).into(holder.displayWallpaper);
-        //Picasso.with(context).load(wallpapers.get(position).getWallpaperUrl()).placeholder(R.drawable.load_animation).into(holder.wallpaper);
+            Log.i("INSTANCE OF ", "PROGRESS");
+        }
     }
 
     public void setLoaded(){
@@ -174,6 +168,7 @@ public class SearchFragmentCustomAdapter extends RecyclerView.Adapter {
             intent.putExtra("caller", "Category");
             intent.putExtra("position", position);
             intent.putParcelableArrayListExtra("array", wallpapersModels);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             this.context.startActivity(intent);
         }
     }

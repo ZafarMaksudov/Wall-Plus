@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Wall Bucket</string>
 
-    <string name="toFullScreenTransition">toFullScreenTransition</string>
+    <string name="preferencesName">WallBucketPrefs</string>
 
 
     <!--App Strings -->
@@ -17,8 +17,14 @@
 
     <string name="smashicons">https://www.flaticon.com/authors/smashicons</string>
 
-
     <!--Download Location-->
     <string name="downloadLocation">/Wall Bucket/WallBucket Downloads</string>
+
+    <!--Intro Activity-->
+    <string name="explore"><b>Explore</b></string>
+
+    <!--About Me-->
+    <string name="myname">Yugansh Tyagi</string>
+    <string name="aboutme">Android Developer and Graphic Designer.\nTech Enthusiast at morning and \nFull Otaku at night\nEat, Sleep, Code, Repeat!</string>
 
 </resources>

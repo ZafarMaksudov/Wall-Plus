@@ -71,6 +71,8 @@ public class Home_Fragment extends Fragment {
 
     public static int wallpaperNumber = 0;
 
+    private int numPages;
+
     ProgressBar progressBar;
 
     @Nullable
@@ -79,10 +81,14 @@ public class Home_Fragment extends Fragment {
 
         View view = inflater.inflate(R.layout.home_fragment, null);
 
+        spanCount = 3;
+
         API_KEY = getResources().getString(R.string.API_KEY);
 
-        LocalBroadcastManager.getInstance(getContext()).registerReceiver(broadcastReceiver,
+        LocalBroadcastManager.getInstance(getContext()).registerReceiver(loadMoreBroadcastReceiver,
                 new IntentFilter("LoadMore"));
+//        LocalBroadcastManager.getInstance(getContext()).registerReceiver(initDataBroadcastReceiver,
+//                new IntentFilter("InitData"));
 
         progressBar = view.findViewById(R.id.progressBar);
 
@@ -112,25 +118,27 @@ public class Home_Fragment extends Fragment {
         homeFragmentCustomAdapter.setOnLoadMoreListener(new onLoadMoreListener() {
             @Override
             public void onLoadMore() {
-                //add null , so the adapter will check view_type and show progress bar at bottom
-                wallpapersModelArrayList.add(null);
-                Log.i("INSERTED", "NULL");
-                homeFragmentCustomAdapter.notifyItemInserted(wallpapersModelArrayList.size() - 1);
-                //Log.i("SIZE ", String.valueOf(wallpapersModelArrayList.size()));
+                if (pageCount < numPages) {
+                    Log.i("CURRENT PAGE ", String.valueOf(pageCount));
+                    Log.i("NUMBER OF  PAGE ", String.valueOf(numPages));
+                    wallpapersModelArrayList.add(null);
+                    Log.i("INSERTED", "NULL");
+                    homeFragmentCustomAdapter.notifyItemInserted(wallpapersModelArrayList.size() - 1);
 
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        wallpapersModelArrayList.remove(wallpapersModelArrayList.size() - 1);
-                        homeFragmentCustomAdapter.notifyItemRemoved(wallpapersModelArrayList.size());
-                        Log.i("REMOVED", "NULL");
-                        //add items one by one
-                        Log.i("INIT", "DATA");
-                        new loadMore().execute("http://papers.co/android/page/" + pageCount + "/");
-                        homeFragmentCustomAdapter.setLoaded();
-                        Log.i("INIT", "FINISHED");
-                    }
-                }, 900);
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            wallpapersModelArrayList.remove(wallpapersModelArrayList.size() - 1);
+                            homeFragmentCustomAdapter.notifyItemRemoved(wallpapersModelArrayList.size());
+                            Log.i("REMOVED", "NULL");
+                            //add items one by one
+                            Log.i("INIT", "DATA");
+                            new loadMore().execute("http://papers.co/android/page/" + pageCount + "/");
+                            homeFragmentCustomAdapter.setLoaded();
+                            Log.i("INIT", "FINISHED");
+                        }
+                    }, 900);
+                }
             }
         });
 
@@ -152,66 +160,13 @@ public class Home_Fragment extends Fragment {
         }
     }
 
-    public class loadMore extends AsyncTask<String, Integer, String> {
 
-        List list;
-        List id;
-
-        @Override
-        protected String doInBackground(String... params) {
-            pageCount++;
-            try {
-                Document document = Jsoup.connect(params[0]).get();
-                Element wall = document.select("ul.postul").first();
-                //Log.i("LIST ", wall.toString());
-                Elements url = wall.getElementsByAttribute("src");
-                list = url.eachAttr("src");
-
-                for (int i = 0; i < list.size(); i++) {
-                    wallpaperNumber++;
-                    String string = list.get(i).toString();
-                    String sep[] = string.split("http://");
-                    sep[1] = sep[1].replace("android/wp-content/uploads", "wallpaper");
-                    String septemp[] = sep[1].split("wallpaper-");
-                    septemp[0] = septemp[0] + "wallpaper.jpg?download=true" ;
-                    sep[1] = "http://" + septemp[0];
-                    Log.i("String ", sep[1]);
-                    //Log.i("URL", string);
-                    wallpapersModelArrayList.add(wallpapersModelArrayList.size() - 1, new WallpapersModel(
-                            string,///
-                            sep[1],
-                            "jpg",
-                            wallpaperNumber
-                    ));
-                }
-            } catch (Exception e) {
-                Log.i("ERROR", e.toString());
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-            //Log.i("COUNT ", String.valueOf(count));
-            homeFragmentCustomAdapter.notifyItemInserted(wallpapersModelArrayList.size());
-        }
-    }
-
-    private void initData() {
+    public void initData() {
         isNetworkConnected = isNetworkAvailable();
         if (isNetworkConnected) {
             noNetImage.setVisibility(View.INVISIBLE);
             noNetText.setVisibility(View.INVISIBLE);
             connectBtn.setVisibility(View.GONE);
-//            for (int i=1;i<2;i++)
-//            {
-//                if(i < 2){
-//                    loadFromInternet("https://wallpaperscraft.com/all/ratings/1080x1920");
-//                }
-//                else
-//                    loadFromInternet("https://wallpaperscraft.com/all/ratings/1080x1920/page" + i);
-//            }
 
             loadFromInternet("http://papers.co/android/");
             //https://spliffmobile.com/mobile-wallpapers/hd/wallpapers-for-mobile-2-1-16.html
@@ -229,6 +184,64 @@ public class Home_Fragment extends Fragment {
         }
     }
 
+    public class loadMore extends AsyncTask<String, Integer, String> {
+
+        List list;
+        List id;
+
+        @Override
+        protected String doInBackground(String... params) {
+            try {
+                Document document = Jsoup.connect(params[0]).get();
+                Element wall = document.select("ul.postul").first();
+                //Log.i("LIST ", wall.toString());
+                Elements url = wall.getElementsByAttribute("src");
+                list = url.eachAttr("src");
+
+                if(pageCount <= numPages) {
+
+                    for (int i = 0; i < list.size(); i++) {
+                        wallpaperNumber++;
+                        String string = list.get(i).toString();
+                        String sep[] = string.split("http://");
+                        sep[1] = sep[1].replace("android/wp-content/uploads", "wallpaper");
+                        String septemp[] = sep[1].split("wallpaper-");
+                        //Log.i("SEPARATION ", septemp[1]);
+                        if(!septemp[1].contains("250x400.jpg")){
+                            //Log.i("YES ", "It will be fixed!");
+                            septemp[0] = septemp[0] + "wallpaper-" + septemp[1] + "wallpaper.jpg?download=true";
+                            sep[1] = "http://" + septemp[0];
+                        }
+                        else {
+                            Log.i("String ", septemp[0]);
+                            septemp[0] = septemp[0] + "wallpaper.jpg?download=true";
+                            sep[1] = "http://" + septemp[0];
+                            //Log.i("String ", septemp[0]);
+                        }
+                        //Log.i("URL", string);
+                        wallpapersModelArrayList.add(wallpapersModelArrayList.size() - 1, new WallpapersModel(
+                                string,///
+                                sep[1],
+                                "jpg",
+                                wallpaperNumber
+                        ));
+                    }
+                }
+            } catch (Exception e) {
+                Log.i("ERROR", e.toString());
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            //Log.i("COUNT ", String.valueOf(count));
+            pageCount++;
+            homeFragmentCustomAdapter.notifyItemInserted(wallpapersModelArrayList.size());
+        }
+    }
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
@@ -238,12 +251,9 @@ public class Home_Fragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menu_settings:
-                Intent settings = new Intent(getContext(), SettingsActivity.class);
-                startActivity(settings);
-                return true;
             case R.id.menu_about:
-                Toast.makeText(getContext(), "About", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getActivity(), AboutActivity.class);
+                startActivity(intent);
                 return true;
             case R.id.grid_two:
                 spanCount = 2;
@@ -289,36 +299,39 @@ public class Home_Fragment extends Fragment {
         protected String doInBackground(String... params) {
 
             //***************PAPERS
-                try {
+            try {
 
-                    Document document = Jsoup.connect(params[0]).get();
-                    Element wall = document.select("ul.postul").first();
-                    //Log.i("LIST ", wall.toString());
-                    Elements url = wall.getElementsByAttribute("src");
-                    list = url.eachAttr("src");
+                Document document = Jsoup.connect(params[0]).get();
+                Element wall = document.select("ul.postul").first();
+                //Log.i("LIST ", wall.toString());
+                Elements url = wall.getElementsByAttribute("src");
+                Element page = document.select("a.page-numbers").last();
+                numPages = Integer.parseInt(page.text());
+                Log.i("PAGE NUMBER ", String.valueOf(numPages));
+                list = url.eachAttr("src");
 
-                    for (int i = 0; i < list.size(); i++) {
-                        wallpaperNumber++;
-                        String string = list.get(i).toString();
-                        String sep[] = string.split("http://");
-                        sep[1] = sep[1].replace("android/wp-content/uploads", "wallpaper");
-                        String septemp[] = sep[1].split("wallpaper-");
-                        septemp[0] = septemp[0] + "wallpaper.jpg?download=true" ;
-                        sep[1] = "http://" + septemp[0];
-                        Log.i("String ", sep[1]);
-                        //Log.i("URL", string);
-                        wallpapersModelArrayList.add(new WallpapersModel(
-                                string,///
-                                sep[1],
-                                "jpg",
-                                wallpaperNumber,
-                                0
-                        ));
-                    }
-                }catch (Exception e){
-                    Log.i("ERROR LOADING WEBSITE ", e.toString());
+                for (int i = 0; i < list.size(); i++) {
+                    wallpaperNumber++;
+                    String string = list.get(i).toString();
+                    String sep[] = string.split("http://");
+                    sep[1] = sep[1].replace("android/wp-content/uploads", "wallpaper");
+                    String septemp[] = sep[1].split("wallpaper-");
+                    septemp[0] = septemp[0] + "wallpaper.jpg?download=true";
+                    sep[1] = "http://" + septemp[0];
+                    Log.i("String ", sep[1]);
+                    //Log.i("URL", string);
+                    wallpapersModelArrayList.add(new WallpapersModel(
+                            string,///
+                            sep[1],
+                            "jpg",
+                            wallpaperNumber,
+                            0
+                    ));
                 }
-                return null;
+            } catch (Exception e) {
+                Log.i("ERROR LOADING WEBSITE ", e.toString());
+            }
+            return null;
         }
         //************************************
         //Elements url = wall.getElementsByAttribute("src");
@@ -445,7 +458,7 @@ public class Home_Fragment extends Fragment {
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
-    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+    private BroadcastReceiver loadMoreBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             new loadMore().execute("http://papers.co/android/page/" + pageCount + "/");
@@ -453,4 +466,13 @@ public class Home_Fragment extends Fragment {
             homeFragmentCustomAdapter.notifyDataSetChanged();
         }
     };
+
+//    private BroadcastReceiver initDataBroadcastReceiver = new BroadcastReceiver() {
+//        @Override
+//        public void onReceive(Context context, Intent intent) {
+//            initData();
+//            Log.i("BroadCast InitData", "RECEIVED");
+//            homeFragmentCustomAdapter.notifyDataSetChanged();
+//        }
+//    };
 }

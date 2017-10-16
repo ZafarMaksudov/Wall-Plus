@@ -1,5 +1,6 @@
 package ytstudios.wall.bucket;
 
+import android.app.Activity;
 import android.app.WallpaperManager;
 import android.content.Context;
 import android.content.Intent;
@@ -8,7 +9,6 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -40,11 +40,12 @@ public class DownloadFragmentAdapter extends RecyclerView.Adapter {
     Context context;
     DisplayMetrics displayMetrics;
     public static String uri;
+    Activity activity;
 
-    public DownloadFragmentAdapter(Context context, ArrayList<String> paths, ArrayList<String> names) {
+    public DownloadFragmentAdapter(Context context, ArrayList<String> paths, ArrayList<String> names, Activity activity) {
         this.paths = paths;
         this.names = names;
-        //this.activity = activity;
+        this.activity = activity;
         this.context = context;
     }
 
@@ -78,6 +79,7 @@ public class DownloadFragmentAdapter extends RecyclerView.Adapter {
                 Toast.makeText(context, "Deleted!", Toast.LENGTH_SHORT).show();
                 Animation animation = AnimationUtils.loadAnimation(context, R.anim.zoom_out);
                 Animation animation1 = AnimationUtils.loadAnimation(context, R.anim.fadeout);
+                animation.setDuration(200);
 
                 animation.setAnimationListener(new Animation.AnimationListener() {
                     @Override
@@ -115,7 +117,7 @@ public class DownloadFragmentAdapter extends RecyclerView.Adapter {
         ((DownloadsHolder) holder).setAsWall.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new setWall(context, position).execute();
+                new setWall(position).execute();
             }
         });
     }
@@ -156,27 +158,23 @@ public class DownloadFragmentAdapter extends RecyclerView.Adapter {
             intent.putExtra("paths", paths);
             intent.putExtra("position", position);
             intent.putExtra("caller", "Downloads");
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             this.context.startActivity(intent);
 
         }
     }
 
     class setWall extends AsyncTask<Void, Void, Void> {
-
-        Context context;
         Bitmap result;
         int position;
-        AlertDialog alertDialog;
 
-        public setWall(Context context, int position) {
-            this.context = context;
+        public setWall(int position) {
             this.result = null;
             this.position = position;
         }
 
         @Override
         protected Void doInBackground(Void... voids) {
-
             try {
                 result = BitmapFactory.decodeFile(paths.get(position));
             } catch (Exception e) {
@@ -188,11 +186,10 @@ public class DownloadFragmentAdapter extends RecyclerView.Adapter {
 
             @Override
             protected void onPreExecute () {
-                Toast.makeText(context, "Applying Wallpaper!", Toast.LENGTH_SHORT).show();
-//                AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(context);
-//                builder.setCancelable(false);
-//                builder.setView(R.layout.setwall_dialog_layout);
-//                alertDialog = builder.create();
+                Toast.makeText(context, "Applying Wallpaper!", Toast.LENGTH_LONG).show();
+//                alertDialog = new Dialog(activity, R.style.MyDialogTheme);
+//                alertDialog.setCancelable(false);
+//                alertDialog.setContentView(R.layout.setwall_dialog_layout);
 //                ProgressBar progressBar = alertDialog.findViewById(R.id.settingWall);
 //                progressBar.setIndeterminate(true);
 //                alertDialog.show();
@@ -205,10 +202,9 @@ public class DownloadFragmentAdapter extends RecyclerView.Adapter {
                     wallpaperManager.setBitmap(result);
                     Toast.makeText(context, "Wallpaper Applied Successfully", Toast.LENGTH_SHORT).show();
                 } catch (Exception ex) {
-                    ex.printStackTrace();
+                    Log.i("ERROR", ex.toString());
                     Toast.makeText(context, "Error applying wallpaper!", Toast.LENGTH_SHORT).show();
                 }
-                //alertDialog.hide();
             }
         }
     }

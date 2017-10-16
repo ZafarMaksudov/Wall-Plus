@@ -70,7 +70,7 @@ public class FavoriteFragment extends Fragment {
         brokenHeart = view.findViewById(R.id.broken_heart);
         noFav = view.findViewById(R.id.no_fav_text);
 
-        size = initArrayList();
+        initArrayList();
         Log.i("FAORITES SIZE ", String.valueOf(size));
 
         toggleUi(size);
@@ -114,6 +114,7 @@ public class FavoriteFragment extends Fragment {
         switch (item.getItemId()) {
             case R.id.remove_database:
                 if (size != 0) {
+                    Log.i("Size IS", String.valueOf(size));
                     Log.i("INSIDE", "OPTIONS");
                     try {
                         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.MyDialogTheme);
@@ -141,7 +142,8 @@ public class FavoriteFragment extends Fragment {
                 }
                 break;
             case R.id.menu_about:
-                Toast.makeText(context, "ABOUT!", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getActivity(), AboutActivity.class);
+                startActivity(intent);
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -166,6 +168,7 @@ public class FavoriteFragment extends Fragment {
                 ));
                 Log.i("ARRAYLIST UPDATED SIZE ", String.valueOf(arrayList.size()));
                 toggleUi(arrayList.size());
+                size = arrayList.size();
                 favoriteFragmentAdapter.notifyDataSetChanged();
             }
         }
@@ -182,7 +185,7 @@ public class FavoriteFragment extends Fragment {
     };
 
 
-    private int initArrayList() {
+    private void initArrayList() {
         arrayList.clear();
         Cursor cursor = MainActivity.favDatabaseHelper.readFavFromDatabase();
         while (cursor.moveToNext()) {
@@ -192,11 +195,9 @@ public class FavoriteFragment extends Fragment {
                     cursor.getString(2),
                     Integer.parseInt(cursor.getString(3))
             ));
-            Log.i("ARRAYLIST", "ACTIVATED");
-            Log.i("SIZE", String.valueOf(arrayList.size()));
         }
         toggleUi(arrayList.size());
-        Log.i("SIZE", String.valueOf(arrayList.size()));
-        return arrayList.size();
+        size = arrayList.size();
+        Log.i("SIZE AFTER DELETION", String.valueOf(arrayList.size()));
     }
 }

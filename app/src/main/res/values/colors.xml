@@ -4,7 +4,7 @@
     <color name="colorPrimaryDark">#222c31</color>
     <color name="colorAccent">#B2DFD8</color>
     <color name="colorAccentTransparent">#66B2DFD8</color>
-    <color name="colorBackground">#1e282d</color>
+        <color name="colorBackground">#1e282d</color>
 
     <color name="tabSelected">#ecf0f1</color>
     <color name="textColor">#B2DFD8</color>
@@ -15,4 +15,11 @@
     <color name="white">#ffffff</color>
     <color name="transparentColor">#00000000</color>
     <color name="translucentBlackColor">#66000000</color>
+
+    <!--Intro Activity colors-->
+    <color name="color1">#2c3e50</color>
+    <color name="color2">#9b59b6</color>
+    <color name="color3">#27ae60</color>
+    <color name="color4">#e74c3c</color>
+    <color name="color5">#27ae60</color>
 </resources>
