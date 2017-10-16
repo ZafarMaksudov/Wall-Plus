@@ -1,3 +1,5 @@
+[![HitCount](http://hits.dwyl.io/YuganshT79/Wall-Plus.svg)](http://hits.dwyl.io/YuganshT79/Wall-Plus)
+
 # Wall Bucket
 Wall Bucket is a Simple Wallpaper Downloading App for Android that provide you with
 the best Android wallpapers available for your **Device Resolution!**
