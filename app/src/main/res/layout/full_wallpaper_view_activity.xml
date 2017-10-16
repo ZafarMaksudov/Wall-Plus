@@ -104,7 +104,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         ads:adSize="SMART_BANNER"
-        ads:adUnitId="@string/BANNER_ID">
+        ads:adUnitId="@secrets/BANNER_ID">
 
     </com.google.android.gms.ads.AdView>
 
