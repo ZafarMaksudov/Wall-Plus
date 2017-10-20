@@ -52,7 +52,7 @@ public class Search_Fragment extends Fragment {
     LottieAnimationView animationView;
 
     ArrayList<WallpapersModel> wallpapersModels;
-    RecyclerView recyclerView;
+    public static RecyclerView recyclerView;
     SearchFragmentCustomAdapter searchFragmentCustomAdapter;
 
     String query;

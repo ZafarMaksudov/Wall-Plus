@@ -47,8 +47,8 @@ import java.util.List;
 
 public class Home_Fragment extends Fragment {
 
-    ArrayList<WallpapersModel> wallpapersModelArrayList;
-    RecyclerView recyclerView;
+    public static ArrayList<WallpapersModel> wallpapersModelArrayList;
+    public static RecyclerView recyclerView;
     HomeFragmentCustomAdapter homeFragmentCustomAdapter;
     ImageView noNetImage;
     TextView noNetText;
@@ -383,6 +383,9 @@ public class Home_Fragment extends Fragment {
             new loadMore().execute("http://papers.co/android/page/" + pageCount + "/");
             Log.i("BroadCast LoadMore", "RECEIVED");
             homeFragmentCustomAdapter.notifyDataSetChanged();
+//            Intent intentView = new Intent("UpdateHomeViewPager");
+//            LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(intentView);
+//            Log.i("Update View Pager", "SENT");
         }
     };
 }

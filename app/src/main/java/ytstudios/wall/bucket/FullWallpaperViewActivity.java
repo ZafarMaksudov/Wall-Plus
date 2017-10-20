@@ -2,7 +2,6 @@ package ytstudios.wall.bucket;
 
 import android.app.Dialog;
 import android.app.WallpaperManager;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -89,8 +88,8 @@ public class FullWallpaperViewActivity extends AppCompatActivity {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         super.onCreate(savedInstanceState);
 
-//        LocalBroadcastManager.getInstance(FullWallpaperViewActivity.this.registerReceiver(broadcastReceiver,
-//                new IntentFilter("Update"));
+//        LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(broadcastReceiver,
+//                new IntentFilter("UpdateHomeViewPager"));
 
         wallpaperManager = WallpaperManager.getInstance(FullWallpaperViewActivity.this);
 
@@ -169,7 +168,7 @@ public class FullWallpaperViewActivity extends AppCompatActivity {
         } else {
             arrayList = getIntent().getParcelableArrayListExtra("array");
             fullScreenSwipeAdapter = new FullScreenSwipeAdapter(FullWallpaperViewActivity.this, arrayList);
-            Log.i("ARRAYLIST SIZE", String.valueOf(arrayList.size()));
+            Log.i("ARRAYLIST PAGER SIZE", String.valueOf(arrayList.size()));
 
             viewPager.setAdapter(fullScreenSwipeAdapter);
             viewPager.setCurrentItem(pos);
@@ -324,7 +323,7 @@ public class FullWallpaperViewActivity extends AppCompatActivity {
                         Intent intent = new Intent("LoadMore");
                         LocalBroadcastManager.getInstance(FullWallpaperViewActivity.this).sendBroadcast(intent);
                         Log.i("BroadCast LoadMore", "SENT");
-                        viewPager.invalidate();
+                        //viewPager.invalidate();
                     }
                     if (pos > position) {
                         //left
@@ -339,6 +338,16 @@ public class FullWallpaperViewActivity extends AppCompatActivity {
                     wallId = arrayList.get(position).getWallId();
                     Log.i("Position", String.valueOf(pos));
                     Log.i("URL", encodedUrlFull);
+                    if(ActivityCaller.equals("Home")){
+                        Home_Fragment.recyclerView.scrollToPosition(position+3);
+                    }
+                    else if(ActivityCaller.equals("Search")){
+                        Search_Fragment.recyclerView.scrollToPosition(position+3);
+                    }
+                    else if(ActivityCaller.equals("Category")){
+                        CategoryDetailsFragment.recyclerView.scrollToPosition(position+3);
+                    }
+
                 }
 
                 @Override
@@ -559,17 +568,22 @@ public class FullWallpaperViewActivity extends AppCompatActivity {
         return result;
     }
 
-    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            Log.i("BroadCast LoadMore", "RECEIVED");
-        }
-    };
-
-    public void updateData(ArrayList<WallpapersModel> arrayList) {
-        this.arrayList = arrayList;
-        Log.i("UPDATED", String.valueOf(this.arrayList.size()));
-    }
+//    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+//        @Override
+//        public void onReceive(Context context, Intent intent) {
+//            Log.i("BroadCast Update Pager", "RECEIVED");
+//            updateData();
+//            fullScreenSwipeAdapter.notifyDataSetChanged();
+//            //viewPager.invalidate();
+//        }
+//    };
+//
+//    public void updateData() {
+//        this.arrayList.clear();
+//        this.arrayList = Home_Fragment.wallpapersModelArrayList;
+//        Log.i("UPDATED FULL SIZE", String.valueOf(this.arrayList.size()));
+//        Log.i("UPDATED HOME SIZE", String.valueOf(Home_Fragment.wallpapersModelArrayList.size()));
+//    }
 
     public boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager

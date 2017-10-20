@@ -37,7 +37,7 @@ public class CategoryDetailsFragment extends Activity {
 
     Toolbar toolbar;
     String categoryName;
-    RecyclerView recyclerView;
+    public static RecyclerView recyclerView;
     CategoryDetailsFragmentAdapter categoryDetailsFragmentAdapter;
     GridLayoutManager gridLayoutManager;
     ArrayList<WallpapersModel> wallpapersModels;

@@ -160,7 +160,7 @@ public class SearchFragmentCustomAdapter extends RecyclerView.Adapter {
             intent.putExtra("thumbUrl", wallpapersModels.get(position).getWallpaperURL());
             intent.putExtra("file_type", wallpapersModels.get(position).getFileType());
             intent.putExtra("id", wallpapersModels.get(position).getWallId());
-            intent.putExtra("caller", "Category");
+            intent.putExtra("caller", "Search");
             intent.putExtra("position", position);
             intent.putParcelableArrayListExtra("array", wallpapersModels);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
