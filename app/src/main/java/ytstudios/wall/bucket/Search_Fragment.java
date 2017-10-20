@@ -1,6 +1,8 @@
 package ytstudios.wall.bucket;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -144,7 +146,12 @@ public class Search_Fragment extends Fragment {
 
                     InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(searchBar.getWindowToken(), 0);
-                    numSearch++;
+                    int temp = numSearch++;
+                    SharedPreferences sp = getActivity().getSharedPreferences(getResources().getString(R.string.preferencesName), Activity.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sp.edit();
+                    editor.putInt("numSearch", temp);
+                    editor.apply();
+                    Log.i("---------->>SEARCHES", String.valueOf(sp.getInt("numSearch",-1)));
                     return true;
                 }
 
@@ -181,6 +188,9 @@ public class Search_Fragment extends Fragment {
             }
         });
 
+        SharedPreferences sp = getActivity().getSharedPreferences(getResources().getString(R.string.preferencesName), Activity.MODE_PRIVATE);
+        numSearch = sp.getInt("numSearch", 0);
+        Log.i("---->Number of Searches", String.valueOf(numSearch));
         return view;
     }
 
@@ -337,10 +347,14 @@ public class Search_Fragment extends Fragment {
             animationView.setVisibility(View.INVISIBLE);
             searchQueryText.setVisibility(View.INVISIBLE);
             searchQuery.setVisibility(View.INVISIBLE);
-            if (interstitialAd.isLoaded() && numSearch == 5) {
+            if (interstitialAd.isLoaded() && numSearch == 4) {
                 interstitialAd.show();
                 Log.i("IS LOADED", "INTERSTITIAL");
                 numSearch = 0;
+                SharedPreferences sp = getActivity().getSharedPreferences(getResources().getString(R.string.preferencesName), Activity.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sp.edit();
+                editor.putInt("numSearch", 0);
+                editor.apply();
                 loadInterstitial();
             }
 

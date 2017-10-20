@@ -11,7 +11,8 @@
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
         android:elevation="2dp"
-        app:theme="@style/ToolBarStyle"></android.support.v7.widget.Toolbar>
+        app:theme="@style/ToolBarStyle">
+    </android.support.v7.widget.Toolbar>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -112,33 +113,132 @@
                 </RelativeLayout>
             </android.support.v7.widget.CardView>
 
-            <!--<android.support.v7.widget.CardView-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_margin="6dp"-->
-                <!--android:background="@color/colorPrimary"-->
-                <!--app:cardCornerRadius="4dp">-->
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="6dp"
+                android:background="@color/colorPrimary"
+                app:cardCornerRadius="4dp">
 
-                <!--<LinearLayout-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="110dp"-->
-                    <!--android:background="@color/colorPrimary">-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/colorPrimary"
+                    android:orientation="vertical"
+                    android:theme="@style/AppTheme.FullScreen">
 
-                    <!--<TextView-->
-                        <!--android:layout_width="match_parent"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:fontFamily="sans-serif"-->
-                        <!--android:text="Library Implementations"-->
-                        <!--android:textColor="@android:color/white"-->
-                        <!--android:textSize="20sp"-->
-                        <!--android:layout_margin="12dp"/>-->
+                    <TextView
+                        android:id="@+id/shareApp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_margin="12dp"
+                        android:text="@string/shareApp"
+                        android:textColor="@android:color/white"
+                        android:textSize="18sp" />
 
-                    <!---->
-                <!--</LinearLayout>-->
-            <!--</android.support.v7.widget.CardView>-->
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginLeft="12dp"
+                        android:layout_marginRight="12dp"
+                        android:background="@color/colorBackground" />
+
+                    <TextView
+                        android:id="@+id/rateApp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_margin="12dp"
+                        android:text="@string/rateApp"
+                        android:textColor="@android:color/white"
+                        android:textSize="18sp" />
+
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="6dp"
+                android:background="@color/colorPrimary"
+                app:cardCornerRadius="4dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/colorPrimary"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="8dp"
+                        android:fontFamily="sans-serif"
+                        android:text="@string/copyright_claim"
+                        android:textColor="@android:color/white"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="8dp"
+                        android:fontFamily="monospace"
+                        android:text="@string/cpyrghtText"
+                        android:textColor="@android:color/white"
+                        android:textSize="14sp" />
+
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
 
         </LinearLayout>
 
     </ScrollView>
 
 </LinearLayout>
+
+
+    <!--<android.support.v7.widget.CardView-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_margin="6dp"-->
+    <!--android:background="@color/colorPrimary"-->
+    <!--app:cardCornerRadius="4dp">-->
+
+    <!--<RelativeLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:background="@color/colorPrimary">-->
+
+    <!--<ImageView-->
+    <!--android:id="@+id/appImg"-->
+    <!--android:layout_width="80dp"-->
+    <!--android:layout_height="80dp"-->
+    <!--android:layout_centerHorizontal="true"-->
+    <!--android:src="@drawable/searchwall" />-->
+
+    <!--<TextView-->
+    <!--android:id="@+id/appName"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_below="@id/appImg"-->
+    <!--android:layout_centerHorizontal="true"-->
+    <!--android:layout_margin="4dp"-->
+    <!--android:text="@string/app_name"-->
+    <!--android:textColor="@color/colorAccent"-->
+    <!--android:textSize="24sp" />-->
+
+    <!--<TextView-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_below="@id/appName"-->
+    <!--android:layout_centerHorizontal="true"-->
+    <!--android:layout_margin="4dp"-->
+    <!--android:text="The best Wallpaper app on Playstore"-->
+    <!--android:textColor="@android:color/white"-->
+    <!--android:textSize="14sp" -->
+    <!--android:fontFamily="monospace"/>-->
+
+    <!--</RelativeLayout>-->
+
+    <!--</android.support.v7.widget.CardView>-->
