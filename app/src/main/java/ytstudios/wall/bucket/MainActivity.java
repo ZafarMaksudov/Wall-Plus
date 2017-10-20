@@ -44,10 +44,6 @@ public class MainActivity extends AppCompatActivity {
 
     public static String DATABASE_FULL_PATH = null;
 
-//    CardView disableAdBlock;
-//    AdView bannerAd;
-//    boolean isAdblock;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -107,32 +103,6 @@ public class MainActivity extends AppCompatActivity {
             favDatabaseHelper = new FavDatabaseHelper(MainActivity.this);
             Log.i("DATABASE ", "CREATED");
         }
-
-//        disableAdBlock = findViewById(R.id.disableAdBlock);
-//        MobileAds.initialize(MainActivity.this, getResources().getString(R.string.CATEGORY_BANNED_ID));
-//        bannerAd = new AdView(MainActivity.this);
-//        bannerAd = findViewById(R.id.bannerAdView);
-//        final AdRequest adRequest = new AdRequest.Builder()
-//                .addTestDevice("02147518DD550E863FFAA08EA49B5F41")
-//                .addTestDevice("4F18060E4B4A11E00C6E6C3B8EEF6353")
-//                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-//                .build();
-//
-//        bannerAd.loadAd(adRequest);
-//        bannerAd.setAdListener(new AdListener() {
-//            @Override
-//            public void onAdFailedToLoad(int i) {
-//                disableAdBlock.setVisibility(View.VISIBLE);
-//                Log.i("MAIN ACTIVITY", "**************************AD NOT LOADED");
-//            }
-//
-//            @Override
-//            public void onAdLoaded() {
-//                super.onAdLoaded();
-//                disableAdBlock.setVisibility(View.GONE);
-//                Log.i("MAIN ACTIVITY", "***************************AD Loaded");
-//            }
-//        });
 
         viewPager = findViewById(R.id.view_pager);
         viewPager.setAdapter(new setViewAdapter(getSupportFragmentManager()));
@@ -282,13 +252,4 @@ public class MainActivity extends AppCompatActivity {
         }
         return checkDB != null;
     }
-
-//    public class NetworkReceiver extends BroadcastReceiver {
-//
-//        @Override
-//        public void onReceive(Context context, Intent intent) {
-//            Intent init = new Intent("InitData");
-//            LocalBroadcastManager.getInstance(MainActivity.this).sendBroadcast(init);
-//        }
-//    }
 }

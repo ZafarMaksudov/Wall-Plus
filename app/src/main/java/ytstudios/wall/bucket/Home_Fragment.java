@@ -29,9 +29,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -67,13 +64,13 @@ public class Home_Fragment extends Fragment {
 
     public static int spanCount = 3;
 
-    public static String API_KEY;
-
     public static int wallpaperNumber = 0;
 
     private int numPages;
 
     ProgressBar progressBar;
+
+    private boolean isLoading = false;
 
     @Nullable
     @Override
@@ -82,8 +79,6 @@ public class Home_Fragment extends Fragment {
         View view = inflater.inflate(R.layout.home_fragment, null);
 
         spanCount = 3;
-
-        API_KEY = getResources().getString(R.string.API_KEY);
 
         LocalBroadcastManager.getInstance(getContext()).registerReceiver(loadMoreBroadcastReceiver,
                 new IntentFilter("LoadMore"));
@@ -128,8 +123,12 @@ public class Home_Fragment extends Fragment {
                     handler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            wallpapersModelArrayList.remove(wallpapersModelArrayList.size() - 1);
-                            homeFragmentCustomAdapter.notifyItemRemoved(wallpapersModelArrayList.size());
+                            try {
+                                wallpapersModelArrayList.remove(wallpapersModelArrayList.size() - 1);
+                                homeFragmentCustomAdapter.notifyItemRemoved(wallpapersModelArrayList.size());
+                            }catch (ArrayIndexOutOfBoundsException e){
+                                //Toast.makeText(getContext(), "ERROR!", Toast.LENGTH_SHORT).show();
+                            }
                             Log.i("REMOVED", "NULL");
                             //add items one by one
                             Log.i("INIT", "DATA");
@@ -138,6 +137,7 @@ public class Home_Fragment extends Fragment {
                             Log.i("INIT", "FINISHED");
                         }
                     }, 900);
+                    isLoading = false;
                 }
             }
         });
@@ -169,9 +169,6 @@ public class Home_Fragment extends Fragment {
             connectBtn.setVisibility(View.GONE);
 
             loadFromInternet("http://papers.co/android/");
-            //https://spliffmobile.com/mobile-wallpapers/hd/wallpapers-for-mobile-2-1-16.html
-            //http://papers.co/android/
-            //http://wallpaperscraft.com/all/1080x1920
 
         } else {
 
@@ -192,6 +189,7 @@ public class Home_Fragment extends Fragment {
         @Override
         protected String doInBackground(String... params) {
             try {
+                isLoading = true;
                 Document document = Jsoup.connect(params[0]).get();
                 Element wall = document.select("ul.postul").first();
                 //Log.i("LIST ", wall.toString());
@@ -216,9 +214,7 @@ public class Home_Fragment extends Fragment {
                             Log.i("String ", septemp[0]);
                             septemp[0] = septemp[0] + "wallpaper.jpg?download=true";
                             sep[1] = "http://" + septemp[0];
-                            //Log.i("String ", septemp[0]);
                         }
-                        //Log.i("URL", string);
                         wallpapersModelArrayList.add(wallpapersModelArrayList.size() - 1, new WallpapersModel(
                                 string,///
                                 sep[1],
@@ -267,8 +263,11 @@ public class Home_Fragment extends Fragment {
                 return true;
             case R.id.refresh:
                 pageCount = 2;
-                recyclerView.setVisibility(View.INVISIBLE);
-                initData();
+                if(!isLoading){
+                    recyclerView.setVisibility(View.INVISIBLE);
+                    wallpapersModelArrayList.clear();
+                    initData();
+                }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -298,7 +297,6 @@ public class Home_Fragment extends Fragment {
         @Override
         protected String doInBackground(String... params) {
 
-            //***************PAPERS
             try {
 
                 Document document = Jsoup.connect(params[0]).get();
@@ -333,49 +331,6 @@ public class Home_Fragment extends Fragment {
             }
             return null;
         }
-        //************************************
-        //Elements url = wall.getElementsByAttribute("src");
-        //Log.i("URL 1  ", url.toString());
-//                list = url.eachAttr("src");
-//
-//                for (int i = 0; i < list.size(); i++) {
-//                    wallpaperNumber++;
-//                    String string = list.get(i).toString();
-//                    String sep[] = string.split("http://");
-//                    sep[1] = sep[1].replace("android/wp-content/uploads", "wallpaper");
-//                    //sep[1] = sep[1].replace("-6-", "-6-");
-//                    sep[1] = sep[1].replace("-250x400.jpg", ".jpg?download=true");
-//                    sep[1] = "http://" + sep[1];
-//                    Log.i("String ", sep[1]);
-//                    Log.i("URL", string);
-//                    wallpapersModelArrayList.add(new WallpapersModel(
-//                            string,///
-//                            sep[1],
-//                            "jpg",
-//                            wallpaperNumber
-//                    ));
-//                }
-
-
-//                //FOR WALLPAPERSCRAFT
-//                Document document = Jsoup.connect(params[0]).get();
-//                Element wall = document.select("div.wallpapers").first();
-//                //Log.i("WALL  ", wall.toString());
-//                Elements url = wall.getElementsByAttribute("src");
-//                //Log.i("ELEMENTS   ", url.toString());
-//                list = url.eachAttr("src");
-//
-//                for(int i = 0; i < list.size(); i++){
-//                    String string = list.get(i).toString();
-//                    String[] sep = string.split("wallpaperscraft.com");
-//                    ///Log.i("URL ", sep[1]);
-//                    wallpapersModelArrayList.add(new WallpapersModel(
-//                            "https:/www.wallpaperscraft.com"+sep[1].replace("168x300", "320x480"),///
-//                            "https:/www.wallpaperscraft.com"+sep[1].replace("168x300", "1080x1920"),
-//                            "jpg",
-//                            1
-//                    ));
-//                }
 
         @Override
         protected void onPreExecute() {
@@ -391,42 +346,6 @@ public class Home_Fragment extends Fragment {
             homeFragmentCustomAdapter.notifyDataSetChanged();
             progressBar.setVisibility(View.GONE);
             recyclerView.setVisibility(View.VISIBLE);
-        }
-    }
-
-    class ReadJSON extends AsyncTask<String, Integer, String> {
-
-
-        @Override
-        protected String doInBackground(String... params) {
-            return readURL(params[0]);
-        }
-
-        @Override
-        protected void onPostExecute(String content) {
-            try {
-                JSONObject jsonObject = new JSONObject(content);
-                JSONArray jsonArray = jsonObject.getJSONArray("wallpapers");
-
-                for (int i = 0; i < jsonArray.length(); i++) {
-                    JSONObject wallpaperObject = jsonArray.getJSONObject(i);
-//                    if(wallpaperObject.getString("success").length() <= 4){
-                    wallpapersModelArrayList.add(new WallpapersModel(
-                            wallpaperObject.getString("url_thumb"),
-                            wallpaperObject.getString("url_image"),
-                            wallpaperObject.getString("file_type"),
-                            wallpaperObject.getInt("id")
-                    ));
-//                    }
-//                    else {
-//                        imageView.setVisibility(View.VISIBLE);
-//                        return;
-//                    }
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            homeFragmentCustomAdapter.notifyDataSetChanged();
         }
     }
 
@@ -466,13 +385,4 @@ public class Home_Fragment extends Fragment {
             homeFragmentCustomAdapter.notifyDataSetChanged();
         }
     };
-
-//    private BroadcastReceiver initDataBroadcastReceiver = new BroadcastReceiver() {
-//        @Override
-//        public void onReceive(Context context, Intent intent) {
-//            initData();
-//            Log.i("BroadCast InitData", "RECEIVED");
-//            homeFragmentCustomAdapter.notifyDataSetChanged();
-//        }
-//    };
 }

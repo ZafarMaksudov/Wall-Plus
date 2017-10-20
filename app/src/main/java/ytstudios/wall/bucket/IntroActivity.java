@@ -90,8 +90,6 @@ public class IntroActivity extends MaterialIntroActivity {
 
     @Override
     public void onFinish() {
-//        Intent intent = new Intent(IntroActivity.this, MainActivity.class);
-//        startActivity(intent);
         SharedPreferences settings = getSharedPreferences(getResources().getString(R.string.preferencesName), MODE_PRIVATE);
         SharedPreferences.Editor editor = settings.edit();
         editor.putBoolean("firstRun", false);

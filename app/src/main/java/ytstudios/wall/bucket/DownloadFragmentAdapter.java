@@ -39,7 +39,7 @@ public class DownloadFragmentAdapter extends RecyclerView.Adapter {
     private ArrayList<String> names;
     Context context;
     DisplayMetrics displayMetrics;
-    public static String uri;
+    public static Uri uri;
     Activity activity;
 
     public DownloadFragmentAdapter(Context context, ArrayList<String> paths, ArrayList<String> names, Activity activity) {
@@ -66,17 +66,17 @@ public class DownloadFragmentAdapter extends RecyclerView.Adapter {
         int width = displayMetrics.widthPixels / 2;
         int height = 220;
 
-        Uri uriImage = Uri.fromFile(new File(paths.get(position)));
+        uri = Uri.fromFile(new File(paths.get(position)));
         RequestOptions myOptions = new RequestOptions()
                 .centerCrop()
                 .override(width, height);
-        Glide.with(context).load(uriImage).apply(myOptions).transition(withCrossFade()).into(((DownloadsHolder) holder).downloadedImage);
+        Glide.with(context).load(uri).apply(myOptions).transition(withCrossFade()).into(((DownloadsHolder) holder).downloadedImage);
 
         ((DownloadsHolder) holder).deleteDownload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                Toast.makeText(context, "Deleted!", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(context, "Deleted!", Toast.LENGTH_SHORT).show();
                 Animation animation = AnimationUtils.loadAnimation(context, R.anim.zoom_out);
                 Animation animation1 = AnimationUtils.loadAnimation(context, R.anim.fadeout);
                 animation.setDuration(200);
@@ -187,12 +187,6 @@ public class DownloadFragmentAdapter extends RecyclerView.Adapter {
             @Override
             protected void onPreExecute () {
                 Toast.makeText(context, "Applying Wallpaper!", Toast.LENGTH_LONG).show();
-//                alertDialog = new Dialog(activity, R.style.MyDialogTheme);
-//                alertDialog.setCancelable(false);
-//                alertDialog.setContentView(R.layout.setwall_dialog_layout);
-//                ProgressBar progressBar = alertDialog.findViewById(R.id.settingWall);
-//                progressBar.setIndeterminate(true);
-//                alertDialog.show();
             }
 
             @Override

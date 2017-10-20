@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,17 +45,22 @@ public class HomeFragmentCustomAdapter extends RecyclerView.Adapter {
             gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
                 @Override
                 public int getSpanSize(int position) {
-                    switch (getItemViewType(position)) {
-                        case VIEW_ITEM:
-                            return 1;
-                        case VIEW_PROG:
-                            if (Home_Fragment.spanCount == 2) {
+                    try {
+                        switch (getItemViewType(position)) {
+                            case VIEW_ITEM:
+                                return 1;
+                            case VIEW_PROG:
+                                if (Home_Fragment.spanCount == 2) {
+                                    return 2;
+                                } else if (Home_Fragment.spanCount == 3)
+                                    return 3;
+                            default:
                                 return 2;
-                            } else if (Home_Fragment.spanCount == 3)
-                                return 3;
-                        default:
-                            return 2;
+                        }
+                    }catch (Exception e){
+                        Log.i("GETSPAN SIZE", e.toString());
                     }
+                    return 3;
                 }
             });
 
@@ -67,8 +73,6 @@ public class HomeFragmentCustomAdapter extends RecyclerView.Adapter {
                     lastVisibleItem = gridLayoutManager.findLastVisibleItemPosition();
 
                     if (!loading && totalItemCount <= (lastVisibleItem + visibleThreshold)) {
-                        // End has been reached
-                        // Do something
                         if (onLoadMoreListener != null) {
                             onLoadMoreListener.onLoadMore();
                         }
@@ -81,8 +85,13 @@ public class HomeFragmentCustomAdapter extends RecyclerView.Adapter {
 
     @Override
     public int getItemViewType(int position) {
-        if (wallpapersModels.get(position) != null) {
-            return VIEW_ITEM;
+        try {
+            if (wallpapersModels.get(position) != null) {
+                return VIEW_ITEM;
+            }
+            return VIEW_PROG;
+        }catch (Exception e){
+            Log.i("Get View Type", e.toString());
         }
         return VIEW_PROG;
     }
@@ -118,17 +127,6 @@ public class HomeFragmentCustomAdapter extends RecyclerView.Adapter {
         } else
             ((ProgressViewHolder) holder).progressBar.setIndeterminate(true);
 
-//        ImageRequest request = ImageRequestBuilder.newBuilderWithSource(uri)
-//                .setResizeOptions(new ResizeOptions(1080, 1280))
-//                .build();
-//        holder.displayWallpaper.setController(
-//                Fresco.newDraweeControllerBuilder()
-//                        .setOldController(holder.displayWallpaper.getController())
-//                        .setImageRequest(request)
-//                        .build());
-
-        //Glide.with(context).load(wallpapersModels.get(position).getWallpaperURL()).into(holder.displayWallpaper);
-        //Picasso.with(context).load(wallpapers.get(position).getWallpaperUrl()).placeholder(R.drawable.load_animation).into(holder.wallpaper);
     }
 
     public void setLoaded() {

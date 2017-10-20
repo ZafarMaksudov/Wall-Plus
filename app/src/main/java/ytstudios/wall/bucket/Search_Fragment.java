@@ -26,6 +26,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.airbnb.lottie.LottieAnimationView;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -57,7 +59,9 @@ public class Search_Fragment extends Fragment {
 
     GridLayoutManager gridLayoutManager;
 
-    private static int numPages, currPg = 1;
+    private static int numPages, currPg = 1, numSearch;
+
+    private InterstitialAd interstitialAd;
 
 
     @Nullable
@@ -74,41 +78,15 @@ public class Search_Fragment extends Fragment {
 
         handler = new Handler();
 
+        numSearch = 0;
+
+        loadInterstitial();
+
         recyclerView = view.findViewById(R.id.searchFragment_rv);
         gridLayoutManager = new GridLayoutManager(getContext(), 3);
         recyclerView.setLayoutManager(gridLayoutManager);
 
         searchBar = view.findViewById(R.id.search_bar);
-
-//        disableAdBlock = view.findViewById(R.id.disableAdBlock);
-//        disableAdBlock.bringToFront();
-//        MobileAds.initialize(getActivity(), getResources().getString(R.string.CATEGORY_BANNED_ID));
-//        bannerAd = new AdView(getActivity());
-//        bannerAd = view.findViewById(R.id.bannerAdView);
-//        bannerAd.bringToFront();
-//        final AdRequest adRequest = new AdRequest.Builder()
-//                .addTestDevice("02147518DD550E863FFAA08EA49B5F41")
-//                .addTestDevice("4F18060E4B4A11E00C6E6C3B8EEF6353")
-//                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-//                .build();
-//
-//        bannerAd.loadAd(adRequest);
-//        bannerAd.setAdListener(new AdListener() {
-//            @Override
-//            public void onAdFailedToLoad(int i) {
-//                disableAdBlock.setVisibility(View.VISIBLE);
-//                isAdblock = true;
-//                Log.i("Searc fragment", "NOT LOADED");
-//            }
-//
-//            @Override
-//            public void onAdLoaded() {
-//                super.onAdLoaded();
-//                isAdblock = false;
-//                disableAdBlock.setVisibility(View.GONE);
-//                Log.i("Searc fragment", "ADLOADED");
-//            }
-//        });
 
         searchFragmentCustomAdapter = new SearchFragmentCustomAdapter(wallpapersModels, getContext(), searchBar.getText().toString(), recyclerView);
         recyclerView.setAdapter(searchFragmentCustomAdapter);
@@ -118,7 +96,7 @@ public class Search_Fragment extends Fragment {
             @Override
             public void onLoadMore() {
                 Log.i("IN LOADMORE", "WITHOUT IF");
-                if (currPg <= numPages) {
+                if (currPg <= numPages && (wallpapersModels.size() > 0)) {
                     Log.i("CURRENT SET LOAD", String.valueOf(currPg));
                     Log.i("NUM OF PAGES SET LOAD", String.valueOf(numPages));
                     wallpapersModels.add(null);
@@ -126,8 +104,10 @@ public class Search_Fragment extends Fragment {
                     handler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            wallpapersModels.remove(wallpapersModels.size() - 1);
-                            searchFragmentCustomAdapter.notifyItemRemoved(wallpapersModels.size());
+                            try {
+                                wallpapersModels.remove(wallpapersModels.size() - 1);
+                                searchFragmentCustomAdapter.notifyItemRemoved(wallpapersModels.size());
+                            }catch (ArrayIndexOutOfBoundsException e){}
                             Log.i("REMOVED", "NULL");
                             //add items one by one
                             Log.i("INIT SEARCH", "DATA");
@@ -158,17 +138,17 @@ public class Search_Fragment extends Fragment {
 
                 if (i == EditorInfo.IME_ACTION_SEARCH && query.length() > 2) {
 
+                    wallpapersModels.clear();
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            //https://wall.alphacoders.com/api2.0/get.php?auth="+API_KEY+"&method=highest_rated&page=10&info_level=2
-                            //https://wall.alphacoders.com/api2.0/get.php?auth=" + API_KEY + "&method=search&term="+ query
                             new ReadJSON().execute("https://mobile.alphacoders.com/by-resolution/1/1080x1920-Wallpapers?search=" + query);
                         }
                     });
 
                     InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(searchBar.getWindowToken(), 0);
+                    numSearch++;
                     return true;
                 }
 
@@ -197,6 +177,7 @@ public class Search_Fragment extends Fragment {
                         searchBar.setText("");
 
                         recyclerView.setVisibility(View.INVISIBLE);
+                        wallpapersModels.clear();
                         return true;
                     }
                 }
@@ -218,6 +199,7 @@ public class Search_Fragment extends Fragment {
 
         @Override
         protected String doInBackground(String... params) {
+            //wallpapersModels.clear();
             try {
                 Log.i("IN LOAD MORE", "TRUE");
                 Document document = Jsoup.connect(params[0]).get();
@@ -267,7 +249,6 @@ public class Search_Fragment extends Fragment {
                     Log.i("NUM OF PAGES ", String.valueOf(numPages));
                     Document document = Jsoup.connect(params[0]).get();
                     Element wall = document.select("div.thumb-container").first();
-                    //Log.i("RESULT", wall.toString());
                     Elements img = wall.getElementsByAttribute("src");
                     Elements widList = wall.getElementsByAttribute("alt");
                     Element page = document.select("ul.pagination.pagination").first();
@@ -333,8 +314,6 @@ public class Search_Fragment extends Fragment {
             wallpapersModels.clear();
             recyclerView.setVisibility(View.INVISIBLE);
 
-            animationView.setVisibility(View.VISIBLE);
-
             imageView.setVisibility(View.INVISIBLE);
             searchNet.setVisibility(View.INVISIBLE);
 
@@ -343,9 +322,15 @@ public class Search_Fragment extends Fragment {
             searchQuery.setText(query.toUpperCase());
             searchQuery.setVisibility(View.VISIBLE);
 
-            animationView.setAnimation("wallFind.json");
-            animationView.loop(true);
-            animationView.playAnimation();
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    animationView.setVisibility(View.VISIBLE);
+                    animationView.setAnimation("wallFind.json");
+                    animationView.loop(true);
+                    animationView.playAnimation();
+                }
+            });
         }
 
         @Override
@@ -356,28 +341,29 @@ public class Search_Fragment extends Fragment {
             animationView.setVisibility(View.INVISIBLE);
             searchQueryText.setVisibility(View.INVISIBLE);
             searchQuery.setVisibility(View.INVISIBLE);
-//            try {
-//                JSONObject jsonObject = new JSONObject(content);
-//                JSONArray jsonArray =  jsonObject.getJSONArray("wallpapers");
-//
-//                for(int i =0;i<jsonArray.length(); i++){
-//                    JSONObject wallpaperObject = jsonArray.getJSONObject(i);
-//                    wallpapersModels.add(new WallpapersModel(
-//                            wallpaperObject.getString("url_thumb"),
-//                            wallpaperObject.getString("url_image"),
-//                            wallpaperObject.getString("file_type"),
-//                            wallpaperObject.getInt("id")
-//
-//                    ));
-//                }
-//            } catch (JSONException e) {
-//                e.printStackTrace();
-//            }
+            if (interstitialAd.isLoaded() && numSearch == 5) {
+                interstitialAd.show();
+                Log.i("IS LOADED", "INTERSTITIAL");
+                numSearch = 0;
+                loadInterstitial();
+            }
+
             searchFragmentCustomAdapter.notifyDataSetChanged();
             currPg++;
             Log.i("POST EXECUTE", "ME HUN MAI");
             searchFragmentCustomAdapter.setLoaded();
         }
+    }
+
+    private void loadInterstitial() {
+        interstitialAd = new InterstitialAd(getContext());
+        interstitialAd.setAdUnitId(getResources().getString(R.string.INTERSTITIAL_AD));
+        AdRequest adRequest = new AdRequest.Builder()
+                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                .build();
+        interstitialAd.loadAd(adRequest);
+        Log.i("------------>LOADED", "INTERSTITIAL");
+
     }
 
     public boolean isNetworkAvailable() {
@@ -387,4 +373,3 @@ public class Search_Fragment extends Fragment {
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 }
-

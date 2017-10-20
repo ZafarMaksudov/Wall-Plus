@@ -82,8 +82,6 @@ public class FullWallpaperViewActivity extends AppCompatActivity {
 
     public WallpaperManager wallpaperManager;
 
-    private boolean isFavorite = false;
-
     ImageView zoomHeart;
 
     @Override
@@ -185,7 +183,7 @@ public class FullWallpaperViewActivity extends AppCompatActivity {
                 public boolean onTouch(View v, final MotionEvent event) {
                     switch (event.getAction()) {
                         case MotionEvent.ACTION_MOVE:
-                            return false; //This is important, if you return TRUE the action of swipe will not take place.
+                            return false; //This is important keep this False
                         case MotionEvent.ACTION_DOWN:
                             pointX = event.getX();
                             pointY = event.getY();
@@ -232,7 +230,6 @@ public class FullWallpaperViewActivity extends AppCompatActivity {
                                                                 cursor.getString(2),
                                                                 Integer.parseInt(cursor.getString(3))
                                                         ));
-                                                        //Log.i("Favorite", cursor.getString(4));
                                                     }
                                                 } catch (Exception e) {
                                                     Log.i("DATABASE EXCEPTION", e.toString());
@@ -398,14 +395,12 @@ public class FullWallpaperViewActivity extends AppCompatActivity {
                     case "Category":
                         new DownloadHandler.ImageDownloadAndSave(getApplicationContext()).execute(encodedUrlFull, "Wallpaper " + String.valueOf(wallId) + fileType);
                         toast = makeText(getApplicationContext(), "Downloading " + "Wallpaper " + String.valueOf(wallId) + fileType, Toast.LENGTH_SHORT);
-                        //toast.setGravity(Gravity.BOTTOM, 0, 330);
                         toast.show();
                         break;
 
                     case "Search":
                         new DownloadHandler.ImageDownloadAndSave(getApplicationContext()).execute(encodedUrlFull, "Wallpaper " + String.valueOf(wallId) + fileType);
                         toast = Toast.makeText(getApplicationContext(), "Downloading " + "Wallpaper " + String.valueOf(wallId) + fileType, Toast.LENGTH_SHORT);
-                        //toast.setGravity(Gravity.BOTTOM, 0, 330);
                         toast.show();
                         break;
 
@@ -470,14 +465,6 @@ public class FullWallpaperViewActivity extends AppCompatActivity {
                 }
             }
         });
-        //Fresco.initialize(this);
-
-//        this.runOnUiThread(new Runnable() {
-//            @Override
-//            public void run() {
-//                new loadWall().execute(encodedUrlFull);
-//            }
-//        });
 
     }
 
@@ -504,28 +491,6 @@ public class FullWallpaperViewActivity extends AppCompatActivity {
         }
         super.onDestroy();
     }
-
-//
-//    class loadWall extends AsyncTask<String, Void, Uri> {
-//
-//        @Override
-//        protected Uri doInBackground(String... params) {
-//            Uri uri = Uri.parse(params[0]);
-//            return uri;
-//        }
-//
-//        @Override
-//        protected void onPreExecute() {
-//            //avLoadingIndicatorView.show();
-//        }
-//
-//        @Override
-//        protected void onPostExecute(Uri url) {
-//            //avLoadingIndicatorView.show();
-//            full_imageView.setImageURI(url);
-//        }
-//
-//    }
 
     class setWall extends AsyncTask<Void, Void, Void> {
 
@@ -585,53 +550,6 @@ public class FullWallpaperViewActivity extends AppCompatActivity {
         }
 
     }
-
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        Log.i("CREATED ", "OPTIONS MENU");
-//        MenuInflater inflater = getMenuInflater();
-//        inflater.inflate(R.menu.fav_menu, menu);
-////        MenuItem item = menu.findItem(R.id.add_fav);
-////        if (arrayList.get(pos).getFavorite() == 0){
-////            item.setIcon(R.drawable.fav_heart_white);
-////            Log.i("VALUE OF FAV",String.valueOf(arrayList.get(pos).getFavorite()));
-////        }
-////        else if(arrayList.get(pos).getFavorite() == 1){
-////            item.setIcon(R.drawable.fav_heart_red);
-////            Log.i("VALUE OF FAV",String.valueOf(arrayList.get(pos).getFavorite()));
-////        }
-//        return true;
-//    }
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        if (arrayList.get(pos).getFavorite() == 0) {
-//            //Toast.makeText(getApplicationContext(), "Added to Favorites!", Toast.LENGTH_SHORT).show();
-//            item.setIcon(R.drawable.fav_heart_red);
-//            boolean inserted = favDatabaseHelper.addFavToDatabase(
-//                                    arrayList.get(pos).getWallpaperURL(),
-//                                    arrayList.get(pos).getWallpaperFullURL(),
-//                                    arrayList.get(pos).getFileType(),
-//                                    arrayList.get(pos).getWallId(),
-//                                    arrayList.get(pos).getFavorite());
-//            Log.i("IS INSERTED", String.valueOf(inserted));
-//            Cursor cursor = favDatabaseHelper.readFavFromDatabase();
-//            if(cursor.moveToNext()){
-//                Log.i("CURSOR", String.valueOf(cursor.moveToNext()));
-//                Log.i("smallURL", cursor.getString(0));
-//                Log.i("fullURL", cursor.getString(1));
-//                Log.i("filetype", cursor.getString(2));
-//                Log.i("wallID", cursor.getString(3));
-//                //Log.i("Favorite", cursor.getString(4));
-//            }
-//            isFavorite = true;
-//        } else {
-//            //Toast.makeText(getApplicationContext(), "Removed from Favorites!", Toast.LENGTH_SHORT).show();
-//            item.setIcon(R.drawable.fav_heart_white);
-//            isFavorite = false;
-//        }
-//        return true;
-//    }
-
     public int getStatusBarHeight() {
         int result = 0;
         int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");

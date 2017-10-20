@@ -51,7 +51,6 @@ public class Categories_Adapter extends RecyclerView.Adapter<Categories_Adapter.
                 Intent intent = new Intent(context, CategoryDetailsFragment.class);
                 intent.putExtra("Image", categoriesArray.get(position).getCategory_image_id());
                 intent.putExtra("categoryName", categoriesArray.get(position).category_name);
-                //ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity)context, pair1);
                 context.startActivity(intent);
             }
         });

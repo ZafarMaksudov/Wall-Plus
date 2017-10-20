@@ -68,10 +68,6 @@ public class WallpapersModel implements Parcelable {
         return isFavorite;
     }
 
-    public void setIsFavorite(int isFavorite) {
-        this.isFavorite = isFavorite;
-    }
-
     public String getWallpaperFullURL() {
         return wallpaperFullURL;
     }

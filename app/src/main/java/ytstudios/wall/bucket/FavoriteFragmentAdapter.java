@@ -8,6 +8,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
@@ -26,6 +28,7 @@ public class FavoriteFragmentAdapter extends RecyclerView.Adapter {
 
     Context context;
     ArrayList<WallpapersModel> wallpapersModels;
+    Animation animation;
 
     public FavoriteFragmentAdapter(Context context, ArrayList<WallpapersModel> wallpapersModels) {
         this.context = context;
@@ -38,11 +41,12 @@ public class FavoriteFragmentAdapter extends RecyclerView.Adapter {
         RecyclerView.ViewHolder viewHolder;
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.favorite_item, parent, false);
         viewHolder = new FavoriteFragmentHolder(v, context, wallpapersModels);
+        animation = AnimationUtils.loadAnimation(context, R.anim.fade_out);
         return viewHolder;
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
+    public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
         if (wallpapersModels != null) {
 
             Uri uri = Uri.parse(wallpapersModels.get(position).getWallpaperURL());

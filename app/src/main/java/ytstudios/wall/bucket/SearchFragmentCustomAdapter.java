@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,11 +28,10 @@ public class SearchFragmentCustomAdapter extends RecyclerView.Adapter {
 
     private final int VIEW_ITEM = 1;
     private final int VIEW_PROG = 0;
-    private final int VIEW_NATIVE_AD = 2;
 
-    private int visibleThreshold = 3;
+    private int visibleThreshold = 5;
     private int lastVisibleItem, totalItemCount;
-    private boolean loading;
+    public boolean loading;
     private onLoadMoreListener onLoadMoreListener;
 
     int rvPosition;
@@ -113,17 +111,14 @@ public class SearchFragmentCustomAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
 
-        Log.i("**********POSITION", String.valueOf(position));
         if (holder instanceof WallpapersViewHolder) {
             Uri uri = Uri.parse(wallpapersModels.get(position).getWallpaperURL());
             ((WallpapersViewHolder) holder).displayWallpaper.setImageURI(uri);
             rvPosition = holder.getAdapterPosition();
-            Log.i("INSTANCE OF ", "WALLPAPER");
         }
         else if(holder instanceof ProgressViewHolder)
         {
             ((ProgressViewHolder) holder).progressBar.setIndeterminate(true);
-            Log.i("INSTANCE OF ", "PROGRESS");
         }
     }
 
