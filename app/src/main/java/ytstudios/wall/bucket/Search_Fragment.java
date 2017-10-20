@@ -63,7 +63,6 @@ public class Search_Fragment extends Fragment {
 
     private InterstitialAd interstitialAd;
 
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -113,9 +112,6 @@ public class Search_Fragment extends Fragment {
                             Log.i("INIT SEARCH", "DATA");
                             new loadMore().execute("https://mobile.alphacoders.com/by-resolution/1/1080x1920-Wallpapers/?search=" + query + "&page=" + currPg);
                             searchFragmentCustomAdapter.setLoaded();
-                            Log.i("CURRENT ", String.valueOf(currPg));
-                            Log.i("NUM OF PAGES  ", String.valueOf(numPages));
-                            Log.i("LOAD MORE", "https://mobile.alphacoders.com/by-resolution/1/1080x1920-Wallpapers/?search=" + query + "&page=" + currPg);
                         }
                     }, 700);
                 }

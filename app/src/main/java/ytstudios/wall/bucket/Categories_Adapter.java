@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -42,7 +42,7 @@ public class Categories_Adapter extends RecyclerView.Adapter<Categories_Adapter.
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
 
-        Glide.with(context).load(categoriesArray.get(position).getCategory_image_id()).into(holder.image);
+        Picasso.with(context).load(categoriesArray.get(position).getCategory_image_id()).into(holder.image);
         holder.name.setText(categoriesArray.get(position).getCategory_name());
         holder.image.setOnClickListener(new View.OnClickListener() {
             @Override

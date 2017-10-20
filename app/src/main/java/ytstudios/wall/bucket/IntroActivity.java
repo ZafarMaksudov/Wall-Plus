@@ -76,12 +76,13 @@ public class IntroActivity extends MaterialIntroActivity {
                 .buttonsColor(R.color.translucentBlackColor)
                 .image(R.drawable.img4)
                 .title("Add to Favorites")
-                .description("Loved a wallpaper? Add them to Favorites so you never lose them")
+                .description("Loved a wallpaper? Double Tap to Add them to Favorites so you never lose them")
                 .build());
 
         addSlide(new SlideFragmentBuilder()
                 .backgroundColor(R.color.colorPrimary)
                 .buttonsColor(R.color.translucentBlackColor)
+                .image(R.drawable.searchwall)
                 .title("Ready to Dive in ?")
                 .neededPermissions(new String[] {Manifest.permission.READ_EXTERNAL_STORAGE})
                 .build());

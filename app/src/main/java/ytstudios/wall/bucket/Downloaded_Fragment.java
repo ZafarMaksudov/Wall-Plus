@@ -101,14 +101,14 @@ public class Downloaded_Fragment extends Fragment {
                         Log.i("FILENAMES", fileNames.get(i));
                     }
                     Log.i("SIZE  ", String.valueOf(filePaths.size()));
-                    downloadFragmentAdapter = new DownloadFragmentAdapter(getActivity().getApplicationContext(), filePaths, fileNames, getActivity());
-                    recyclerView.setAdapter(downloadFragmentAdapter);
                 }
                 else {
                     recyclerView.setVisibility(View.GONE);
                     noDownloadsText.setVisibility(View.VISIBLE);
                     noDownloadsImage.setVisibility(View.VISIBLE);
                 }
+                downloadFragmentAdapter = new DownloadFragmentAdapter(getActivity().getApplicationContext(), filePaths, fileNames, getActivity());
+                recyclerView.setAdapter(downloadFragmentAdapter);
 
             }
         } catch (Exception e) {

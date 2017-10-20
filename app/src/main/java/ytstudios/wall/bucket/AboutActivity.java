@@ -17,7 +17,7 @@ import android.widget.Toast;
 public class AboutActivity extends AppCompatActivity {
 
     Toolbar toolbar;
-    ImageView github,gmail,linkedIn, codingScreen, profileImg;
+    ImageView github,gmail,linkedIn;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

@@ -4,6 +4,10 @@
     <string name="preferencesName">WallBucketPrefs</string>
 
 
+    <!--Download Location-->
+    <string name="downloadLocation">/Wall Bucket/WallBucket Downloads</string>
+
+
     <!--App Strings -->
     <string name="search">Tell me what you are searching for , \n I will do the rest!</string>
     <string name="search404">Sorry, No wallpapers found for \n</string>
@@ -14,11 +18,6 @@
     <string name="delete">Delete</string>
 
     <string name="applyingWall">Applying Wallpaper</string>
-
-    <string name="smashicons">https://www.flaticon.com/authors/smashicons</string>
-
-    <!--Download Location-->
-    <string name="downloadLocation">/Wall Bucket/WallBucket Downloads</string>
 
     <!--Intro Activity-->
     <string name="explore"><b>Explore</b></string>
