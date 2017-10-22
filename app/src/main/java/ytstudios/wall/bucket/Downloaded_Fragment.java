@@ -107,10 +107,12 @@ public class Downloaded_Fragment extends Fragment {
                     noDownloadsText.setVisibility(View.VISIBLE);
                     noDownloadsImage.setVisibility(View.VISIBLE);
                 }
-                downloadFragmentAdapter = new DownloadFragmentAdapter(getActivity().getApplicationContext(), filePaths, fileNames, getActivity());
-                recyclerView.setAdapter(downloadFragmentAdapter);
+//                downloadFragmentAdapter = new DownloadFragmentAdapter(getActivity().getApplicationContext(), filePaths, fileNames, getActivity());
+//                recyclerView.setAdapter(downloadFragmentAdapter);
 
             }
+            downloadFragmentAdapter = new DownloadFragmentAdapter(getActivity().getApplicationContext(), filePaths, fileNames, getActivity());
+            recyclerView.setAdapter(downloadFragmentAdapter);
         } catch (Exception e) {
             Log.i("EXCEPTION ", e.toString());
         }

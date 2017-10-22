@@ -51,7 +51,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        ads:adSize="SMART_BANNER"
+        ads:adSize="BANNER"
+        android:background="@color/translucentBlackColor"
         ads:adUnitId="@string/CATEGORY_BANNED_ID">
 
     </com.google.android.gms.ads.AdView>

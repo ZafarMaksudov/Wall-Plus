@@ -34,7 +34,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            ads:adSize="SMART_BANNER"
+            ads:adSize="BANNER"
+            android:background="@color/translucentBlackColor"
             ads:adUnitId="@string/FULLSCREEN_BANNER_ID">
 
         </com.google.android.gms.ads.AdView>

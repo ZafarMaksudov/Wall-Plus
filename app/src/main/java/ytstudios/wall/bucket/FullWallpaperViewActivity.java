@@ -371,7 +371,12 @@ public class FullWallpaperViewActivity extends AppCompatActivity {
         bannerAd.setAdListener(new AdListener() {
             @Override
             public void onAdFailedToLoad(int i) {
-                disableAdBlock.setVisibility(View.VISIBLE);
+                if(i == 3){
+                    disableAdBlock.setVisibility(View.GONE);
+                }
+                else {
+                    disableAdBlock.setVisibility(View.VISIBLE);
+                }
                 isAdblock = true;
             }
 
