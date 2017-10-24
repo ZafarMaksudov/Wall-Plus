@@ -85,19 +85,6 @@
     app:layout_anchorGravity="bottom|right"
     app:srcCompat="@drawable/download" />
 
-    <com.like.LikeButton
-        android:id="@+id/fav_toggle"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_gravity="top|right"
-        android:layout_margin="8dp"
-        app:icon_size="32dp"
-        app:icon_type="heart"
-        app:is_enabled="true"
-        app:like_drawable="@drawable/fav_red_full"
-        app:liked="false"
-        app:unlike_drawable="@drawable/fav_white_border" />
-
     <com.google.android.gms.ads.AdView
         android:id="@+id/bannerAdView"
         android:layout_width="match_parent"
