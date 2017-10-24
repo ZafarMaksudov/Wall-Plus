@@ -18,7 +18,7 @@ There is something for everyone.
 # **ScreenShots of App**
 | Home | Categories | Search | Favorites | Downloaded |
 |:-:|:-:|:-:|:-:|:-:|
-| ![Home](https://i.imgur.com/3zkw6BY.png) | ![Categories](https://i.imgur.com/5Z5ENHV.png) | ![Search](https://i.imgur.com/vcnSVaW.png) | ![Favorites](https://i.imgur.com/ADDfQzt.png) | ![Downloaded](https://i.imgur.com/oeWWrr0.png)
+| ![Home](https://i.imgur.com/3zkw6BY.png) | ![Categories](https://i.imgur.com/F5z2qze.png) | ![Search](https://i.imgur.com/vcnSVaW.png) | ![Favorites](https://i.imgur.com/ADDfQzt.png) | ![Downloaded](https://i.imgur.com/oeWWrr0.png)
 
 
 ## **Why choose Wall Bucket ?**  
