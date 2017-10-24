@@ -6,8 +6,10 @@ import android.os.Bundle;
 import android.support.annotation.FloatRange;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import agency.tango.materialintroscreen.MaterialIntroActivity;
+import agency.tango.materialintroscreen.MessageButtonBehaviour;
 import agency.tango.materialintroscreen.SlideFragmentBuilder;
 import agency.tango.materialintroscreen.animations.IViewTranslation;
 
@@ -17,6 +19,9 @@ import agency.tango.materialintroscreen.animations.IViewTranslation;
 
 public class IntroActivity extends MaterialIntroActivity {
 
+//    final FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+//    DatabaseReference databaseReference = firebaseDatabase.getReference();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,6 +29,22 @@ public class IntroActivity extends MaterialIntroActivity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         enableLastSlideAlphaExitTransition(false);
+
+//        databaseReference.child("Websites").addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                SharedPreferences settings = getSharedPreferences(getResources().getString(R.string.preferencesName), MODE_PRIVATE);
+//                SharedPreferences.Editor editor = settings.edit();
+//                editor.putString("wallpaperSite1", dataSnapshot.child("Site1").getValue().toString());
+//                editor.putString("wallpaperSite2", dataSnapshot.child("Site2").getValue().toString());
+//                editor.apply();
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//            }
+//        });
 
         getBackButtonTranslationWrapper()
                 .setEnterTranslation(new IViewTranslation() {
@@ -34,18 +55,12 @@ public class IntroActivity extends MaterialIntroActivity {
                 });
 
         addSlide(new SlideFragmentBuilder()
-                        .backgroundColor(R.color.color1)
-                        .buttonsColor(R.color.translucentBlackColor)
-                        .image(R.drawable.searchwall)
-                        .title("Wall Bucket")
-                        .description("The best wallpaper downloader app for Android!")
-                        .build());
-//                new MessageButtonBehaviour(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        showMessage("We provide solutions to make you love your work");
-//                    }
-//                }, "Work with love"));
+                .backgroundColor(R.color.color1)
+                .buttonsColor(R.color.translucentBlackColor)
+                .image(R.drawable.introimg)
+                .title("Wall Bucket")
+                .description("The best wallpaper downloading app for Android!")
+                .build());
 
         addSlide(new SlideFragmentBuilder()
                 .backgroundColor(R.color.color2)
@@ -80,12 +95,18 @@ public class IntroActivity extends MaterialIntroActivity {
                 .build());
 
         addSlide(new SlideFragmentBuilder()
-                .backgroundColor(R.color.colorPrimary)
-                .buttonsColor(R.color.translucentBlackColor)
-                .image(R.drawable.searchwall)
-                .title("Ready to Dive in ?")
-                .neededPermissions(new String[] {Manifest.permission.READ_EXTERNAL_STORAGE})
-                .build());
+                        .backgroundColor(R.color.colorPrimary)
+                        .buttonsColor(R.color.translucentBlackColor)
+                        .image(R.drawable.introimg)
+                        .title("Ready to Dive in ?")
+                        .neededPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE})
+                        .build(),
+                new MessageButtonBehaviour(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(getApplicationContext(), "Press 'Tick' to continue", Toast.LENGTH_SHORT).show();
+                    }
+                }, "You are ready to rock!"));
 
     }
 

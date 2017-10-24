@@ -56,6 +56,8 @@ public class CategoryDetailsFragment extends Activity {
 
     private static int numPages, currPg = 1;
 
+    private static String categorySite;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,55 +80,49 @@ public class CategoryDetailsFragment extends Activity {
 
         progressBar = findViewById(R.id.progressBar);
 
+        categorySite = "https://mobile.alphacoders.com/by-resolution/1/";
         categoryName = getIntent().getStringExtra("categoryName");
         toolbar.setTitle(categoryName);
         switch (categoryName) {
             case "Abstract":
                 numPages =0;
                 currPg = 0;
-                categorySearchUrl = "https://mobile.alphacoders.com/by-resolution/1/Abstract/1080x1920-Wallpapers/?page=";
+                categorySearchUrl = categorySite + "Abstract/1080x1920-Wallpapers/?page=";
                 break;
             case "Animal":
                 numPages =0;
                 currPg = 0;
-                categorySearchUrl = "https://mobile.alphacoders.com/by-resolution/1/Animal/1080x1920-Wallpapers/?page=";
+                categorySearchUrl = categorySite + "Animal/1080x1920-Wallpapers/?page=";
                 break;
-//            case "Amoled":
-//                categorySearchUrl = "https://mobile.alphacoders.com/by-resolution/1/Amoled/1080x1920-Wallpapers/?page=";
-//                //Todo : Find wallpaper site for Amoled walls!
-//                break;
             case "Anime":
                 numPages =0;
                 currPg = 0;
-                categorySearchUrl = "https://mobile.alphacoders.com/by-resolution/1/Anime/1080x1920-Wallpapers/?page=";
+                categorySearchUrl = categorySite + "Anime/1080x1920-Wallpapers/?page=";
                 break;
             case "Cityscape":
                 numPages =0;
                 currPg = 0;
-                categorySearchUrl = "https://mobile.alphacoders.com/by-resolution/1/Man-Made/1080x1920-Wallpapers/?page=";
+                categorySearchUrl = categorySite + "Man-Made/1080x1920-Wallpapers/?page=";
                 break;
             case "Comics":
                 numPages =0;
                 currPg = 0;
-                categorySearchUrl = "https://mobile.alphacoders.com/by-resolution/1/Comics/1080x1920-Wallpapers/?page=";
+                categorySearchUrl = categorySite + "Comics/1080x1920-Wallpapers/?page=";
                 break;
-//            case "Minimal":
-//                categorySearchUrl = "https://mobile.alphacoders.com/by-resolution/1/Minimal/1080x1920-Wallpapers/?page=";
-//                break;
             case "Nature":
                 numPages =0;
                 currPg = 0;
-                categorySearchUrl = "https://mobile.alphacoders.com/by-resolution/1/Earth/1080x1920-Wallpapers/?page=";
+                categorySearchUrl = categorySite + "Earth/1080x1920-Wallpapers/?page=";
                 break;
             case "Patterns":
                 numPages =0;
                 currPg = 0;
-                categorySearchUrl = "https://mobile.alphacoders.com/by-resolution/1/Pattern/1080x1920-Wallpapers/?page=";
+                categorySearchUrl = categorySite + "Pattern/1080x1920-Wallpapers/?page=";
                 break;
             case "Vehicles":
                 numPages =0;
                 currPg = 0;
-                categorySearchUrl = "https://mobile.alphacoders.com/by-resolution/1/Vehicles/1080x1920-Wallpapers/?page=";
+                categorySearchUrl = categorySite + "Vehicles/1080x1920-Wallpapers/?page=";
                 break;
         }
         getCategoryWallpaper(categorySearchUrl + currPg);

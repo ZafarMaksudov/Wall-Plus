@@ -72,6 +72,8 @@ public class Home_Fragment extends Fragment {
 
     private boolean isLoading = false;
 
+    private static String homeSite;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -102,6 +104,7 @@ public class Home_Fragment extends Fragment {
         wallpapersModelArrayList = new ArrayList<>();
         handler = new Handler();
 
+        homeSite = "http://papers.co/android/";
         initData();
 
         gridLayoutManager = new GridLayoutManager(getContext(), 3);
@@ -132,7 +135,7 @@ public class Home_Fragment extends Fragment {
                             Log.i("REMOVED", "NULL");
                             //add items one by one
                             Log.i("INIT", "DATA");
-                            new loadMore().execute("http://papers.co/android/page/" + pageCount + "/");
+                            new loadMore().execute(homeSite + "page/" + pageCount + "/");
                             homeFragmentCustomAdapter.setLoaded();
                             Log.i("INIT", "FINISHED");
                         }
@@ -168,7 +171,7 @@ public class Home_Fragment extends Fragment {
             noNetText.setVisibility(View.INVISIBLE);
             connectBtn.setVisibility(View.GONE);
 
-            loadFromInternet("http://papers.co/android/");
+            loadFromInternet(homeSite);
 
         } else {
 

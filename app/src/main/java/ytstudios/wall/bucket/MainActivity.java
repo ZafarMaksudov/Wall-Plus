@@ -7,6 +7,7 @@ import android.content.pm.ActivityInfo;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -21,6 +22,8 @@ import android.widget.Toast;
 
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabSelectListener;
+
+import java.io.File;
 
 import hotchemi.android.rate.AppRate;
 import hotchemi.android.rate.OnClickButtonListener;
@@ -44,6 +47,8 @@ public class MainActivity extends AppCompatActivity {
 
     public static String DATABASE_FULL_PATH = null;
 
+//    public static  String wallpaperSite1 = "NULL", wallpaperSite2 = "NULL";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -51,6 +56,16 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         context = getApplicationContext();
+
+        String sdCard= Environment.getExternalStorageDirectory().toString();
+        File myDir = new File(sdCard + context.getResources().getString(R.string.downloadLocation));
+
+            /*  if specified not exist create new */
+        if(!myDir.exists())
+        {
+            Log.i("CREATED DIR ", myDir.toString());
+            myDir.mkdirs();
+        }
 
         try{
             AppRate.with(MainActivity.this)
@@ -79,6 +94,11 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("Explore");
 
         SharedPreferences preferences = getSharedPreferences(getResources().getString(R.string.preferencesName), MODE_PRIVATE);
+//        wallpaperSite1 = preferences.getString("wallpaperSite1", "");
+//        wallpaperSite2 = preferences.getString("wallpaperSite2", "");
+//        Log.i("WALLPAPER SITE 1", wallpaperSite1);
+//        Log.i("WALLPAPER SITE 2", wallpaperSite2);
+
         boolean firstRun = preferences.getBoolean("firstRun", true);
         if (firstRun) {
             Log.i("Preferences", String.valueOf(preferences.getBoolean("firstRun", true)));

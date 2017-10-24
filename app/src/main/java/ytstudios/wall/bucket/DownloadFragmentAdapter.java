@@ -72,11 +72,11 @@ public class DownloadFragmentAdapter extends RecyclerView.Adapter {
                 .override(width, height);
         Glide.with(context).load(uri).apply(myOptions).transition(withCrossFade()).into(((DownloadsHolder) holder).downloadedImage);
 
+
         ((DownloadsHolder) holder).deleteDownload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                //Toast.makeText(context, "Deleted!", Toast.LENGTH_SHORT).show();
                 Animation animation = AnimationUtils.loadAnimation(context, R.anim.zoom_out);
                 Animation animation1 = AnimationUtils.loadAnimation(context, R.anim.fadeout);
                 animation.setDuration(200);

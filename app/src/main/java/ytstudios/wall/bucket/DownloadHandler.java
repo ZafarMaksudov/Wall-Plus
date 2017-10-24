@@ -67,13 +67,6 @@ public class DownloadHandler extends AppCompatActivity{
                 String sdCard= Environment.getExternalStorageDirectory().toString();
                 File myDir = new File(sdCard + context.getResources().getString(R.string.downloadLocation));
 
-            /*  if specified not exist create new */
-                if(!myDir.exists())
-                {
-                    Log.i("CREATED DIR ", myDir.toString());
-                    myDir.mkdirs();
-                }
-
             /* checks the file and if it already exist delete */
                 File file = new File (myDir, imageName);
                 Log.i("DIRECTORY", myDir.toString());

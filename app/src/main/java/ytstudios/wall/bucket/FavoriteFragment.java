@@ -37,7 +37,7 @@ public class FavoriteFragment extends Fragment {
     Button add_fav;
     ViewPager viewPager;
     ImageView brokenHeart;
-    TextView noFav;
+    TextView noFav, doubleTap;
 
     public static ArrayList<WallpapersModel> arrayList;
 
@@ -59,7 +59,7 @@ public class FavoriteFragment extends Fragment {
         View view = inflater.inflate(R.layout.favorite_fragment, null);
         LocalBroadcastManager.getInstance(getContext()).registerReceiver(broadcastReceiver,
                 new IntentFilter("ReadDatabase"));
-        LocalBroadcastManager.getInstance(getContext()).registerReceiver(deleteEntryReciever,
+        LocalBroadcastManager.getInstance(getContext()).registerReceiver(deleteEntryReceiver,
                 new IntentFilter("DeleteEntry"));
 
         arrayList = new ArrayList<>();
@@ -69,6 +69,7 @@ public class FavoriteFragment extends Fragment {
         viewPager = getActivity().findViewById(R.id.view_pager);
         brokenHeart = view.findViewById(R.id.broken_heart);
         noFav = view.findViewById(R.id.no_fav_text);
+        doubleTap = view.findViewById(R.id.doubleTap);
 
         initArrayList();
         Log.i("FAORITES SIZE ", String.valueOf(size));
@@ -96,10 +97,12 @@ public class FavoriteFragment extends Fragment {
                     viewPager.setCurrentItem(2, true);
                 }
             });
+            doubleTap.setVisibility(View.VISIBLE);
         } else {
             add_fav.setVisibility(View.INVISIBLE);
             brokenHeart.setVisibility(View.INVISIBLE);
             noFav.setVisibility(View.INVISIBLE);
+            doubleTap.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -125,7 +128,7 @@ public class FavoriteFragment extends Fragment {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 MainActivity.favDatabaseHelper.deleteAllFavs();
-                                deleteEntryReciever.onReceive(context, new Intent("ReadDatabase"));
+                                deleteEntryReceiver.onReceive(context, new Intent("ReadDatabase"));
                             }
                         });
                         builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -174,7 +177,7 @@ public class FavoriteFragment extends Fragment {
         }
     };
 
-    private BroadcastReceiver deleteEntryReciever = new BroadcastReceiver() {
+    private BroadcastReceiver deleteEntryReceiver = new BroadcastReceiver() {
 
         @Override
         public void onReceive(Context context, Intent intent) {

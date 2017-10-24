@@ -65,6 +65,7 @@ public class Search_Fragment extends Fragment {
 
     private InterstitialAd interstitialAd;
 
+    private static String searchSite;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -93,6 +94,7 @@ public class Search_Fragment extends Fragment {
         recyclerView.setAdapter(searchFragmentCustomAdapter);
         recyclerView.addItemDecoration(new RecyclerItemDecoration(2));
 
+        searchSite = "https://mobile.alphacoders.com/by-resolution/1/1080x1920-Wallpapers/?search=";
         searchFragmentCustomAdapter.setOnLoadMoreListener(new onLoadMoreListener() {
             @Override
             public void onLoadMore() {
@@ -112,7 +114,7 @@ public class Search_Fragment extends Fragment {
                             Log.i("REMOVED", "NULL");
                             //add items one by one
                             Log.i("INIT SEARCH", "DATA");
-                            new loadMore().execute("https://mobile.alphacoders.com/by-resolution/1/1080x1920-Wallpapers/?search=" + query + "&page=" + currPg);
+                            new loadMore().execute( searchSite + query + "&page=" + currPg);
                             searchFragmentCustomAdapter.setLoaded();
                         }
                     }, 700);
@@ -140,7 +142,7 @@ public class Search_Fragment extends Fragment {
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            new ReadJSON().execute("https://mobile.alphacoders.com/by-resolution/1/1080x1920-Wallpapers?search=" + query);
+                            new ReadJSON().execute(searchSite + query);
                         }
                     });
 
@@ -347,7 +349,7 @@ public class Search_Fragment extends Fragment {
             animationView.setVisibility(View.INVISIBLE);
             searchQueryText.setVisibility(View.INVISIBLE);
             searchQuery.setVisibility(View.INVISIBLE);
-            if (interstitialAd.isLoaded() && numSearch == 4) {
+            if (interstitialAd.isLoaded() && numSearch >= 4) {
                 interstitialAd.show();
                 Log.i("IS LOADED", "INTERSTITIAL");
                 numSearch = 0;

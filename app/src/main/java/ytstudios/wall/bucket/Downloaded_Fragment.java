@@ -69,7 +69,7 @@ public class Downloaded_Fragment extends Fragment {
         downloadNow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                viewPager.setCurrentItem(2,true);
+                viewPager.setCurrentItem(2, true);
             }
         });
 
@@ -88,7 +88,7 @@ public class Downloaded_Fragment extends Fragment {
                 filePaths = new ArrayList<>();
                 fileNames = new ArrayList<>();
 
-                if(files.length > 0){
+                if (files.length > 0) {
                     recyclerView.setVisibility(View.VISIBLE);
                     noDownloadsText.setVisibility(View.GONE);
                     noDownloadsImage.setVisibility(View.GONE);
@@ -101,15 +101,11 @@ public class Downloaded_Fragment extends Fragment {
                         Log.i("FILENAMES", fileNames.get(i));
                     }
                     Log.i("SIZE  ", String.valueOf(filePaths.size()));
-                }
-                else {
+                } else {
                     recyclerView.setVisibility(View.GONE);
                     noDownloadsText.setVisibility(View.VISIBLE);
                     noDownloadsImage.setVisibility(View.VISIBLE);
                 }
-//                downloadFragmentAdapter = new DownloadFragmentAdapter(getActivity().getApplicationContext(), filePaths, fileNames, getActivity());
-//                recyclerView.setAdapter(downloadFragmentAdapter);
-
             }
             downloadFragmentAdapter = new DownloadFragmentAdapter(getActivity().getApplicationContext(), filePaths, fileNames, getActivity());
             recyclerView.setAdapter(downloadFragmentAdapter);
@@ -128,8 +124,8 @@ public class Downloaded_Fragment extends Fragment {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item){
-        switch (item.getItemId()){
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
             case R.id.menu_about:
                 Intent intent = new Intent(getActivity(), AboutActivity.class);
                 startActivity(intent);
@@ -149,7 +145,7 @@ public class Downloaded_Fragment extends Fragment {
                 if (imageDir.exists()) {
                     files = imageDir.listFiles();
                     Log.i("FILES", String.valueOf(files.length));
-                    if(files.length > 0){
+                    if (files.length > 0) {
                         filePaths.clear();
                         fileNames.clear();
 
@@ -171,8 +167,7 @@ public class Downloaded_Fragment extends Fragment {
                             Log.i("FILENAMES", fileNames.get(i));
                         }
                         Log.i("SIZE  ", String.valueOf(filePaths.size()));
-                    }
-                    else {
+                    } else {
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {

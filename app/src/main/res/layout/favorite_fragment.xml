@@ -34,6 +34,18 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"/>
 
+    <TextView
+        android:layout_below="@id/no_fav_text"
+        android:id="@+id/doubleTap"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Double tap Wallpapers to add them to Favorites"
+        android:textSize="12sp"
+        android:textAlignment="center"
+        android:textColor="@color/colorAccent"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"/>
+
     <Button
         android:id="@+id/add_fav"
         android:layout_width="wrap_content"
