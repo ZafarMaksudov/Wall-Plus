@@ -2,6 +2,8 @@
 ![compileSdkVersion 26](https://img.shields.io/badge/compileSdkVersion-24-yellow.svg?style=true)
 
  ![Icon](https://i.imgur.com/S1Zytjq.png)  
+
+ [![HitCount](http://hits.dwyl.io/YuganshT79/Wall-Plus.svg)](http://hits.dwyl.io/YuganshT79/Wall-Plus)
  
 
 # **Wall Bucket**
