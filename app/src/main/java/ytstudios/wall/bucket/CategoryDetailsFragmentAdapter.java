@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -27,7 +28,7 @@ public class CategoryDetailsFragmentAdapter extends RecyclerView.Adapter {
     private final int VIEW_ITEM = 1;
     private final int VIEW_PROG = 0;
 
-    private int visibleThreshold = 1;
+    private int visibleThreshold = 7;
     private int lastVisibleItem, totalItemCount;
     private boolean loading;
     private onLoadMoreListener onLoadMoreListener;
@@ -48,12 +49,11 @@ public class CategoryDetailsFragmentAdapter extends RecyclerView.Adapter {
                         case VIEW_ITEM:
                             return 1;
                         case VIEW_PROG:
-                            return 2;
-//                            if(Home_Fragment.spanCount == 2){
-//                                return 2;
-//                            }
-//                            else if(Home_Fragment.spanCount == 3)
-//                                return 3;
+                            if(Home_Fragment.spanCount == 2){
+                                return 2;
+                            }
+                            else if(Home_Fragment.spanCount == 3)
+                                return 3;
                         default:
                             return 2;
                     }
@@ -69,8 +69,6 @@ public class CategoryDetailsFragmentAdapter extends RecyclerView.Adapter {
                     lastVisibleItem = gridLayoutManager.findLastVisibleItemPosition();
 
                     if (!loading && totalItemCount <= (lastVisibleItem + visibleThreshold)) {
-                        // End has been reached
-                        // Do something
                         if (onLoadMoreListener != null) {
                             onLoadMoreListener.onLoadMore();
                         }
@@ -150,22 +148,27 @@ public class CategoryDetailsFragmentAdapter extends RecyclerView.Adapter {
         @Override
         public void onClick(View view) {
             int position = getAdapterPosition();
-            //Toast.makeText(context, this.wallpapersModels.get(position).getWallpaperURL(), Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(this.context, FullWallpaperViewActivity.class);
-            //ActivityOptionsCompat activityOptionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(this.context);
             intent.putExtra("fullUrl", wallpapersModels.get(position).getWallpaperFullURL());
             intent.putExtra("thumbUrl", wallpapersModels.get(position).getWallpaperURL());
             intent.putExtra("file_type", wallpapersModels.get(position).getFileType());
             intent.putExtra("id", wallpapersModels.get(position).getWallId());
-            this.context.startActivity(intent);
+            intent.putExtra("caller", "Category");
+            intent.putExtra("position", position);
+            intent.putParcelableArrayListExtra("array", wallpapersModels);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
         }
     }
     public static class ProgressViewHolder extends RecyclerView.ViewHolder {
         public ProgressBar progressBar;
+        public TextView textView;
 
         public ProgressViewHolder(View v) {
             super(v);
             progressBar =  v.findViewById(R.id.progressBar);
+            textView = v.findViewById(R.id.textview);
+            textView.setPadding(0,0,0,0);
         }
     }
 }

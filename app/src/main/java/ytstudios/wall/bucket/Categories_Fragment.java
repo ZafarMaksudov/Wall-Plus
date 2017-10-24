@@ -1,5 +1,6 @@
 package ytstudios.wall.bucket;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -52,18 +53,26 @@ public class Categories_Fragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        return super.onOptionsItemSelected(item);
+        switch (item.getItemId()){
+            case R.id.menu_about:
+                Intent intent = new Intent(getActivity(), AboutActivity.class);
+                startActivity(intent);
+                break;
+        }
+        return true;
     }
 
     private void initializeCategories() {
         categories = new ArrayList<>();
         categories.add(new Categories_Model_Class("Abstract", R.drawable.abstractimg));
-        categories.add(new Categories_Model_Class("Amoled", R.drawable.amoled));
+        //categories.add(new Categories_Model_Class("Amoled", R.drawable.amoled));
         categories.add(new Categories_Model_Class("Animal", R.drawable.animal));
         categories.add(new Categories_Model_Class("Anime", R.drawable.anime));
         categories.add(new Categories_Model_Class("Cityscape", R.drawable.city));
-        categories.add(new Categories_Model_Class("Minimal", R.drawable.minimal));
+        categories.add(new Categories_Model_Class("Comics", R.drawable.comics));
+        //categories.add(new Categories_Model_Class("Minimal", R.drawable.minimal));
         categories.add(new Categories_Model_Class("Nature", R.drawable.nature));
+        categories.add(new Categories_Model_Class("Patterns", R.drawable.patterns));
         categories.add(new Categories_Model_Class("Vehicles", R.drawable.cars));
 
     }

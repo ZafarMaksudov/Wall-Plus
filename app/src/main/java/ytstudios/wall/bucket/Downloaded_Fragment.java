@@ -1,21 +1,28 @@
 package ytstudios.wall.bucket;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -31,12 +38,16 @@ public class Downloaded_Fragment extends Fragment {
     Context context;
     GridLayoutManager gridLayoutManager;
     DownloadFragmentAdapter downloadFragmentAdapter;
-    SwipeRefreshLayout swipeRefreshLayout;
 
     //Directories
     private ArrayList<String> filePaths;
     private ArrayList<String> fileNames;
     private File[] files;
+
+    ImageView noDownloadsImage;
+    TextView noDownloadsText;
+    Button downloadNow;
+    ViewPager viewPager;
 
     @Nullable
     @Override
@@ -44,48 +55,21 @@ public class Downloaded_Fragment extends Fragment {
 
         setHasOptionsMenu(true);
 
+        context = getActivity().getApplicationContext();
+
+        LocalBroadcastManager.getInstance(context).registerReceiver(broadcastReceiver,
+                new IntentFilter("Refresh"));
+
         View view = inflater.inflate(R.layout.downloaded_fragment, null);
 
-        try {
-            File imageDir = new File(Environment.getExternalStorageDirectory().toString() + "/Wall Bucket/Downloads");
-            Log.i("DIR", imageDir.toString());
-            if (imageDir.exists()) {
-                files = imageDir.listFiles();
-                Log.i("FILES", String.valueOf(files.length));
-                filePaths = new ArrayList<>();
-                fileNames = new ArrayList<>();
-
-                for (int i = 0; i < files.length; i++) {
-                    // Get the path of the image file
-                    filePaths.add(i, files[i].getAbsolutePath());
-                    Log.i("FILES", filePaths.get(i));
-                    // Get the name image file
-                    fileNames.add(i, files[i].getAbsolutePath());
-                    Log.i("FILENAMES", fileNames.get(i));
-                }
-                Log.i("SIZE  ", String.valueOf(filePaths.size()));
-
-            }
-        } catch (Exception e) {
-            Log.i("EXCEPTION ", e.toString());
-        }
-
-        downloadFragmentAdapter = new DownloadFragmentAdapter(getActivity().getApplicationContext(), filePaths, fileNames);
-
-        swipeRefreshLayout = view.findViewById(R.id.swipeRefresh);
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        viewPager = getActivity().findViewById(R.id.view_pager);
+        noDownloadsImage = view.findViewById(R.id.noDownloads);
+        noDownloadsText = view.findViewById(R.id.no_download_text);
+        downloadNow = view.findViewById(R.id.download_now);
+        downloadNow.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onRefresh() {
-                swipeRefreshLayout.setRefreshing(true);
-                (new Handler()).postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        new refreshDownloads().execute();
-                        swipeRefreshLayout.setRefreshing(false);
-                    }
-                }, 1000);
-                recyclerView.invalidate();
-                Log.i("DATA CHANGED", "DATA SET CHANGED");
+            public void onClick(View view) {
+                viewPager.setCurrentItem(2, true);
             }
         });
 
@@ -94,7 +78,40 @@ public class Downloaded_Fragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(gridLayoutManager);
         recyclerView.addItemDecoration(new RecyclerItemDecoration(2));
-        recyclerView.setAdapter(downloadFragmentAdapter);
+
+        try {
+            File imageDir = new File(Environment.getExternalStorageDirectory().toString() + getActivity().getResources().getString(R.string.downloadLocation));
+            Log.i("DIR", imageDir.toString());
+            if (imageDir.exists()) {
+                files = imageDir.listFiles();
+                Log.i("FILES", String.valueOf(files.length));
+                filePaths = new ArrayList<>();
+                fileNames = new ArrayList<>();
+
+                if (files.length > 0) {
+                    recyclerView.setVisibility(View.VISIBLE);
+                    noDownloadsText.setVisibility(View.GONE);
+                    noDownloadsImage.setVisibility(View.GONE);
+                    for (int i = 0; i < files.length; i++) {
+                        // Get the path of the image file
+                        filePaths.add(i, files[i].getAbsolutePath());
+                        Log.i("FILES", filePaths.get(i));
+                        // Get the name image file
+                        fileNames.add(i, files[i].getAbsolutePath());
+                        Log.i("FILENAMES", fileNames.get(i));
+                    }
+                    Log.i("SIZE  ", String.valueOf(filePaths.size()));
+                } else {
+                    recyclerView.setVisibility(View.GONE);
+                    noDownloadsText.setVisibility(View.VISIBLE);
+                    noDownloadsImage.setVisibility(View.VISIBLE);
+                }
+            }
+            downloadFragmentAdapter = new DownloadFragmentAdapter(getActivity().getApplicationContext(), filePaths, fileNames, getActivity());
+            recyclerView.setAdapter(downloadFragmentAdapter);
+        } catch (Exception e) {
+            Log.i("EXCEPTION ", e.toString());
+        }
 
         return view;
     }
@@ -106,6 +123,16 @@ public class Downloaded_Fragment extends Fragment {
         return;
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_about:
+                Intent intent = new Intent(getActivity(), AboutActivity.class);
+                startActivity(intent);
+                break;
+        }
+        return true;
+    }
 
     public class refreshDownloads extends AsyncTask<Void, Void, Void> {
 
@@ -113,27 +140,47 @@ public class Downloaded_Fragment extends Fragment {
         @Override
         protected Void doInBackground(Void... voids) {
             try {
-                File imageDir = new File(Environment.getExternalStorageDirectory().toString() + "/Wall Bucket/Downloads");
+                File imageDir = new File(Environment.getExternalStorageDirectory().toString() + getActivity().getResources().getString(R.string.downloadLocation));
                 Log.i("DIR", imageDir.toString());
                 if (imageDir.exists()) {
                     files = imageDir.listFiles();
                     Log.i("FILES", String.valueOf(files.length));
-                    filePaths.clear();
-                    fileNames.clear();
+                    if (files.length > 0) {
+                        filePaths.clear();
+                        fileNames.clear();
 
-                    for (int i = 0; i < files.length; i++) {
-                        // Get the path of the image file
-                        filePaths.add(i, files[i].getAbsolutePath());
-                        Log.i("FILES", filePaths.get(i));
-                        // Get the name image file
-                        fileNames.add(i, files[i].getAbsolutePath());
-                        Log.i("FILENAMES", fileNames.get(i));
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                recyclerView.setVisibility(View.VISIBLE);
+                                noDownloadsText.setVisibility(View.GONE);
+                                noDownloadsImage.setVisibility(View.GONE);
+                            }
+                        });
+
+                        for (int i = 0; i < files.length; i++) {
+                            // Get the path of the image file
+                            filePaths.add(i, files[i].getAbsolutePath());
+                            Log.i("FILES", filePaths.get(i));
+                            // Get the name image file
+                            fileNames.add(i, files[i].getAbsolutePath());
+                            Log.i("FILENAMES", fileNames.get(i));
+                        }
+                        Log.i("SIZE  ", String.valueOf(filePaths.size()));
+                    } else {
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                recyclerView.setVisibility(View.GONE);
+                                noDownloadsText.setVisibility(View.VISIBLE);
+                                noDownloadsImage.setVisibility(View.VISIBLE);
+                            }
+                        });
                     }
-                    Log.i("SIZE  ", String.valueOf(filePaths.size()));
 
                 }
             } catch (Exception e) {
-                Log.i("EXCEPTION ", e.toString());
+                Log.i("EXCEPTION", e.toString());
             }
             return null;
         }
@@ -141,12 +188,17 @@ public class Downloaded_Fragment extends Fragment {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            Log.i("REFRESHED", "CONGO!");
-            //downloadFragmentAdapter = new DownloadFragmentAdapter(context, filePaths, fileNames);
+            Log.i("REFRESHED", "True!");
             downloadFragmentAdapter.notifyDataSetChanged();
-            //recyclerView.setAdapter(downloadFragmentAdapter);
             Log.i("ITEM RANGE CHANGED", "ITEM SET CHANGED");
         }
     }
+
+    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            new refreshDownloads().execute();
+        }
+    };
 }
 

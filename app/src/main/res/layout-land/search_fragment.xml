@@ -76,7 +76,7 @@
             android:layout_below="@id/search_cardView"
             android:layout_centerHorizontal="false"
             android:layout_marginTop="24dp"
-            android:src="@drawable/search_wall_2"
+            android:src="@drawable/searchwall"
             android:layout_marginLeft="64dp"/>
 
         <TextView

@@ -1,9 +1,39 @@
 <resources>
     <string name="app_name">Wall Bucket</string>
 
+    <string name="preferencesName">WallBucketPrefs</string>
+
+
+    <!--Download Location-->
+    <string name="downloadLocation">/Wall Bucket/WallBucket Downloads</string>
+
+
+    <!--App Strings -->
     <string name="search">Tell me what you are searching for , \n I will do the rest!</string>
+    <string name="search404">Sorry, No wallpapers found for \n</string>
     <string name="search_query_hint">What are you looking for ?</string>
     <string name="search_query">Searching wallpapers for </string>
+    <string name="downloadWallBtn">Download</string>
+    <string name="setWallBtn">Set</string>
+    <string name="delete">Delete</string>
 
-    <string name="toFullScreenTransition">toFullScreenTransition</string>
+    <string name="applyingWall">Applying Wallpaper</string>
+
+    <!--Intro Activity-->
+    <string name="explore"><b>Explore</b></string>
+
+    <!--About Me-->
+    <string name="myname">Yugansh Tyagi</string>
+    <string name="aboutme">Android Developer and Graphic Designer.\nTech Enthusiast at morning and \nFull Otaku at night\nEat, Sleep, Code, Repeat!</string>
+    <string name="copyright_claim">Copyright / Claim</string>
+    <string name="cpyrghtText">I do not own or claim copyright to the images used in the app
+                                all the work belongs to their original owners.
+                                The images in the app are only for personal use and
+                                should not be selled or distributed without
+                                the consent of their owners. :)</string>
+
+    <string name="shareApp">Share App with Friends</string>
+    <string name="shareText">Hey checkout this Awesome Wallpaper app I found!\nhttp://play.google.com/store/apps/details?id=</string>
+    <string name="rateApp">Rate app on PlayStore</string>
+
 </resources>

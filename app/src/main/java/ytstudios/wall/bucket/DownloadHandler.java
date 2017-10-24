@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Environment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
@@ -30,7 +31,6 @@ public class DownloadHandler extends AppCompatActivity{
     {
 
         Context context;
-        Downloaded_Fragment downloaded_fragment;
 
         public ImageDownloadAndSave(Context context) {
             this.context = context;
@@ -51,7 +51,11 @@ public class DownloadHandler extends AppCompatActivity{
         @Override
         protected void onPostExecute(Bitmap bitmap) {
             super.onPostExecute(bitmap);
-            Toast.makeText(this.context,"Downloaded!",Toast.LENGTH_LONG).show();
+            Toast toast = Toast.makeText(context, "Downloaded!", Toast.LENGTH_SHORT);
+            //toast.setGravity(Gravity.BOTTOM, 0, 330);
+            toast.show();
+            Intent intent = new Intent("Refresh");
+            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
         }
 
         private void downloadImagesToSdCard(String downloadUrl, String imageName)
@@ -61,13 +65,7 @@ public class DownloadHandler extends AppCompatActivity{
                 URL url = new URL(downloadUrl);
             /* making a directory in sdcard */
                 String sdCard= Environment.getExternalStorageDirectory().toString();
-                File myDir = new File(sdCard + "/Wall Bucket/Downloads");
-
-            /*  if specified not exist create new */
-                if(!myDir.exists())
-                {
-                    myDir.mkdirs();
-                }
+                File myDir = new File(sdCard + context.getResources().getString(R.string.downloadLocation));
 
             /* checks the file and if it already exist delete */
                 File file = new File (myDir, imageName);

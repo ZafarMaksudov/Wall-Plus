@@ -15,6 +15,17 @@ like a Boss! :sunglasses:
 Get new Wallpapers daily from an ever expanding collection.
 There is something for everyone.
 
+[![Get it on Google Play](https://developer.android.com/images/brand/en_generic_rgb_wo_60.png)](https://play.google.com/store/apps/details?id=com.sample.andremion.musicplayer) 
+
+# **Wall Bucket**
+Give your device a new and refreshing look by browsing more than 50000+ Wallpapers that fits your 
+**Device Resolution.**
+Choose any wallpaper that fits your style and make your device shine 
+like a Boss! :sunglasses:
+
+Get new Wallpapers daily from an ever expanding collection.
+There is something for everyone.
+
 [![Get it on Google Play](https://developer.android.com/images/brand/en_generic_rgb_wo_60.png)](https://play.google.com/store/apps/details?id=com.sample.andremion.musicplayer)
 
 # **ScreenShots of App**

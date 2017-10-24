@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorBackground"
@@ -8,27 +9,27 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="60dp">
+        android:layout_height="match_parent">
 
         <android.support.v7.widget.CardView
             android:id="@+id/search_cardView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
-            android:background="@color/colorPrimary"
+            android:background="@color/transparentColor"
             app:cardCornerRadius="4dp">
 
             <EditText
                 android:id="@+id/search_bar"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="48dp"
                 android:background="@color/colorPrimary"
                 android:drawableRight="@drawable/cancel_search"
                 android:hint="@string/search_query_hint"
                 android:imeOptions="actionSearch"
-                android:inputType="text"
+                android:inputType="textNoSuggestions|text"
                 android:maxLines="1"
+                android:textSize="18sp"
                 android:padding="12dp"
                 android:textColor="@color/textColorHint"
                 android:textColorHint="@color/textColorHint"
@@ -41,7 +42,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/search_cardView"
-            android:layout_marginBottom="64dp">
+            android:layout_marginBottom="62dp">
 
         </android.support.v7.widget.RecyclerView>
 
@@ -81,12 +82,12 @@
 
         <ImageView
             android:id="@+id/search_wall_placeholder"
-            android:layout_width="148dp"
-            android:layout_height="110dp"
+            android:layout_width="188dp"
+            android:layout_height="150dp"
             android:layout_below="@id/search_cardView"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="108dp"
-            android:src="@drawable/search_wall_2" />
+            android:layout_marginTop="130dp"
+            android:src="@drawable/searchwall" />
 
         <TextView
             android:id="@+id/search_net"
@@ -99,7 +100,6 @@
             android:textAlignment="center"
             android:textColor="@color/textColor"
             android:textSize="16dp" />
-
     </RelativeLayout>
 
 
