@@ -1,5 +1,5 @@
-![minSdkVersion 21](https://img.shields.io/badge/minSdkVersion-21-red.svg?style=true)
-![compileSdkVersion 26](https://img.shields.io/badge/compileSdkVersion-24-yellow.svg?style=true)
+![minSdkVersion 19](https://img.shields.io/badge/minSdkVersion-19-red.svg?style=true)
+![compileSdkVersion 26](https://img.shields.io/badge/compileSdkVersion-26-yellow.svg?style=true)
 
  ![Icon](https://i.imgur.com/S1Zytjq.png)  
 
@@ -31,8 +31,7 @@ There is something for everyone.
 . Small in Size   
 
 ## **External Libraries Used**
-.  [BottomBar](https://github.com/roughike/BottomBar) : A custom view component that mimics the new Material Design Bottom Navigation pattern.  
-. [Lottie](https://github.com/airbnb/lottie) : Lottie is a mobile library for Android and iOS that parses Adobe After Effects animations exported as json  
+.  [BottomBar](https://github.com/roughike/BottomBar) : A custom view component that mimics the new Material Design Bottom Navigation pattern.   
 . [Glide](https://github.com/bumptech/glide) : Glide is a fast and efficient open source media management and image loading  
 . [Picasso](https://github.com/square/picasso) : A powerful image downloading and caching library for Android  
 . [Fresco](https://github.com/facebook/fresco) : An Android library for managing images and the memory they use  
