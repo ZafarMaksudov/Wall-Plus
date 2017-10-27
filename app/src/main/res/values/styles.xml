@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!--Rate Dialog Resources-->
     <string name="rate_dialog_title">Looks like you like it here!</string>
@@ -15,14 +15,14 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:windowDisablePreview">false</item>
         <item name="android:windowBackground">@color/colorBackground</item>
-        <item name="android:windowActivityTransitions">true</item>
-        <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
     </style>
 
     <style name="MyDialogTheme" parent="Theme.AppCompat.Dialog.Alert" />
 
     <!-- Base application theme. For Categories  -->
     <style name="AppTheme.FullScreen" parent="Theme.AppCompat.NoActionBar">
+
+
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/translucentBlackColor</item>
@@ -39,22 +39,5 @@
         <item name="actionMenuTextColor">@android:color/white</item>
     </style>
 
-
-    <style name="PreferenceThemeOverlay">
-        <item name="preferenceScreenStyle">@style/Preference.PreferenceScreen</item>
-        <item name="preferenceFragmentCompatStyle">@style/PreferenceFragment</item>
-        <item name="preferenceCategoryStyle">@style/Preference.Category</item>
-        <item name="preferenceStyle">@style/Preference</item>
-        <item name="preferenceInformationStyle">@style/Preference.Information</item>
-        <item name="checkBoxPreferenceStyle">@style/Preference.CheckBoxPreference</item>
-        <item name="switchPreferenceCompatStyle">@style/Preference.SwitchPreferenceCompat</item>
-        <item name="seekBarPreferenceStyle">@style/Preference.SeekBarPreference</item>
-        <item name="dialogPreferenceStyle">@style/Preference.DialogPreference</item>
-        <item name="editTextPreferenceStyle">@style/Preference.DialogPreference.EditTextPreference
-        </item>
-        <item name="preferenceFragmentListStyle">@style/PreferenceFragmentList</item>
-        <item name="dropdownPreferenceStyle">@style/Preference.DropDown</item>
-        <item name="android:textColor">@color/colorAccent</item>
-    </style>
 
 </resources>

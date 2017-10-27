@@ -122,8 +122,8 @@ public class FavoriteFragment extends Fragment {
                     try {
                         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.MyDialogTheme);
                         builder.setCancelable(true);
-                        builder.setTitle("Warning!");
-                        builder.setMessage("This will delete all your Favorites!");
+                        builder.setTitle(getResources().getString(R.string.delete_warning));
+                        builder.setMessage(getResources().getString(R.string.delete_warning_msg));
                         builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
@@ -140,7 +140,7 @@ public class FavoriteFragment extends Fragment {
                         builder.show();
                     } catch (Exception e) {
                         Log.i("DELETE EXCEPTION", e.toString());
-                        Toast.makeText(this.context, "Some error occurred!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this.context, getResources().getString(R.string.delete_error), Toast.LENGTH_SHORT).show();
                     }
                 }
                 break;

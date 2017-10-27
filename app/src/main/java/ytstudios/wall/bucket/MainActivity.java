@@ -47,8 +47,6 @@ public class MainActivity extends AppCompatActivity {
 
     public static String DATABASE_FULL_PATH = null;
 
-//    public static  String wallpaperSite1 = "NULL", wallpaperSite2 = "NULL";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -86,18 +84,14 @@ public class MainActivity extends AppCompatActivity {
             AppRate.showRateDialogIfMeetsConditions(MainActivity.this);
         }catch (Exception e){
             Log.i("PlayStore Exception", e.toString());
-            Toast.makeText(MainActivity.this, "Error Opening PlayStore!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, getResources().getString(R.string.playstore_error), Toast.LENGTH_SHORT).show();
         }
 
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Explore");
+        getSupportActionBar().setTitle(getResources().getString(R.string.explore_intro));
 
         SharedPreferences preferences = getSharedPreferences(getResources().getString(R.string.preferencesName), MODE_PRIVATE);
-//        wallpaperSite1 = preferences.getString("wallpaperSite1", "");
-//        wallpaperSite2 = preferences.getString("wallpaperSite2", "");
-//        Log.i("WALLPAPER SITE 1", wallpaperSite1);
-//        Log.i("WALLPAPER SITE 2", wallpaperSite2);
 
         boolean firstRun = preferences.getBoolean("firstRun", true);
         if (firstRun) {
@@ -138,23 +132,23 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onPageSelected(int position) {
                 if (position == 0) {
-                    setActionBarTitle("Search");
+                    setActionBarTitle(getResources().getString(R.string.search_intro));
                     toolbar.setVisibility(View.GONE);
                     bottomBar.selectTabAtPosition(0, true);
                 } else if (position == 1) {
-                    setActionBarTitle("Categories");
+                    setActionBarTitle(getResources().getString(R.string.category_intro));
                     toolbar.setVisibility(View.VISIBLE);
                     bottomBar.selectTabAtPosition(1, true);
                 } else if (position == 2) {
-                    setActionBarTitle("Explore");
+                    setActionBarTitle(getResources().getString(R.string.explore_intro));
                     toolbar.setVisibility(View.VISIBLE);
                     bottomBar.selectTabAtPosition(2, true);
                 } else if (position == 3) {
-                    setActionBarTitle("Favorites");
+                    setActionBarTitle(getResources().getString(R.string.fav_intro));
                     toolbar.setVisibility(View.VISIBLE);
                     bottomBar.selectTabAtPosition(3, true);
                 } else if (position == 4) {
-                    setActionBarTitle("Downloaded");
+                    setActionBarTitle(getResources().getString(R.string.downloaded));
                     toolbar.setVisibility(View.VISIBLE);
                     bottomBar.selectTabAtPosition(4, true);
                 }

@@ -1,35 +1,108 @@
 <resources>
+    <!--App Essentials-->
     <string name="app_name">Wall Bucket</string>
-
     <string name="preferencesName">WallBucketPrefs</string>
-
-
-    <!--Download Location-->
     <string name="downloadLocation">/Wall Bucket/WallBucket Downloads</string>
 
 
+
     <!--App Strings -->
-    <string name="search">Tell me what you are searching for , \n I will do the rest!</string>
+    <string name="no_net_connection">No internet connection</string>
+    <string name="connect_btn">Connect</string>
+    <string name="cannot_connect">Cannot connect to a Network!</string>
+    <string name="loading_more">Loading more Wallpapers</string>
+    <string name="disable_adblock">Disable AdBlock and support development!</string>
+
+
+    <!--Menus-->
+    <string name="menu_about">About</string>
+    <string name="remove_database">Remove database</string>
+    <string name="change_layout">Change Layout</string>
+    <string name="grid_2">2 Grid</string>
+    <string name="grid_3">3 Grid</string>
+    <string name="refresh">Refresh</string>
+
+    <!--Main Activity-->
+    <string name="playstore_error">Error opening PlayStore</string>
+
+    <!--Intro Activity Strings-->
+    <string name="app_desc">The best wallpaper downloading app for Android!</string>
+    <string name="explore_intro"><b>Explore</b></string>
+    <string name="explore_intro_desc">More than 50000 wallpapers curated for your device</string>
+    <string name="search_intro">Search</string>
+    <string name="search_intro_desc">Find the wallpapers that fits your taste</string>
+    <string name="category_intro">Categories</string>
+    <string name="category_intro_desc">Explore the categories for finding precise wallpapers</string>
+    <string name="fav_intro">Favorites</string>
+    <string name="fav_intro_desc">Loved a wallpaper? Double Tap to Add them to Favorites so you never lose them</string>
+    <string name="ready_ask">Ready to Dive in ?</string>
+    <string name="press_tick">Press \'Tick\' to continue</string>
+    <string name="ready_rock">You are ready to Rock!</string>
+
+
+    <!--Category Fragment-->
+    <string name="cat_abstract">Abstract</string>
+    <string name="cat_animal">Animal</string>
+    <string name="cat_anime">Anime</string>
+    <string name="cat_city">Cityscape</string>
+    <string name="cat_comic">Comics</string>
+    <string name="cat_nature">Nature</string>
+    <string name="cat_patterns">Patterns</string>
+    <string name="cat_vehicles">Vehicles</string>
+
+
+    <!--Set As Wallpaper-->
+    <string name="applying">Applying Wallpaper</string>
+    <string name="apply_success">Wallpaper Applied Successfully</string>
+    <string name="apply_error">Error applying wallpaper!</string>
+
+
+    <!--Download Handler-->
+    <string name="downloaded">Downloaded</string>
+
+
+    <!--Favorite Fragment-->
+    <string name="delete_warning">Warning !</string>
+    <string name="delete_warning_msg">This will delete all your Favorites!</string>
+    <string name="delete_error">Some error occurred !</string>
+    <string name="no_favs">No Favorites yet!</string>
+    <string name="double_taps">Double tap Wallpapers to add them to Favorites</string>
+    <string name="add_fav_btn">Add Favorites</string>
+
+
+    <!--Fullscreen Wallpaper View Activity-->
+    <string name="size_option_small">Small - 1024x1024</string>
+    <string name="size_option_med">Medium - 2048x2048</string>
+    <string name="size_option_large">Large - 2732x2732</string>
+    <string name="download_wallpaper_btn">Download</string>
+    <string name="set_wallpaper_btn">Set</string>
+    <string name="downloading_wallpaper">Downloading Wallpaper </string>
+
+
+    <!--Home Fragment-->
+    <string name="loading_wallpapers">Loading Wallpapers</string>
+
+
+    <!--Search Fragment-->
+    <string name="search_what">Tell me what you are searching for , \n I will do the rest!</string>
     <string name="search404">Sorry, No wallpapers found for \n</string>
     <string name="search_query_hint">What are you looking for ?</string>
     <string name="search_query">Searching wallpapers for </string>
-    <string name="downloadWallBtn">Download</string>
-    <string name="setWallBtn">Set</string>
-    <string name="delete">Delete</string>
 
-    <string name="applyingWall">Applying Wallpaper</string>
 
-    <!--Intro Activity-->
-    <string name="explore"><b>Explore</b></string>
+    <!--Downloads Fragment-->
+    <string name="no_wallpaper_downloaded">No Wallpapers Downloaded !</string>
+    <string name="download_now_btn">Download Now</string>
 
-    <!--About Me-->
+
+    <!--About Me Section-->
     <string name="myname">Yugansh Tyagi</string>
     <string name="aboutme">Android Developer and Graphic Designer.\nTech Enthusiast at morning and \nFull Otaku at night\nEat, Sleep, Code, Repeat!</string>
     <string name="copyright_claim">Copyright / Claim</string>
     <string name="cpyrghtText">I do not own or claim copyright to the images used in the app
                                 all the work belongs to their original owners.
                                 The images in the app are only for personal use and
-                                should not be selled or distributed without
+                                should not be sold or distributed without
                                 the consent of their owners. :)</string>
 
     <string name="shareApp">Share App with Friends</string>

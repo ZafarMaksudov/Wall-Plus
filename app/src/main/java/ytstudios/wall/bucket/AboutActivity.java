@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -12,6 +13,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.facebook.drawee.generic.RoundingParams;
+import com.facebook.drawee.view.SimpleDraweeView;
 
 /**
  * Created by Yugansh Tyagi on 14-10-2017.
@@ -22,6 +26,7 @@ public class AboutActivity extends AppCompatActivity {
     Toolbar toolbar;
     ImageView github,gmail,linkedIn;
     TextView shareApp, rateApp;
+    SimpleDraweeView me,codingScreen;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -38,6 +43,16 @@ public class AboutActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
+
+        me = findViewById(R.id.profile_image);
+        me.setImageURI("https://firebasestorage.googleapis.com/v0/b/wallbucket-1a592.appspot.com/o/me.jpeg?alt=media&token=8b85122a-3010-420e-98e8-7d2e152fdbfc");
+        int overlayColor = ContextCompat.getColor(AboutActivity.this, R.color.translucentBlackColor);
+        RoundingParams roundingParams = RoundingParams.fromCornersRadius(5f);
+        roundingParams.setBorder(overlayColor, 5.0f);
+        roundingParams.setRoundAsCircle(true);
+        me.getHierarchy().setRoundingParams(roundingParams);
+        codingScreen = findViewById(R.id.codingScreen);
+        codingScreen.setImageURI("https://firebasestorage.googleapis.com/v0/b/wallbucket-1a592.appspot.com/o/codingscreen.jpg?alt=media&token=d5b5a2f6-85a5-447f-b2d9-47d63a359234");
 
         github = findViewById(R.id.github);
         gmail = findViewById(R.id.gmail);

@@ -186,7 +186,7 @@ public class DownloadFragmentAdapter extends RecyclerView.Adapter {
 
             @Override
             protected void onPreExecute () {
-                Toast.makeText(context, "Applying Wallpaper!", Toast.LENGTH_LONG).show();
+                Toast.makeText(context, context.getResources().getString(R.string.applying), Toast.LENGTH_LONG).show();
             }
 
             @Override
@@ -194,10 +194,10 @@ public class DownloadFragmentAdapter extends RecyclerView.Adapter {
                 try {
                     WallpaperManager wallpaperManager = WallpaperManager.getInstance(context);
                     wallpaperManager.setBitmap(result);
-                    Toast.makeText(context, "Wallpaper Applied Successfully", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, context.getResources().getString(R.string.apply_success), Toast.LENGTH_SHORT).show();
                 } catch (Exception ex) {
                     Log.i("ERROR", ex.toString());
-                    Toast.makeText(context, "Error applying wallpaper!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, context.getResources().getString(R.string.apply_error), Toast.LENGTH_SHORT).show();
                 }
             }
         }

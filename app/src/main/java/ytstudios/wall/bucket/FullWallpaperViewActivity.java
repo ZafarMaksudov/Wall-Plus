@@ -1,5 +1,6 @@
 package ytstudios.wall.bucket;
 
+import android.annotation.TargetApi;
 import android.app.Dialog;
 import android.app.WallpaperManager;
 import android.content.Context;
@@ -11,8 +12,10 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
@@ -21,6 +24,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -38,6 +42,8 @@ import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 import com.squareup.picasso.Picasso;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.util.ArrayList;
 
 import static android.widget.Toast.makeText;
@@ -58,10 +64,10 @@ public class FullWallpaperViewActivity extends AppCompatActivity {
 
     Button downloadWallBtn, setWallBtn;
 
-    String encodedUrlThumb, encodedUrlFull, fileType;
+    public String encodedUrlThumb, encodedUrlFull, fileType;
     int wallId;
 
-    CharSequence options[] = new CharSequence[]{"Small - 1024x1024", "Medium - 2048x2048", "Large - 2732x2732"};
+    CharSequence options[];
 
     private boolean fullscreen = false;
 
@@ -83,6 +89,11 @@ public class FullWallpaperViewActivity extends AppCompatActivity {
 
     ImageView zoomHeart;
 
+    public DisplayMetrics dm;
+    public int height, width;
+
+    File temp;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -90,6 +101,12 @@ public class FullWallpaperViewActivity extends AppCompatActivity {
 
 //        LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(broadcastReceiver,
 //                new IntentFilter("UpdateHomeViewPager"));
+
+        options = new CharSequence[]{getApplicationContext().getResources().getString(R.string.size_option_small), getApplicationContext().getResources().getString(R.string.size_option_med), getApplicationContext().getResources().getString(R.string.size_option_large)};
+
+        dm = getResources().getDisplayMetrics();
+        height = dm.heightPixels;
+        width = dm.widthPixels;
 
         wallpaperManager = WallpaperManager.getInstance(FullWallpaperViewActivity.this);
 
@@ -338,15 +355,13 @@ public class FullWallpaperViewActivity extends AppCompatActivity {
                     wallId = arrayList.get(position).getWallId();
                     Log.i("Position", String.valueOf(pos));
                     Log.i("URL", encodedUrlFull);
-                    if(ActivityCaller.equals("Home")){
-                        Home_Fragment.recyclerView.scrollToPosition(position+3);
-                    }
-                    else if(ActivityCaller.equals("Search")){
-                        Search_Fragment.recyclerView.scrollToPosition(position+3);
-                    }
-                    else if(ActivityCaller.equals("Category")){
-                        CategoryDetailsFragment.recyclerView.scrollToPosition(position+3);
-                    }
+//                    if (ActivityCaller.equals("Home")) {
+//                        Home_Fragment.recyclerView.scrollToPosition(position + 3);
+//                    } else if (ActivityCaller.equals("Search")) {
+//                        Search_Fragment.recyclerView.scrollToPosition(position + 3);
+//                    } else if (ActivityCaller.equals("Category")) {
+//                        CategoryDetailsFragment.recyclerView.scrollToPosition(position + 3);
+//                    }
 
                 }
 
@@ -371,10 +386,9 @@ public class FullWallpaperViewActivity extends AppCompatActivity {
         bannerAd.setAdListener(new AdListener() {
             @Override
             public void onAdFailedToLoad(int i) {
-                if(i == 3){
+                if (i == 3 || !isNetworkAvailable()) {
                     disableAdBlock.setVisibility(View.GONE);
-                }
-                else {
+                } else {
                     disableAdBlock.setVisibility(View.VISIBLE);
                 }
                 isAdblock = true;
@@ -396,7 +410,7 @@ public class FullWallpaperViewActivity extends AppCompatActivity {
                 } else if (ActivityCaller.equals("Downloads")) {
                     new setWall(getApplicationContext()).execute();
                 } else {
-                    Toast.makeText(getApplicationContext(), "No Internet Connection!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.no_net_connection), Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -408,13 +422,13 @@ public class FullWallpaperViewActivity extends AppCompatActivity {
                 switch (ActivityCaller) {
                     case "Category":
                         new DownloadHandler.ImageDownloadAndSave(getApplicationContext()).execute(encodedUrlFull, "Wallpaper " + String.valueOf(wallId) + fileType);
-                        toast = makeText(getApplicationContext(), "Downloading " + "Wallpaper " + String.valueOf(wallId) + fileType, Toast.LENGTH_SHORT);
+                        toast = makeText(getApplicationContext(), getResources().getString(R.string.downloading_wallpaper) + String.valueOf(wallId) + fileType, Toast.LENGTH_SHORT);
                         toast.show();
                         break;
 
                     case "Search":
                         new DownloadHandler.ImageDownloadAndSave(getApplicationContext()).execute(encodedUrlFull, "Wallpaper " + String.valueOf(wallId) + fileType);
-                        toast = Toast.makeText(getApplicationContext(), "Downloading " + "Wallpaper " + String.valueOf(wallId) + fileType, Toast.LENGTH_SHORT);
+                        toast = Toast.makeText(getApplicationContext(), getResources().getString(R.string.downloading_wallpaper) + String.valueOf(wallId) + fileType, Toast.LENGTH_SHORT);
                         toast.show();
                         break;
 
@@ -428,14 +442,14 @@ public class FullWallpaperViewActivity extends AppCompatActivity {
                                 public void onClick(DialogInterface dialog, int which) {
                                     switch (which) {
                                         case 0:
-                                            toast = Toast.makeText(getApplicationContext(), "Downloading " + "Wallpaper " + String.valueOf(wallId) + "(S)" + fileType, Toast.LENGTH_SHORT);
+                                            toast = Toast.makeText(getApplicationContext(), getResources().getString(R.string.downloading_wallpaper) + String.valueOf(wallId) + "(S)" + fileType, Toast.LENGTH_SHORT);
                                             //toast.setGravity(Gravity.BOTTOM, 0, 330);
                                             toast.show();
                                             new DownloadHandler.ImageDownloadAndSave(getApplicationContext()).execute(encodedUrlFull, "Wallpaper " + String.valueOf(wallId) + fileType);
                                             Log.i("ENCODEDURL", encodedUrlFull);
                                             break;
                                         case 1:
-                                            toast = Toast.makeText(getApplicationContext(), "Downloading " + "Wallpaper " + String.valueOf(wallId) + "(M)" + fileType, Toast.LENGTH_SHORT);
+                                            toast = Toast.makeText(getApplicationContext(), getResources().getString(R.string.downloading_wallpaper) + String.valueOf(wallId) + "(M)" + fileType, Toast.LENGTH_SHORT);
                                             //toast.setGravity(Gravity.BOTTOM, 0, 330);
                                             toast.show();
                                             encodedUrlFull = encodedUrlFull.replace("-6-", "-8-");
@@ -443,7 +457,7 @@ public class FullWallpaperViewActivity extends AppCompatActivity {
                                             Log.i("ENCODEDURL", encodedUrlFull);
                                             break;
                                         case 2:
-                                            toast = Toast.makeText(getApplicationContext(), "Downloading " + "Wallpaper " + String.valueOf(wallId) + "(L)" + fileType, Toast.LENGTH_SHORT);
+                                            toast = Toast.makeText(getApplicationContext(), getResources().getString(R.string.downloading_wallpaper) + String.valueOf(wallId) + "(L)" + fileType, Toast.LENGTH_SHORT);
                                             //toast.setGravity(Gravity.BOTTOM, 0, 330);
                                             toast.show();
                                             encodedUrlFull = encodedUrlFull.replace("-6-", "-40-");
@@ -469,10 +483,10 @@ public class FullWallpaperViewActivity extends AppCompatActivity {
                         boolean isNetworkConnected = isNetworkAvailable();
                         if (isNetworkConnected) {
                             encodedUrlFull = FavoriteFragment.arrayList.get(pos).getWallpaperFullURL();
-                            Toast.makeText(getApplicationContext(), "Downloading Wallpaper " + String.valueOf(wallId) + "(M)." + FavoriteFragment.arrayList.get(pos).getFileType(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), getResources().getString(R.string.downloading_wallpaper) + String.valueOf(wallId) + "." + FavoriteFragment.arrayList.get(pos).getFileType(), Toast.LENGTH_SHORT).show();
                             new DownloadHandler.ImageDownloadAndSave(getApplicationContext()).execute(encodedUrlFull, "Wallpaper " + String.valueOf(FavoriteFragment.arrayList.get(pos).getWallId()) + FavoriteFragment.arrayList.get(pos).getFileType());
                         } else {
-                            Toast.makeText(getApplicationContext(), "No Internet connection!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), getResources().getString(R.string.no_net_connection), Toast.LENGTH_SHORT).show();
                         }
                         break;
 
@@ -540,11 +554,14 @@ public class FullWallpaperViewActivity extends AppCompatActivity {
         }
 
         @Override
+        @TargetApi(11)
         protected void onPreExecute() {
             alertDialog = new Dialog(FullWallpaperViewActivity.this);
             alertDialog.setCancelable(false);
             alertDialog.setContentView(R.layout.setwall_dialog_layout);
             progressBar = alertDialog.findViewById(R.id.settingWall);
+            progressBar.setPadding(12,12,12,12);
+            alertDialog.setTitle(getResources().getString(R.string.applying));
             progressBar.setIndeterminate(true);
             alertDialog.show();
         }
@@ -552,18 +569,55 @@ public class FullWallpaperViewActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void aVoid) {
             try {
-                wallpaperManager.setBitmap(result);
-                Toast toast = makeText(context, "Wallpaper Applied Successfully", Toast.LENGTH_SHORT);
-                toast.show();
+                Intent in = new Intent(wallpaperManager.getCropAndSetWallpaperIntent(getImageUri(FullWallpaperViewActivity.this, result)));
+                startActivityForResult(in, 1);
+                wallpaperManager.suggestDesiredDimensions(width, height);
             } catch (Exception ex) {
                 ex.printStackTrace();
-                Toast toast = makeText(context, "Error applying wallpaper!", Toast.LENGTH_SHORT);
+                Toast toast = makeText(context, getResources().getString(R.string.apply_error), Toast.LENGTH_SHORT);
                 toast.show();
             }
             alertDialog.hide();
         }
 
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 1 && resultCode == -1) {
+            Log.i("CODE ", String.valueOf(resultCode));
+            Toast toast = makeText(FullWallpaperViewActivity.this, getResources().getString(R.string.apply_success), Toast.LENGTH_SHORT);
+            toast.show();
+//            File fdelete = new File(temp.toURI());
+//            Log.d("URI OF PATH DELETE", String.valueOf(fdelete.exists()));
+//            if (fdelete.exists()) {
+//                fdelete.delete();
+//            }
+//            Intent mediaScanIntent = new Intent(
+//                    Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+//            Uri contentUri = Uri.fromFile(fdelete); //out is your file you saved/deleted/moved/copied
+//            mediaScanIntent.setData(contentUri);
+//            FullWallpaperViewActivity.this.sendBroadcast(mediaScanIntent);
+        }
+    }
+
+    public Uri getImageUri(Context inContext, Bitmap inImage) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+//        temp = new File(Environment.getExternalStorageDirectory() + getResources().getString(R.string.downloadLocation) + "/temp.jpg");
+//        try {
+//            temp.createNewFile();
+//            FileOutputStream f = new FileOutputStream(temp);
+//            f.write(bytes.toByteArray());
+//            f.close();
+//        } catch (Exception e) {
+//            Log.d("Temp Error", e.toString());
+//        }
+        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
+        Log.i("URI OF SET IMAGE", path);
+        return Uri.parse(path);
+    }
+
     public int getStatusBarHeight() {
         int result = 0;
         int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
@@ -572,23 +626,6 @@ public class FullWallpaperViewActivity extends AppCompatActivity {
         }
         return result;
     }
-
-//    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
-//        @Override
-//        public void onReceive(Context context, Intent intent) {
-//            Log.i("BroadCast Update Pager", "RECEIVED");
-//            updateData();
-//            fullScreenSwipeAdapter.notifyDataSetChanged();
-//            //viewPager.invalidate();
-//        }
-//    };
-//
-//    public void updateData() {
-//        this.arrayList.clear();
-//        this.arrayList = Home_Fragment.wallpapersModelArrayList;
-//        Log.i("UPDATED FULL SIZE", String.valueOf(this.arrayList.size()));
-//        Log.i("UPDATED HOME SIZE", String.valueOf(Home_Fragment.wallpapersModelArrayList.size()));
-//    }
 
     public boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager

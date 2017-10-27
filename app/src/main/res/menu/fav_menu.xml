@@ -4,12 +4,12 @@
 
     <item
         android:id="@+id/remove_database"
-        android:title="Remove Database"
+        android:title="@string/remove_database"
         android:icon="@drawable/deletedownload"
         app:showAsAction="always"/>
 
     <item
         android:id="@+id/menu_about"
-        android:title="About" />
+        android:title="@string/menu_about" />
 
 </menu>

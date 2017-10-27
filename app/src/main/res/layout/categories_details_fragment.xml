@@ -13,7 +13,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
         android:elevation="2dp"
+        android:textColor="@android:color/white"
         android:theme="@style/ToolBarStyle">
 
     </android.support.v7.widget.Toolbar>
@@ -40,8 +42,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Disable AdBlock and support development!"
-            android:textSize="16dp"
+            android:text="@string/disable_adblock"
+            android:textSize="16sp"
             android:textStyle="bold"/>
 
     </android.support.v7.widget.CardView>
@@ -52,7 +54,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         ads:adSize="BANNER"
-        android:background="@color/translucentBlackColor"
+        android:background="@android:color/black"
         ads:adUnitId="@string/CATEGORY_BANNED_ID">
 
     </com.google.android.gms.ads.AdView>

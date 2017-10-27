@@ -49,13 +49,9 @@ public class CategoryDetailsFragmentAdapter extends RecyclerView.Adapter {
                         case VIEW_ITEM:
                             return 1;
                         case VIEW_PROG:
-                            if(Home_Fragment.spanCount == 2){
-                                return 2;
-                            }
-                            else if(Home_Fragment.spanCount == 3)
-                                return 3;
+                            return 3;
                         default:
-                            return 2;
+                            return 3;
                     }
                 }
             });

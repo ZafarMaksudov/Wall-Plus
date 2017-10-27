@@ -4,16 +4,16 @@
 
     <item
         android:id="@+id/menu_gridView"
-        android:title="Change Layout">
+        android:title="@string/change_layout">
         <menu>
             <group
-                android:checkableBehavior="single">
+                android:checkableBehavior="none">
                 <item
                     android:id="@+id/grid_two"
-                    android:title="2 Grids" />
+                    android:title="@string/grid_2" />
                 <item
                     android:id="@+id/grid_three"
-                    android:title="3 Grids" />
+                    android:title="@string/grid_3" />
             </group>
 
         </menu>
@@ -22,11 +22,11 @@
 
     <item
         android:id="@+id/menu_about"
-        android:title="About" />
+        android:title="@string/menu_about" />
 
     <item
         android:id="@+id/refresh"
-        android:title="Refresh"
+        android:title="@string/refresh"
         android:icon="@drawable/refresh"
         app:showAsAction="always"/>
 

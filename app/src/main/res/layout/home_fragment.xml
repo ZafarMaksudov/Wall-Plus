@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/homeFragment_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -34,9 +33,9 @@
         android:layout_above="@id/noNet"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:text="Cannot connect to a Network!"
+        android:text="@string/cannot_connect"
         android:textColor="@color/textColor"
-        android:textSize="18dp"
+        android:textSize="18sp"
         android:visibility="invisible" />
 
     <Button
@@ -45,7 +44,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/noNet"
         android:layout_centerHorizontal="true"
-        android:text="Connect" />
+        android:text="@string/connect_btn" />
 
     <ProgressBar
         android:visibility="gone"

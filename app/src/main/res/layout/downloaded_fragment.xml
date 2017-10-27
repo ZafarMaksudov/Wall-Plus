@@ -30,8 +30,8 @@
         android:id="@+id/no_download_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="No Wallpapers Downloaded !"
-        android:textSize="20dp"
+        android:text="@string/no_wallpaper_downloaded"
+        android:textSize="20sp"
         android:textColor="@color/textColor"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
@@ -43,6 +43,6 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/noDownloads"
         android:layout_centerHorizontal="true"
-        android:text="Download Now!"/>
+        android:text="@string/download_now_btn"/>
 
 </RelativeLayout>

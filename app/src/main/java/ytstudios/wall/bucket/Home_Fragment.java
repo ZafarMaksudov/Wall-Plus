@@ -47,8 +47,8 @@ import java.util.List;
 
 public class Home_Fragment extends Fragment {
 
-    public static ArrayList<WallpapersModel> wallpapersModelArrayList;
-    public static RecyclerView recyclerView;
+    public ArrayList<WallpapersModel> wallpapersModelArrayList;
+    public RecyclerView recyclerView;
     HomeFragmentCustomAdapter homeFragmentCustomAdapter;
     ImageView noNetImage;
     TextView noNetText;
@@ -129,7 +129,7 @@ public class Home_Fragment extends Fragment {
                             try {
                                 wallpapersModelArrayList.remove(wallpapersModelArrayList.size() - 1);
                                 homeFragmentCustomAdapter.notifyItemRemoved(wallpapersModelArrayList.size());
-                            }catch (ArrayIndexOutOfBoundsException e){
+                            } catch (ArrayIndexOutOfBoundsException e) {
                                 //Toast.makeText(getContext(), "ERROR!", Toast.LENGTH_SHORT).show();
                             }
                             Log.i("REMOVED", "NULL");
@@ -156,7 +156,10 @@ public class Home_Fragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         if (requestCode == 0) {
+            Toast.makeText(getContext(), "Press Refresh to load", Toast.LENGTH_SHORT).show();
+            Log.i("In Result", "TRUE");
             boolean n = isNetworkAvailable();
+            Log.i("NETWORK", String.valueOf(n));
             if (n) {
                 initData();
             }
@@ -179,7 +182,7 @@ public class Home_Fragment extends Fragment {
             noNetImage.setVisibility(View.VISIBLE);
             noNetText.setVisibility(View.VISIBLE);
             connectBtn.setVisibility(View.VISIBLE);
-            Toast.makeText(getContext(), "No Internet Connected!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getResources().getString(R.string.no_net_connection), Toast.LENGTH_SHORT).show();
 
         }
     }
@@ -199,7 +202,7 @@ public class Home_Fragment extends Fragment {
                 Elements url = wall.getElementsByAttribute("src");
                 list = url.eachAttr("src");
 
-                if(pageCount <= numPages) {
+                if (pageCount <= numPages) {
 
                     for (int i = 0; i < list.size(); i++) {
                         wallpaperNumber++;
@@ -208,12 +211,11 @@ public class Home_Fragment extends Fragment {
                         sep[1] = sep[1].replace("android/wp-content/uploads", "wallpaper");
                         String septemp[] = sep[1].split("wallpaper-");
                         //Log.i("SEPARATION ", septemp[1]);
-                        if(!septemp[1].contains("250x400.jpg")){
+                        if (!septemp[1].contains("250x400.jpg")) {
                             //Log.i("YES ", "It will be fixed!");
                             septemp[0] = septemp[0] + "wallpaper-" + septemp[1] + "wallpaper.jpg?download=true";
                             sep[1] = "http://" + septemp[0];
-                        }
-                        else {
+                        } else {
                             Log.i("String ", septemp[0]);
                             septemp[0] = septemp[0] + "wallpaper.jpg?download=true";
                             sep[1] = "http://" + septemp[0];
@@ -266,7 +268,7 @@ public class Home_Fragment extends Fragment {
                 return true;
             case R.id.refresh:
                 pageCount = 2;
-                if(!isLoading){
+                if (!isLoading) {
                     recyclerView.setVisibility(View.INVISIBLE);
                     wallpapersModelArrayList.clear();
                     initData();
@@ -337,9 +339,9 @@ public class Home_Fragment extends Fragment {
 
         @Override
         protected void onPreExecute() {
-            Toast.makeText(getContext(), "Loading Wallpapers!", Toast.LENGTH_SHORT).show();
             progressBar.setIndeterminate(true);
             progressBar.setVisibility(View.VISIBLE);
+
         }
 
         @Override
@@ -376,8 +378,14 @@ public class Home_Fragment extends Fragment {
     public boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+        try {
+            NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+            Log.i("IS NETWORK", String.valueOf(activeNetworkInfo));
+            Log.i("Connected", String.valueOf(activeNetworkInfo.isConnected()));
+            return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+        } catch (Exception e) {
+        }
+        return false;
     }
 
     private BroadcastReceiver loadMoreBroadcastReceiver = new BroadcastReceiver() {

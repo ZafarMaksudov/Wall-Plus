@@ -1,18 +1,16 @@
 package ytstudios.wall.bucket;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.widget.ProgressBar;
 
@@ -33,7 +31,7 @@ import java.util.List;
  * Created by Yugansh Tyagi on 26-09-2017.
  */
 
-public class CategoryDetailsFragment extends Activity {
+public class CategoryDetailsFragment extends AppCompatActivity {
 
     Toolbar toolbar;
     String categoryName;
@@ -70,10 +68,11 @@ public class CategoryDetailsFragment extends Activity {
         context = getApplicationContext();
 
         toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(R.drawable.back_arrow);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 onBackPressed();
             }
         });
@@ -82,7 +81,9 @@ public class CategoryDetailsFragment extends Activity {
 
         categorySite = "https://mobile.alphacoders.com/by-resolution/1/";
         categoryName = getIntent().getStringExtra("categoryName");
-        toolbar.setTitle(categoryName);
+        try{
+            getSupportActionBar().setTitle(categoryName);
+        }catch (Exception e ){}
         switch (categoryName) {
             case "Abstract":
                 numPages =0;
@@ -218,12 +219,12 @@ public class CategoryDetailsFragment extends Activity {
         super.onDestroy();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.home_menu, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        MenuInflater inflater = getMenuInflater();
+//        inflater.inflate(R.menu.home_menu, menu);
+//        return super.onCreateOptionsMenu(menu);
+//    }
 
     class loadMore extends AsyncTask<String, Integer, String> {
 

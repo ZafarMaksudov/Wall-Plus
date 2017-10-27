@@ -30,22 +30,6 @@ public class IntroActivity extends MaterialIntroActivity {
 
         enableLastSlideAlphaExitTransition(false);
 
-//        databaseReference.child("Websites").addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                SharedPreferences settings = getSharedPreferences(getResources().getString(R.string.preferencesName), MODE_PRIVATE);
-//                SharedPreferences.Editor editor = settings.edit();
-//                editor.putString("wallpaperSite1", dataSnapshot.child("Site1").getValue().toString());
-//                editor.putString("wallpaperSite2", dataSnapshot.child("Site2").getValue().toString());
-//                editor.apply();
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//
-//            }
-//        });
-
         getBackButtonTranslationWrapper()
                 .setEnterTranslation(new IViewTranslation() {
                     @Override
@@ -58,55 +42,55 @@ public class IntroActivity extends MaterialIntroActivity {
                 .backgroundColor(R.color.color1)
                 .buttonsColor(R.color.translucentBlackColor)
                 .image(R.drawable.introimg)
-                .title("Wall Bucket")
-                .description("The best wallpaper downloading app for Android!")
+                .title(getResources().getString(R.string.app_name))
+                .description(getResources().getString(R.string.app_desc))
                 .build());
 
         addSlide(new SlideFragmentBuilder()
                 .backgroundColor(R.color.color2)
                 .buttonsColor(R.color.translucentBlackColor)
                 .image(R.drawable.img1)
-                .title(getResources().getString(R.string.explore))
-                .description("More than 50000 wallpapers curated for your device")
+                .title(getResources().getString(R.string.explore_intro))
+                .description(getResources().getString(R.string.explore_intro_desc))
                 .build());
 
         addSlide(new SlideFragmentBuilder()
                 .backgroundColor(R.color.color3)
                 .buttonsColor(R.color.translucentBlackColor)
                 .image(R.drawable.img2)
-                .title("Search")
-                .description("Find the wallpapers that fits your taste")
+                .title(getResources().getString(R.string.search_intro))
+                .description(getResources().getString(R.string.search_intro_desc))
                 .build());
 
         addSlide(new SlideFragmentBuilder()
                 .backgroundColor(R.color.color4)
                 .buttonsColor(R.color.translucentBlackColor)
                 .image(R.drawable.img3)
-                .title("Categories")
-                .description("Explore the categories for finding precise wallpapers")
+                .title(getResources().getString(R.string.category_intro))
+                .description(getResources().getString(R.string.category_intro_desc))
                 .build());
 
         addSlide(new SlideFragmentBuilder()
                 .backgroundColor(R.color.color5)
                 .buttonsColor(R.color.translucentBlackColor)
                 .image(R.drawable.img4)
-                .title("Add to Favorites")
-                .description("Loved a wallpaper? Double Tap to Add them to Favorites so you never lose them")
+                .title(getResources().getString(R.string.fav_intro))
+                .description(getResources().getString(R.string.fav_intro_desc))
                 .build());
 
         addSlide(new SlideFragmentBuilder()
                         .backgroundColor(R.color.colorPrimary)
                         .buttonsColor(R.color.translucentBlackColor)
                         .image(R.drawable.introimg)
-                        .title("Ready to Dive in ?")
+                        .title(getResources().getString(R.string.ready_ask))
                         .neededPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE})
                         .build(),
                 new MessageButtonBehaviour(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Toast.makeText(getApplicationContext(), "Press 'Tick' to continue", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), getResources().getString(R.string.press_tick), Toast.LENGTH_SHORT).show();
                     }
-                }, "You are ready to rock!"));
+                }, getResources().getString(R.string.ready_rock)));
 
     }
 

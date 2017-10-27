@@ -51,7 +51,7 @@ public class DownloadHandler extends AppCompatActivity{
         @Override
         protected void onPostExecute(Bitmap bitmap) {
             super.onPostExecute(bitmap);
-            Toast toast = Toast.makeText(context, "Downloaded!", Toast.LENGTH_SHORT);
+            Toast toast = Toast.makeText(context, context.getResources().getString(R.string.downloaded), Toast.LENGTH_SHORT);
             //toast.setGravity(Gravity.BOTTOM, 0, 330);
             toast.show();
             Intent intent = new Intent("Refresh");
@@ -81,7 +81,6 @@ public class DownloadHandler extends AppCompatActivity{
                 InputStream inputStream = null;
                 HttpURLConnection httpConn = (HttpURLConnection)ucon;
                 httpConn.setDoInput(true);
-                //httpConn.setInstanceFollowRedirects(false);
                 httpConn.setRequestMethod("GET");
                 httpConn.connect();
                 inputStream = httpConn.getInputStream();

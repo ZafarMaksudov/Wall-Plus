@@ -25,9 +25,9 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.airbnb.lottie.LottieAnimationView;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 
@@ -49,10 +49,11 @@ public class Search_Fragment extends Fragment {
     CardView searchView;
     ImageView imageView;
     TextView searchNet, searchQueryText, searchQuery;
-    LottieAnimationView animationView;
+//    LottieAnimationView animationView;
+    ProgressBar progressBar;
 
     ArrayList<WallpapersModel> wallpapersModels;
-    public static RecyclerView recyclerView;
+    public RecyclerView recyclerView;
     SearchFragmentCustomAdapter searchFragmentCustomAdapter;
 
     String query;
@@ -117,7 +118,7 @@ public class Search_Fragment extends Fragment {
                             new loadMore().execute( searchSite + query + "&page=" + currPg);
                             searchFragmentCustomAdapter.setLoaded();
                         }
-                    }, 700);
+                    }, 900);
                 }
             }
         });
@@ -125,7 +126,8 @@ public class Search_Fragment extends Fragment {
         imageView = view.findViewById(R.id.search_wall_placeholder);
         searchNet = view.findViewById(R.id.search_net);
         searchQueryText = view.findViewById(R.id.searching_query);
-        animationView = view.findViewById(R.id.animation_view);
+        //animationView = view.findViewById(R.id.animation_view);
+        progressBar = view.findViewById(R.id.searching_progress);
         searchQuery = view.findViewById(R.id.query_name);
 
         searchBar.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -169,12 +171,13 @@ public class Search_Fragment extends Fragment {
                 if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
                     if (motionEvent.getRawX() >= (searchBar.getRight() - searchBar.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
                         // your action here
-                        animationView.pauseAnimation();
-                        animationView.setVisibility(View.INVISIBLE);
+//                        animationView.pauseAnimation();
+//                        animationView.setVisibility(View.INVISIBLE);
+                        progressBar.setVisibility(View.INVISIBLE);
                         searchQueryText.setVisibility(View.INVISIBLE);
                         searchQuery.setVisibility(View.INVISIBLE);
 
-                        searchNet.setText(getResources().getString(R.string.search));
+                        searchNet.setText(getResources().getString(R.string.search_what));
                         searchNet.setVisibility(View.VISIBLE);
                         imageView.setImageResource(R.drawable.searchwall);
                         imageView.setVisibility(View.VISIBLE);
@@ -307,7 +310,7 @@ public class Search_Fragment extends Fragment {
                     public void run() {
                         imageView.setImageResource(R.drawable.nonetwork);
                         imageView.setVisibility(View.VISIBLE);
-                        searchNet.setText("No Internet connection!");
+                        searchNet.setText(getResources().getString(R.string.no_net_connection));
                         searchNet.setVisibility(View.VISIBLE);
                     }
                 });
@@ -333,10 +336,12 @@ public class Search_Fragment extends Fragment {
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    animationView.setVisibility(View.VISIBLE);
-                    animationView.setAnimation("wallFind.json");
-                    animationView.loop(true);
-                    animationView.playAnimation();
+//                    animationView.setVisibility(View.VISIBLE);
+//                    animationView.setAnimation("wallFind.json");
+//                    animationView.loop(true);
+//                    animationView.playAnimation();
+                    progressBar.setIndeterminate(true);
+                    progressBar.setVisibility(View.VISIBLE);
                 }
             });
         }
@@ -345,8 +350,10 @@ public class Search_Fragment extends Fragment {
         protected void onPostExecute(String content) {
             recyclerView.setVisibility(View.VISIBLE);
             recyclerView.scrollToPosition(0);
-            animationView.pauseAnimation();
-            animationView.setVisibility(View.INVISIBLE);
+//            animationView.pauseAnimation();
+//            animationView.setVisibility(View.INVISIBLE);
+            progressBar.setIndeterminate(false);
+            progressBar.setVisibility(View.GONE);
             searchQueryText.setVisibility(View.INVISIBLE);
             searchQuery.setVisibility(View.INVISIBLE);
             if (interstitialAd.isLoaded() && numSearch >= 4) {
@@ -362,7 +369,7 @@ public class Search_Fragment extends Fragment {
 
             searchFragmentCustomAdapter.notifyDataSetChanged();
             currPg++;
-            Log.i("POST EXECUTE", "ME HUN MAI");
+            Log.i("POST EXECUTE", "True");
             searchFragmentCustomAdapter.setLoaded();
         }
     }
