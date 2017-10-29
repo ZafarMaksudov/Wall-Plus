@@ -1,6 +1,6 @@
 ![minSdkVersion 21](https://img.shields.io/badge/minSdkVersion-19-red.svg?style=true)
 ![compileSdkVersion 26](https://img.shields.io/badge/compileSdkVersion-26-yellow.svg?style=true)
-[![HitCount](http://hits.dwyl.io/dwyl/hits.svg)](https://github.com/YuganshT79/Wall-Plus) 
+[![HitCount](http://hits.dwyl.io/YuganshT79/Wall-Plus.svg)](http://hits.dwyl.io/YuganshT79/Wall-Plus)
  
 
 # **Wall Bucket**
