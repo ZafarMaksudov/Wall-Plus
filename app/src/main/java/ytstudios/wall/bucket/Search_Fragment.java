@@ -49,7 +49,6 @@ public class Search_Fragment extends Fragment {
     CardView searchView;
     ImageView imageView;
     TextView searchNet, searchQueryText, searchQuery;
-//    LottieAnimationView animationView;
     ProgressBar progressBar;
 
     ArrayList<WallpapersModel> wallpapersModels;
@@ -126,7 +125,6 @@ public class Search_Fragment extends Fragment {
         imageView = view.findViewById(R.id.search_wall_placeholder);
         searchNet = view.findViewById(R.id.search_net);
         searchQueryText = view.findViewById(R.id.searching_query);
-        //animationView = view.findViewById(R.id.animation_view);
         progressBar = view.findViewById(R.id.searching_progress);
         searchQuery = view.findViewById(R.id.query_name);
 
@@ -171,8 +169,6 @@ public class Search_Fragment extends Fragment {
                 if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
                     if (motionEvent.getRawX() >= (searchBar.getRight() - searchBar.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
                         // your action here
-//                        animationView.pauseAnimation();
-//                        animationView.setVisibility(View.INVISIBLE);
                         progressBar.setVisibility(View.INVISIBLE);
                         searchQueryText.setVisibility(View.INVISIBLE);
                         searchQuery.setVisibility(View.INVISIBLE);
@@ -336,10 +332,6 @@ public class Search_Fragment extends Fragment {
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-//                    animationView.setVisibility(View.VISIBLE);
-//                    animationView.setAnimation("wallFind.json");
-//                    animationView.loop(true);
-//                    animationView.playAnimation();
                     progressBar.setIndeterminate(true);
                     progressBar.setVisibility(View.VISIBLE);
                 }
@@ -350,8 +342,6 @@ public class Search_Fragment extends Fragment {
         protected void onPostExecute(String content) {
             recyclerView.setVisibility(View.VISIBLE);
             recyclerView.scrollToPosition(0);
-//            animationView.pauseAnimation();
-//            animationView.setVisibility(View.INVISIBLE);
             progressBar.setIndeterminate(false);
             progressBar.setVisibility(View.GONE);
             searchQueryText.setVisibility(View.INVISIBLE);

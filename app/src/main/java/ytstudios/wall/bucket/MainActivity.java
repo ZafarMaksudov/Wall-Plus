@@ -4,8 +4,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.IdRes;
@@ -18,10 +21,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabSelectListener;
+import com.yarolegovich.lovelydialog.LovelyStandardDialog;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 
 import java.io.File;
 
@@ -55,19 +63,18 @@ public class MainActivity extends AppCompatActivity {
 
         context = getApplicationContext();
 
-        String sdCard= Environment.getExternalStorageDirectory().toString();
+        String sdCard = Environment.getExternalStorageDirectory().toString();
         File myDir = new File(sdCard + context.getResources().getString(R.string.downloadLocation));
 
-            /*  if specified not exist create new */
-        if(!myDir.exists())
-        {
+        /*  if not exist create new */
+        if (!myDir.exists()) {
             Log.i("CREATED DIR ", myDir.toString());
             myDir.mkdirs();
         }
 
-        try{
+        try {
             AppRate.with(MainActivity.this)
-                .setInstallDays(0) // default 10, 0 means install day.
+                    .setInstallDays(0) // default 10, 0 means install day.
                     .setLaunchTimes(9) // default 10
                     .setRemindInterval(2) // default 1
                     .setShowLaterButton(true) // default true
@@ -82,10 +89,14 @@ public class MainActivity extends AppCompatActivity {
 
             // Show a dialog if meets conditions
             AppRate.showRateDialogIfMeetsConditions(MainActivity.this);
-        }catch (Exception e){
+        } catch (Exception e) {
             Log.i("PlayStore Exception", e.toString());
             Toast.makeText(MainActivity.this, getResources().getString(R.string.playstore_error), Toast.LENGTH_SHORT).show();
         }
+
+
+        /* Check for app Updates */
+        new checkForAppUpdates().execute();
 
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -139,6 +150,11 @@ public class MainActivity extends AppCompatActivity {
                     setActionBarTitle(getResources().getString(R.string.category_intro));
                     toolbar.setVisibility(View.VISIBLE);
                     bottomBar.selectTabAtPosition(1, true);
+                    try {
+                        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+                    } catch (NullPointerException e) {
+                    }
                 } else if (position == 2) {
                     setActionBarTitle(getResources().getString(R.string.explore_intro));
                     toolbar.setVisibility(View.VISIBLE);
@@ -265,5 +281,65 @@ public class MainActivity extends AppCompatActivity {
             Log.i("DATABASE", "DOES'T EXISTS");
         }
         return checkDB != null;
+    }
+
+    private class checkForAppUpdates extends AsyncTask<Void, Void, Void> {
+
+        float latestVersion;
+        float currentVersion;
+        String releaseNotes;
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            Log.d("IN CHECK UPDATES", "TRUE");
+            try {
+
+                Document document = Jsoup.connect("http://play.google.com/store/apps/details?id=" + MainActivity.this.getPackageName()).get();
+                latestVersion = Float.parseFloat(document.getElementsByAttributeValue
+                        ("itemprop", "softwareVersion").first().text());
+                releaseNotes = String.valueOf(document.select("div.recent-change").text());
+                Log.d("Latest Version", String.valueOf(latestVersion));
+                Log.d("Release Notes", releaseNotes);
+            } catch (Exception e) {
+                Log.i("Exception", e.toString());
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            try {
+                currentVersion = Float.parseFloat(context.getPackageManager().getPackageInfo(
+                        context.getApplicationInfo().packageName, 0).versionName);
+                Log.d("Current Version", String.valueOf(currentVersion));
+
+                if (latestVersion == currentVersion) {
+                    if (!MainActivity.this.isFinishing()) {
+
+                        new LovelyStandardDialog(MainActivity.this, R.style.MyDialogTheme)
+                                .setTopColorRes(R.color.colorPrimary)
+                                .setButtonsColorRes(R.color.white)
+                                .setIcon(R.mipmap.ic_launcher)
+                                .setTitle(getResources().getString(R.string.update_text) +" " + latestVersion)
+                                .setMessage(getResources().getString(R.string.release_notes) +"\n" + releaseNotes)
+                                .setCancelable(false)
+                                .setPositiveButton(R.string.update, new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        Uri uri = Uri.parse("market://details?id=" + MainActivity.this.getPackageName());
+                                        Intent goToMarket = new Intent(Intent.ACTION_VIEW, uri);
+                                        goToMarket.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY |
+                                                Intent.FLAG_ACTIVITY_NEW_DOCUMENT |
+                                                Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+                                        startActivity(goToMarket);
+                                    }
+                                })
+                                .show();
+                    }
+                }
+
+            } catch (PackageManager.NameNotFoundException e) {
+            }
+        }
     }
 }

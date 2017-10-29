@@ -1,0 +1,112 @@
+<resources>
+    <!--App Essentials-->
+    <string name="app_name">Wall Bucket</string>
+    <string name="preferencesName">WallBucketPrefs</string>
+    <string name="downloadLocation">/Wall Bucket/WallBucket Downloads</string>
+
+
+
+    <!--App Strings -->
+    <string name="no_net_connection">Sin conexión a Internet</string>
+    <string name="connect_btn">Conectar</string>
+    <string name="cannot_connect">No se puede conectar a una red!</string>
+    <string name="loading_more">Cargando</string>
+    <string name="disable_adblock">Por favor desactive AdBlock!</string>
+
+
+    <!--Menus-->
+    <string name="menu_about">Acerca de</string>
+    <string name="remove_database">Eliminar base de datos</string>
+    <string name="change_layout">Change Layout</string>
+    <string name="grid_2">2 Grid</string>
+    <string name="grid_3">3 Grid</string>
+    <string name="refresh">Refrescar</string>
+
+    <!--Main Activity-->
+    <string name="playstore_error">Error al abrir Play Store</string>
+
+    <!--Intro Activity Strings-->
+    <string name="app_desc">¡La mejor aplicación de descarga de fondo de pantalla para Android!</string>
+    <string name="explore_intro"><b>Explorar</b></string>
+    <string name="explore_intro_desc">Más de 50000 fondos de pantalla seleccionados para tu dispositivo</string>
+    <string name="search_intro">Buscar</string>
+    <string name="search_intro_desc">Encuentra los fondos de pantalla que se adapten a tu gusto</string>
+    <string name="category_intro">Categorías</string>
+    <string name="category_intro_desc">Explore las categorías para encontrar fondos de pantalla precisos</string>
+    <string name="fav_intro">Favoritos</string>
+    <string name="fav_intro_desc">Encantó un fondo de pantalla? Toca dos veces para agregarlos a Favoritos para que nunca los pierdas</string>
+    <string name="ready_ask">Listo para explorar?</string>
+    <string name="press_tick">Presiona \'Marcar\' para continuar</string>
+    <string name="ready_rock">¡Estás listo para Rock!</string>
+
+
+    <!--Category Fragment-->
+    <string name="cat_abstract">Abstracto</string>
+    <string name="cat_animal">Animal</string>
+    <string name="cat_anime">Anime</string>
+    <string name="cat_city">Ciudad</string>
+    <string name="cat_comic">Historietas</string>
+    <string name="cat_nature">Naturaleza</string>
+    <string name="cat_patterns">Patrones</string>
+    <string name="cat_vehicles">Vehículos</string>
+
+
+    <!--Set As Wallpaper-->
+    <string name="applying">Aplicando papel tapiz</string>
+        <string name="apply_success">Éxito</string>
+    <string name="apply_error">Error!</string>
+
+
+    <!--Download Handler-->
+    <string name="downloaded">Descargado</string>
+
+
+    <!--Favorite Fragment-->
+    <string name="delete_warning">Advertencia !</string>
+    <string name="delete_warning_msg">¡Esto borrará todos tus Favoritos!</string>
+    <string name="delete_error">¡Ha ocurrido un error!</string>
+    <string name="no_favs">¡Sin favoritos todavía!</string>
+    <string name="double_taps">Doble toque Fondos de pantalla para agregarlos a Favoritos</string>
+    <string name="add_fav_btn">Agregar favoritos</string>
+
+
+    <!--Fullscreen Wallpaper View Activity-->
+    <string name="size_option_small">Pequeña - 1024x1024</string>
+    <string name="size_option_med">Medio - 2048x2048</string>
+    <string name="size_option_large">Grande - 2732x2732</string>
+    <string name="download_wallpaper_btn">Descargar</string>
+    <string name="set_wallpaper_btn">Conjunto</string>
+    <string name="downloading_wallpaper">Descargaring Wallpaper</string>
+
+
+    <!--Home Fragment-->
+    <string name="loading_wallpapers">Cargando más</string>
+
+
+    <!--Search Fragment-->
+    <string name="search_what">¡Dime lo que estás buscando, \nyo haré el resto!</string>
+    <string name="search404">Lo sentimos, no se encontraron fondos de pantalla para \n</string>
+    <string name="search_query_hint">Qué estás buscando ?</string>
+    <string name="search_query">Buscando fondos de pantalla para </string>
+
+
+    <!--Downloads Fragment-->
+    <string name="no_wallpaper_downloaded">¡Sin descargas!</string>
+    <string name="download_now_btn">Descargar ahora</string>
+
+
+    <!--About Me Section-->
+    <string name="myname">Yugansh Tyagi</string>
+    <string name="aboutme">Desarrollador de Android y Diseñador gráfico.\nEntusiasta de la tecnología en la \nmañana y Otaku completo en la noche. \n¡Coma, duerma, codifique, repita!</string>
+    <string name="copyright_claim">Copyright / Reclamo</string>
+    <string name="cpyrghtText">No soy propietario ni reclamo derechos de autor de las imágenes utilizadas en la aplicación
+                                 todo el trabajo pertenece a sus dueños originales.
+                                 Las imágenes en la aplicación son solo para uso personal y
+                                 no debe ser vendido o distribuido sin
+                                 el consentimiento de sus dueños. :)</string>
+
+    <string name="shareApp">Compartir aplicación con amigos</string>
+    <string name="shareText">¡Oye, revisa esta aplicación Awesome Wallpaper que encontré!\nhttp://play.google.com/store/apps/details?id=</string>
+    <string name="rateApp">Califica la aplicación en PlayStore</string>
+
+</resources>

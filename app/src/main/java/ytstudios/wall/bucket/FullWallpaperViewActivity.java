@@ -92,7 +92,7 @@ public class FullWallpaperViewActivity extends AppCompatActivity {
     public DisplayMetrics dm;
     public int height, width;
 
-    File temp;
+    String tempPath;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -318,18 +318,21 @@ public class FullWallpaperViewActivity extends AppCompatActivity {
             viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                 @Override
                 public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                    String title = "Wallpaper " + String.valueOf(arrayList.get(position).getWallId());
-                    getSupportActionBar().setTitle(title);
-                    toolbar.setTitleTextColor(ContextCompat.getColor(FullWallpaperViewActivity.this, R.color.white));
-                    toolbar.setPadding(0, getStatusBarHeight(), 0, 0);
-                    toolbar.setBackgroundColor(ContextCompat.getColor(FullWallpaperViewActivity.this, R.color.translucentBlackColor));
-                    toolbar.setNavigationIcon(R.drawable.back_arrow);
-                    toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            onBackPressed();
-                        }
-                    });
+                    try {
+                        String title = "Wallpaper " + String.valueOf(arrayList.get(position).getWallId());
+                        getSupportActionBar().setTitle(title);
+                        toolbar.setTitleTextColor(ContextCompat.getColor(FullWallpaperViewActivity.this, R.color.white));
+                        toolbar.setPadding(0, getStatusBarHeight(), 0, 0);
+                        toolbar.setBackgroundColor(ContextCompat.getColor(FullWallpaperViewActivity.this, R.color.translucentBlackColor));
+                        toolbar.setNavigationIcon(R.drawable.back_arrow);
+                        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                onBackPressed();
+                            }
+                        });
+                    } catch (NullPointerException e) {
+                    }
                 }
 
                 @Override
@@ -351,10 +354,13 @@ public class FullWallpaperViewActivity extends AppCompatActivity {
                         pos++;
                         Log.i("POSITION RIGHT", String.valueOf(pos));
                     }
-                    encodedUrlFull = arrayList.get(position).getWallpaperFullURL();
-                    wallId = arrayList.get(position).getWallId();
-                    Log.i("Position", String.valueOf(pos));
-                    Log.i("URL", encodedUrlFull);
+                    try {
+                        encodedUrlFull = arrayList.get(position).getWallpaperFullURL();
+                        wallId = arrayList.get(position).getWallId();
+                        Log.i("Position", String.valueOf(pos));
+                        Log.i("URL", encodedUrlFull);
+                    } catch (NullPointerException e) {
+                    }
 //                    if (ActivityCaller.equals("Home")) {
 //                        Home_Fragment.recyclerView.scrollToPosition(position + 3);
 //                    } else if (ActivityCaller.equals("Search")) {
@@ -560,7 +566,7 @@ public class FullWallpaperViewActivity extends AppCompatActivity {
             alertDialog.setCancelable(false);
             alertDialog.setContentView(R.layout.setwall_dialog_layout);
             progressBar = alertDialog.findViewById(R.id.settingWall);
-            progressBar.setPadding(12,12,12,12);
+            progressBar.setPadding(12, 12, 12, 12);
             alertDialog.setTitle(getResources().getString(R.string.applying));
             progressBar.setIndeterminate(true);
             alertDialog.show();
@@ -588,34 +594,43 @@ public class FullWallpaperViewActivity extends AppCompatActivity {
             Log.i("CODE ", String.valueOf(resultCode));
             Toast toast = makeText(FullWallpaperViewActivity.this, getResources().getString(R.string.apply_success), Toast.LENGTH_SHORT);
             toast.show();
-//            File fdelete = new File(temp.toURI());
-//            Log.d("URI OF PATH DELETE", String.valueOf(fdelete.exists()));
-//            if (fdelete.exists()) {
-//                fdelete.delete();
-//            }
-//            Intent mediaScanIntent = new Intent(
-//                    Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-//            Uri contentUri = Uri.fromFile(fdelete); //out is your file you saved/deleted/moved/copied
-//            mediaScanIntent.setData(contentUri);
-//            FullWallpaperViewActivity.this.sendBroadcast(mediaScanIntent);
+            String tempUri = getRealPathFromUri(getApplicationContext(), Uri.parse(tempPath));
+            File tempFile = new File(tempUri);
+            Log.i("URI OF PATH DELETE", String.valueOf(tempFile.exists()));
+            if (tempFile.exists()) {
+                tempFile.delete();
+            }
+            Intent mediaScanIntent = new Intent(
+                    Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+            Uri contentUri = Uri.fromFile(tempFile); //out is your file you saved/deleted/moved/copied
+            mediaScanIntent.setData(contentUri);
+            FullWallpaperViewActivity.this.sendBroadcast(mediaScanIntent);
         }
     }
 
     public Uri getImageUri(Context inContext, Bitmap inImage) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-//        temp = new File(Environment.getExternalStorageDirectory() + getResources().getString(R.string.downloadLocation) + "/temp.jpg");
-//        try {
-//            temp.createNewFile();
-//            FileOutputStream f = new FileOutputStream(temp);
-//            f.write(bytes.toByteArray());
-//            f.close();
-//        } catch (Exception e) {
-//            Log.d("Temp Error", e.toString());
-//        }
-        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
-        Log.i("URI OF SET IMAGE", path);
-        return Uri.parse(path);
+        tempPath = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
+        Log.i("URI OF SET IMAGE", tempPath);
+        return Uri.parse(tempPath);
+    }
+
+    public static String getRealPathFromUri(Context context, Uri contentUri) {
+        Cursor cursor = null;
+        try {
+            String[] proj = {MediaStore.Images.Media.DATA};
+            cursor = context.getContentResolver().query(contentUri, proj, null, null, null);
+            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            cursor.moveToFirst();
+            return cursor.getString(column_index);
+        } catch (NullPointerException e) {
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return null;
     }
 
     public int getStatusBarHeight() {

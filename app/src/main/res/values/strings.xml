@@ -37,7 +37,7 @@
     <string name="fav_intro_desc">Loved a wallpaper? Double Tap to Add them to Favorites so you never lose them</string>
     <string name="ready_ask">Ready to Dive in ?</string>
     <string name="press_tick">Press \'Tick\' to continue</string>
-    <string name="ready_rock">You are ready to Rock!</string>
+        <string name="ready_rock">You are ready to Rock!</string>
 
 
     <!--Category Fragment-->
@@ -108,5 +108,10 @@
     <string name="shareApp">Share App with Friends</string>
     <string name="shareText">Hey checkout this Awesome Wallpaper app I found!\nhttp://play.google.com/store/apps/details?id=</string>
     <string name="rateApp">Rate app on PlayStore</string>
+
+    <!--Update App Dialog-->
+    <string name="update_text"><i>New Update  -  Version</i></string>
+    <string name="update">Update</string>
+    <string name="release_notes"><b>Release Notes : </b></string>
 
 </resources>

@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
 
     <!--Rate Dialog Resources-->
     <string name="rate_dialog_title">Looks like you like it here!</string>
@@ -8,7 +8,7 @@
     <string name="rate_dialog_no">No, Thanks</string>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -21,8 +21,6 @@
 
     <!-- Base application theme. For Categories  -->
     <style name="AppTheme.FullScreen" parent="Theme.AppCompat.NoActionBar">
-
-
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/translucentBlackColor</item>

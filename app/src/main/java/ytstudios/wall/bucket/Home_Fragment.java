@@ -34,10 +34,6 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,12 +45,12 @@ public class Home_Fragment extends Fragment {
 
     public ArrayList<WallpapersModel> wallpapersModelArrayList;
     public RecyclerView recyclerView;
-    HomeFragmentCustomAdapter homeFragmentCustomAdapter;
-    ImageView noNetImage;
-    TextView noNetText;
-    Button connectBtn;
+    private HomeFragmentCustomAdapter homeFragmentCustomAdapter;
+    private ImageView noNetImage;
+    private TextView noNetText, loadinWallTxt;
+    private Button connectBtn;
 
-    GridLayoutManager gridLayoutManager;
+    private GridLayoutManager gridLayoutManager;
 
     boolean isNetworkConnected;
 
@@ -68,7 +64,7 @@ public class Home_Fragment extends Fragment {
 
     private int numPages;
 
-    ProgressBar progressBar;
+    private ProgressBar progressBar;
 
     private boolean isLoading = false;
 
@@ -88,6 +84,7 @@ public class Home_Fragment extends Fragment {
 //                new IntentFilter("InitData"));
 
         progressBar = view.findViewById(R.id.progressBar);
+        loadinWallTxt = view.findViewById(R.id.loading_walls);
 
 
         noNetImage = view.findViewById(R.id.noNet);
@@ -210,7 +207,6 @@ public class Home_Fragment extends Fragment {
                         String sep[] = string.split("http://");
                         sep[1] = sep[1].replace("android/wp-content/uploads", "wallpaper");
                         String septemp[] = sep[1].split("wallpaper-");
-                        //Log.i("SEPARATION ", septemp[1]);
                         if (!septemp[1].contains("250x400.jpg")) {
                             //Log.i("YES ", "It will be fixed!");
                             septemp[0] = septemp[0] + "wallpaper-" + septemp[1] + "wallpaper.jpg?download=true";
@@ -237,7 +233,6 @@ public class Home_Fragment extends Fragment {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            //Log.i("COUNT ", String.valueOf(count));
             pageCount++;
             homeFragmentCustomAdapter.notifyItemInserted(wallpapersModelArrayList.size());
         }
@@ -256,16 +251,16 @@ public class Home_Fragment extends Fragment {
                 Intent intent = new Intent(getActivity(), AboutActivity.class);
                 startActivity(intent);
                 return true;
-            case R.id.grid_two:
-                spanCount = 2;
-                gridLayoutManager.setSpanCount(spanCount);
-                recyclerView.setLayoutManager(gridLayoutManager);
-                return true;
-            case R.id.grid_three:
-                spanCount = 3;
-                gridLayoutManager.setSpanCount(spanCount);
-                recyclerView.setLayoutManager(gridLayoutManager);
-                return true;
+//            case R.id.grid_two:
+//                spanCount = 2;
+//                gridLayoutManager.setSpanCount(spanCount);
+//                recyclerView.setLayoutManager(gridLayoutManager);
+//                return true;
+//            case R.id.grid_three:
+//                spanCount = 3;
+//                gridLayoutManager.setSpanCount(spanCount);
+//                recyclerView.setLayoutManager(gridLayoutManager);
+//                return true;
             case R.id.refresh:
                 pageCount = 2;
                 if (!isLoading) {
@@ -341,6 +336,7 @@ public class Home_Fragment extends Fragment {
         protected void onPreExecute() {
             progressBar.setIndeterminate(true);
             progressBar.setVisibility(View.VISIBLE);
+            loadinWallTxt.setVisibility(View.VISIBLE);
 
         }
 
@@ -350,29 +346,9 @@ public class Home_Fragment extends Fragment {
             //Log.i("COUNT ", String.valueOf(count));
             homeFragmentCustomAdapter.notifyDataSetChanged();
             progressBar.setVisibility(View.GONE);
+            loadinWallTxt.setVisibility(View.GONE);
             recyclerView.setVisibility(View.VISIBLE);
         }
-    }
-
-    private static String readURL(String theUrl) {
-        StringBuilder content = new StringBuilder();
-        try {
-            // create a url object
-            URL url = new URL(theUrl);
-            // create a urlconnection object
-            URLConnection urlConnection = url.openConnection();
-            // wrap the urlconnection in a bufferedreader
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
-            String line;
-            // read from the urlconnection via the bufferedreader
-            while ((line = bufferedReader.readLine()) != null) {
-                content.append(line + "\n");
-            }
-            bufferedReader.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return content.toString();
     }
 
     public boolean isNetworkAvailable() {
