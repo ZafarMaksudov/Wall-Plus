@@ -1,5 +1,6 @@
 ![minSdkVersion 21](https://img.shields.io/badge/minSdkVersion-19-red.svg?style=true)
 ![compileSdkVersion 26](https://img.shields.io/badge/compileSdkVersion-26-yellow.svg?style=true)
+[![HitCount](http://hits.dwyl.io/YuganshT79/Wall-Plus.svg)](http://hits.dwyl.io/YuganshT79/Wall-Plus)
 
  ![Icon](https://i.imgur.com/S1Zytjq.png)  
  
