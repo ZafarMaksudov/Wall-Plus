@@ -25,21 +25,21 @@ import java.net.URLConnection;
  */
 
 
-public class DownloadHandler extends AppCompatActivity{
+public class DownloadHandler extends AppCompatActivity {
 
-    public static class ImageDownloadAndSave extends AsyncTask<String, Void, Bitmap>
-    {
+
+    public static class ImageDownloadAndSave extends AsyncTask<String, Void, Bitmap> {
 
         Context context;
+        String imageName;
 
         public ImageDownloadAndSave(Context context) {
             this.context = context;
         }
 
         @Override
-        protected Bitmap doInBackground(String... params)
-        {
-            downloadImagesToSdCard(params[0],params[1]);
+        protected Bitmap doInBackground(String... params) {
+            downloadImagesToSdCard(params[0], params[1]);
             return null;
         }
 
@@ -51,46 +51,67 @@ public class DownloadHandler extends AppCompatActivity{
         @Override
         protected void onPostExecute(Bitmap bitmap) {
             super.onPostExecute(bitmap);
-            Toast toast = Toast.makeText(context, context.getResources().getString(R.string.downloaded), Toast.LENGTH_SHORT);
-            //toast.setGravity(Gravity.BOTTOM, 0, 330);
-            toast.show();
-            Intent intent = new Intent("Refresh");
-            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+            if(imageName.contains("strings.xml")){
+                Toast.makeText(context, context.getResources().getString(R.string.downloaded) + " " +context.getResources().getString(R.string.downloadLocationStrings), Toast.LENGTH_LONG).show();
+            }
+            else if(imageName.equals("Error")){
+                Toast.makeText(context, context.getResources().getString(R.string.permission_denied), Toast.LENGTH_LONG).show();
+            }
+            else {
+                Toast toast = Toast.makeText(context, context.getResources().getString(R.string.downloaded), Toast.LENGTH_SHORT);
+                toast.show();
+                Intent intent = new Intent("Refresh");
+                LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+            }
+
         }
 
-        private void downloadImagesToSdCard(String downloadUrl, String imageName)
-        {
-            try
-            {
+        private void downloadImagesToSdCard(String downloadUrl, String imageName) {
+            try {
                 URL url = new URL(downloadUrl);
-            /* making a directory in sdcard */
-                String sdCard= Environment.getExternalStorageDirectory().toString();
-                File myDir = new File(sdCard + context.getResources().getString(R.string.downloadLocation));
+//            /* making a directory in sdcard */
+//                String sdCard = Environment.getExternalStorageDirectory().toString();
+//                File myDir = new File(sdCard + context.getResources().getString(R.string.downloadLocation));
 
             /* checks the file and if it already exist delete */
-                File file = new File (myDir, imageName);
-                Log.i("DIRECTORY", myDir.toString());
-                Log.i("IMAGE", imageName);
-                if (file.exists ()){
-                    file.delete ();
+                File file;
+                this.imageName = imageName;
+                if(imageName.contains("strings.xml")){
+                    file = new File(MainActivity.myDir2, imageName);
+                    Log.i("DIRECTORY", MainActivity.myDir2.toString());
+                    Log.i("IMAGE", imageName);
+                    if(file.exists()){
+                        file.delete();
+                    }
                 }
-                file.createNewFile();
+                else {
+                    file = new File(MainActivity.myDir, imageName);
+                    Log.i("DIRECTORY", MainActivity.myDir.toString());
+                    Log.i("IMAGE", imageName);
+                    if (file.exists()) {
+                        file.delete();
+                    }
+                }
+                try {
+                    file.createNewFile();
+                }catch (Exception e){
+                    this.imageName="Error";
+                }
+
 
                 /* Open a connection */
                 URLConnection ucon = url.openConnection();
                 InputStream inputStream = null;
-                HttpURLConnection httpConn = (HttpURLConnection)ucon;
+                HttpURLConnection httpConn = (HttpURLConnection) ucon;
                 httpConn.setDoInput(true);
                 httpConn.setRequestMethod("GET");
                 httpConn.connect();
                 inputStream = httpConn.getInputStream();
                 Log.i("STREAM", inputStream.toString());
 
-                if (httpConn.getResponseCode() == HttpURLConnection.HTTP_OK)
-                {
+                if (httpConn.getResponseCode() == HttpURLConnection.HTTP_OK) {
                     inputStream = httpConn.getInputStream();
-                }
-                else
+                } else
                     Log.i("HTTP ERROR ", String.valueOf(httpConn.getResponseCode()));
 
                 FileOutputStream fos = new FileOutputStream(file);
@@ -98,37 +119,32 @@ public class DownloadHandler extends AppCompatActivity{
                 int downloadedSize = 0;
                 byte[] buffer = new byte[2048];
                 int bufferLength = 0;
-                while ( (bufferLength = inputStream.read(buffer)) >0 )
-                {
+                while ((bufferLength = inputStream.read(buffer)) > 0) {
                     fos.write(buffer, 0, bufferLength);
                     downloadedSize += bufferLength;
-                    Log.i("Progress:","downloadedSize:"+downloadedSize+"totalSize:"+ totalSize) ;
+                    Log.i("Progress:", "downloadedSize:" + downloadedSize + "totalSize:" + totalSize);
                 }
 
-            // AFTER IMAGE DOWNLOADED
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                Intent mediaScanIntent = new Intent(
-                        Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-                Uri contentUri = Uri.fromFile(file); //out is your file you saved/deleted/moved/copied
-                mediaScanIntent.setData(contentUri);
-                this.context.sendBroadcast(mediaScanIntent);
-            } else {
-                this.context.sendBroadcast(new Intent(
-                        Intent.ACTION_MEDIA_MOUNTED,
-                        Uri.parse("file://"
-                                + Environment.getExternalStorageDirectory())));
-            }
+                // AFTER IMAGE DOWNLOADED
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                    Intent mediaScanIntent = new Intent(
+                            Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+                    Uri contentUri = Uri.fromFile(file); //out is your file you saved/deleted/moved/copied
+                    mediaScanIntent.setData(contentUri);
+                    this.context.sendBroadcast(mediaScanIntent);
+                } else {
+                    this.context.sendBroadcast(new Intent(
+                            Intent.ACTION_MEDIA_MOUNTED,
+                            Uri.parse("file://"
+                                    + Environment.getExternalStorageDirectory())));
+                }
                 fos.close();
                 ((HttpURLConnection) ucon).disconnect();
                 inputStream.close();
                 Log.i("Result", "DOWNLOADED!");
-            }
-            catch(IOException io)
-            {
+            } catch (IOException io) {
                 io.printStackTrace();
-            }
-            catch(Exception e)
-            {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }

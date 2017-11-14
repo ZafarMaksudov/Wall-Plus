@@ -27,6 +27,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
@@ -156,6 +157,9 @@ public class Search_Fragment extends Fragment {
                     Log.i("---------->>SEARCHES", String.valueOf(sp.getInt("numSearch",-1)));
                     return true;
                 }
+                else {
+                    Toast.makeText(getContext(), getResources().getString(R.string.search_relevant), Toast.LENGTH_SHORT).show();
+                }
 
                 return false;
             }
@@ -225,7 +229,7 @@ public class Search_Fragment extends Fragment {
                         wallpapersModels.add(wallpapersModels.size() - 1, new WallpapersModel(
                                 wallUrl,///
                                 wallUrl.replace("thumb-", ""),
-                                "jpg",
+                                ".jpg",
                                 Integer.valueOf(sep[1])
                         ));
                     }
@@ -282,7 +286,7 @@ public class Search_Fragment extends Fragment {
                             wallpapersModels.add(new WallpapersModel(
                                     wallUrl,///
                                     wallUrl.replace("thumb-", ""),
-                                    "jpg",
+                                    ".jpg",
                                     Integer.valueOf(sep[1])
                             ));
                         }

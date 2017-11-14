@@ -21,7 +21,7 @@ import java.util.ArrayList;
  * Created by Yugansh Tyagi on 15-09-2017.
  */
 
-public class HomeFragmentCustomAdapter extends RecyclerView.Adapter {
+public class    HomeFragmentCustomAdapter extends RecyclerView.Adapter {
 
     ArrayList<WallpapersModel> wallpapersModels;
     Context context;

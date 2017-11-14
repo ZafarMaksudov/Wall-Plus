@@ -22,7 +22,6 @@ public class FavDatabaseHelper extends SQLiteOpenHelper {
     public static final String COL_2 = "wallFullUrl";
     public static final String COL_3 = "filetype";
     public static final String COL_4 = "wallId";
-    public static final String  COL_5 = "isFavorite";
 
     public FavDatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, version);
@@ -30,7 +29,7 @@ public class FavDatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        sqLiteDatabase.execSQL("create table if not exists " + TABLE_NAME + "(wallUrl String Not Null, wallFullUrl String Not Null, filetype String,  wallId Int, isFavorite Int)" );
+        sqLiteDatabase.execSQL("create table if not exists " + TABLE_NAME + "(wallUrl String Not Null, wallFullUrl String Not Null, filetype String,  wallId Int)" );
 
     }
 
@@ -40,15 +39,13 @@ public class FavDatabaseHelper extends SQLiteOpenHelper {
         onCreate(sqLiteDatabase);
     }
 
-    public boolean addFavToDatabase(String wallUrl, String wallFullUrl, String filetype, int wallId, int isFavorite){
+    public boolean addFavToDatabase(String wallUrl, String wallFullUrl, String filetype, int wallId){
         SQLiteDatabase database = this.getWritableDatabase();
-        ContentValues contentValues = new ContentValues(6);
+        ContentValues contentValues = new ContentValues(4);
         contentValues.put(COL_1, wallUrl);
         contentValues.put(COL_2, wallFullUrl);
         contentValues.put(COL_3, filetype);
         contentValues.put(COL_4, wallId);
-        contentValues.put(COL_5, isFavorite);
-        Log.i("IN DATABSE FAV", String.valueOf(isFavorite));
         Log.i("IN DATABSE small", wallUrl);
         Log.i("IN DATABSE full ", wallFullUrl);
         Log.i("IN DATABSE ID", String.valueOf(wallId));

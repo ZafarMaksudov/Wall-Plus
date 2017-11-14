@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
-import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.net.Uri;
@@ -55,6 +54,8 @@ public class MainActivity extends AppCompatActivity {
 
     public static String DATABASE_FULL_PATH = null;
 
+    public static File myDir,myDir2;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -64,12 +65,15 @@ public class MainActivity extends AppCompatActivity {
         context = getApplicationContext();
 
         String sdCard = Environment.getExternalStorageDirectory().toString();
-        File myDir = new File(sdCard + context.getResources().getString(R.string.downloadLocation));
+        myDir = new File(sdCard + context.getResources().getString(R.string.downloadLocation));
+        myDir2 = new File(sdCard + context.getResources().getString(R.string.downloadLocationStrings));
 
         /*  if not exist create new */
-        if (!myDir.exists()) {
+        if (!myDir.exists() || !myDir2.exists()) {
             Log.i("CREATED DIR ", myDir.toString());
             myDir.mkdirs();
+            Log.i("CREATED DIR ", myDir2.toString());
+            myDir2.mkdir();
         }
 
         try {
@@ -78,11 +82,29 @@ public class MainActivity extends AppCompatActivity {
                     .setLaunchTimes(9) // default 10
                     .setRemindInterval(2) // default 1
                     .setShowLaterButton(true) // default true
-                    .setDebug(false) // default false
+                    .setDebug(false ) // default false
                     .setOnClickButtonListener(new OnClickButtonListener() { // callback listener.
                         @Override
                         public void onClickButton(int which) {
                             Log.d(MainActivity.class.getName(), Integer.toString(which));
+                            if(which == -1){
+                                try {
+                                    Uri uri = Uri.parse("market://details?id=" + MainActivity.this.getPackageName());
+                                    Intent goToMarket = new Intent(Intent.ACTION_VIEW, uri);
+                                    goToMarket.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY |
+                                            Intent.FLAG_ACTIVITY_NEW_DOCUMENT |
+                                            Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+                                    startActivity(goToMarket);
+                                } catch (Exception e) {
+                                    Uri uri = Uri.parse("play.google.com/store/apps/details?id=ytstudios.wall.bucket&hl=en");
+                                    Intent goToMarket = new Intent(Intent.ACTION_VIEW, uri);
+                                    goToMarket.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY |
+                                            Intent.FLAG_ACTIVITY_NEW_DOCUMENT |
+                                            Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+                                    startActivity(goToMarket);
+                                }
+                            }
+
                         }
                     })
                     .monitor();
@@ -298,6 +320,7 @@ public class MainActivity extends AppCompatActivity {
                 latestVersion = Float.parseFloat(document.getElementsByAttributeValue
                         ("itemprop", "softwareVersion").first().text());
                 releaseNotes = String.valueOf(document.select("div.recent-change").text());
+                releaseNotes = releaseNotes.replace(".", "\n.");
                 Log.d("Latest Version", String.valueOf(latestVersion));
                 Log.d("Release Notes", releaseNotes);
             } catch (Exception e) {
@@ -313,32 +336,43 @@ public class MainActivity extends AppCompatActivity {
                         context.getApplicationInfo().packageName, 0).versionName);
                 Log.d("Current Version", String.valueOf(currentVersion));
 
-                if (latestVersion == currentVersion) {
+                if (latestVersion > currentVersion) {
                     if (!MainActivity.this.isFinishing()) {
 
                         new LovelyStandardDialog(MainActivity.this, R.style.MyDialogTheme)
                                 .setTopColorRes(R.color.colorPrimary)
                                 .setButtonsColorRes(R.color.white)
                                 .setIcon(R.mipmap.ic_launcher)
-                                .setTitle(getResources().getString(R.string.update_text) +" " + latestVersion)
-                                .setMessage(getResources().getString(R.string.release_notes) +"\n" + releaseNotes)
+                                .setTitle(getResources().getString(R.string.update_text) + " " + latestVersion)
+                                .setMessage(getResources().getString(R.string.release_notes) + "\n" + releaseNotes)
                                 .setCancelable(false)
                                 .setPositiveButton(R.string.update, new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        Uri uri = Uri.parse("market://details?id=" + MainActivity.this.getPackageName());
-                                        Intent goToMarket = new Intent(Intent.ACTION_VIEW, uri);
-                                        goToMarket.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY |
-                                                Intent.FLAG_ACTIVITY_NEW_DOCUMENT |
-                                                Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
-                                        startActivity(goToMarket);
+                                        try {
+                                            Uri uri = Uri.parse("market://details?id=" + MainActivity.this.getPackageName());
+                                            Intent goToMarket = new Intent(Intent.ACTION_VIEW, uri);
+                                            goToMarket.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY |
+                                                    Intent.FLAG_ACTIVITY_NEW_DOCUMENT |
+                                                    Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+                                            startActivity(goToMarket);
+                                        } catch (Exception e) {
+                                            Uri uri = Uri.parse("play.google.com/store/apps/details?id=ytstudios.wall.bucket&hl=en");
+                                            Intent goToMarket = new Intent(Intent.ACTION_VIEW, uri);
+                                            goToMarket.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY |
+                                                    Intent.FLAG_ACTIVITY_NEW_DOCUMENT |
+                                                    Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+                                            startActivity(goToMarket);
+                                        }
+
                                     }
                                 })
                                 .show();
                     }
                 }
 
-            } catch (PackageManager.NameNotFoundException e) {
+            } catch (Exception e) {
+                Toast.makeText(MainActivity.this, "Couldn't check for updates!", Toast.LENGTH_SHORT).show();
             }
         }
     }

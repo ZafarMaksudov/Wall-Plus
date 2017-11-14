@@ -69,8 +69,12 @@ public class Categories_Fragment extends Fragment {
         categories.add(new Categories_Model_Class(getResources().getString(R.string.cat_anime), "https://firebasestorage.googleapis.com/v0/b/wallbucket-1a592.appspot.com/o/anime.jpg?alt=media&token=ba505dbd-5697-43ad-af8e-92e91ea6c347"));
         categories.add(new Categories_Model_Class(getResources().getString(R.string.cat_city), "https://firebasestorage.googleapis.com/v0/b/wallbucket-1a592.appspot.com/o/city.jpg?alt=media&token=d8d3673b-f30e-492e-a9ad-1b25d634b070"));
         categories.add(new Categories_Model_Class(getResources().getString(R.string.cat_comic), "https://firebasestorage.googleapis.com/v0/b/wallbucket-1a592.appspot.com/o/comics.jpg?alt=media&token=c77ad840-0ef5-4120-98eb-5e305dd49dcf"));
+        categories.add(new Categories_Model_Class(getResources().getString(R.string.cat_games), "https://firebasestorage.googleapis.com/v0/b/wallbucket-1a592.appspot.com/o/Games.jpg?alt=media&token=b2aaba9c-e3b8-431e-9d67-7e44b185e78e"));
+        categories.add(new Categories_Model_Class(getResources().getString(R.string.cat_movies), "https://firebasestorage.googleapis.com/v0/b/wallbucket-1a592.appspot.com/o/movies.jpg?alt=media&token=fbd54f1f-7afe-487e-bf9a-f0b0709d8d1c"));
         categories.add(new Categories_Model_Class(getResources().getString(R.string.cat_nature), "https://firebasestorage.googleapis.com/v0/b/wallbucket-1a592.appspot.com/o/nature.jpg?alt=media&token=9614c034-a256-4fe3-8bab-f49bd8fb3ee2"));
-        categories.add(new Categories_Model_Class(getResources().getString(R.string.cat_patterns), "https://firebasestorage.googleapis.com/v0/b/wallbucket-1a592.appspot.com/o/nature.jpg?alt=media&token=9614c034-a256-4fe3-8bab-f49bd8fb3ee2"));
+        categories.add(new Categories_Model_Class(getResources().getString(R.string.cat_patterns), "https://firebasestorage.googleapis.com/v0/b/wallbucket-1a592.appspot.com/o/patterns.jpg?alt=media&token=df85011d-2617-4ba8-9f59-4cb713689dc6"));
+        categories.add(new Categories_Model_Class(getResources().getString(R.string.cat_scifi), "https://firebasestorage.googleapis.com/v0/b/wallbucket-1a592.appspot.com/o/Sci-Fi.jpg?alt=media&token=264fc122-90a7-4cdf-9e94-e0aea7c0bea4"));
+        categories.add(new Categories_Model_Class(getResources().getString(R.string.cat_tv), "https://firebasestorage.googleapis.com/v0/b/wallbucket-1a592.appspot.com/o/tv.jpg?alt=media&token=0e872639-ec61-49c5-8caf-bc5035fb3b4f"));
         categories.add(new Categories_Model_Class(getResources().getString(R.string.cat_vehicles), "https://firebasestorage.googleapis.com/v0/b/wallbucket-1a592.appspot.com/o/cars.jpg?alt=media&token=70d17da0-0a4b-4fbb-82f5-af7c6659f50f"));
 
     }

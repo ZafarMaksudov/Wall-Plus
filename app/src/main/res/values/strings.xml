@@ -1,10 +1,18 @@
 <resources>
     <!--App Essentials-->
-    <string name="app_name">Wall Bucket</string>
-    <string name="preferencesName">WallBucketPrefs</string>
-    <string name="downloadLocation">/Wall Bucket/WallBucket Downloads</string>
+    <!--DON'T CHANGE THESE-->
+    <string name="app_name" translatable="false">Wall Bucket</string>
+    <string name="preferencesName" translatable="false">WallBucketPrefs</string>
+    <string name="downloadLocation" translatable="false">/Wall Bucket/WallBucket Downloads</string>
+    <string name="downloadLocationStrings" translatable="false">/Wall Bucket/WallBucket Translations</string>
 
 
+    <!--Rate Dialog Resources-->
+    <string name="rate_dialog_title">Looks like you like it here!</string>
+    <string name="rate_dialog_message">If you are enjoying <i>Wall Bucket</i>, would you mind taking a moment to rate it? It won\'t take more than a minute. Thanks for your support! :)</string>
+    <string name="rate_dialog_ok">Rate It Now</string>
+    <string name="rate_dialog_cancel">Later</string>
+    <string name="rate_dialog_no">No, Thanks</string>
 
     <!--App Strings -->
     <string name="no_net_connection">No internet connection</string>
@@ -17,13 +25,11 @@
     <!--Menus-->
     <string name="menu_about">About</string>
     <string name="remove_database">Remove database</string>
-    <string name="change_layout">Change Layout</string>
-    <string name="grid_2">2 Grid</string>
-    <string name="grid_3">3 Grid</string>
     <string name="refresh">Refresh</string>
 
     <!--Main Activity-->
     <string name="playstore_error">Error opening PlayStore</string>
+    <string name="cannot_update">Couldn\'t check for updates!</string>
 
     <!--Intro Activity Strings-->
     <string name="app_desc">The best wallpaper downloading app for Android!</string>
@@ -41,14 +47,19 @@
 
 
     <!--Category Fragment-->
-    <string name="cat_abstract">Abstract</string>
-    <string name="cat_animal">Animal</string>
-    <string name="cat_anime">Anime</string>
-    <string name="cat_city">Cityscape</string>
-    <string name="cat_comic">Comics</string>
-    <string name="cat_nature">Nature</string>
-    <string name="cat_patterns">Patterns</string>
-    <string name="cat_vehicles">Vehicles</string>
+    <!--DON'T CHANGE THESE-->
+    <string name="cat_abstract" translatable="false">Abstract</string>
+    <string name="cat_animal" translatable="false">Animal</string>
+    <string name="cat_anime" translatable="false">Anime</string>
+    <string name="cat_city" translatable="false">Cityscape</string>
+    <string name="cat_comic" translatable="false">Comics</string>
+    <string name="cat_games" translatable="false">Games</string>
+    <string name="cat_movies" translatable="false">Movies</string>
+    <string name="cat_nature" translatable="false">Nature</string>
+    <string name="cat_patterns" translatable="false">Patterns</string>
+    <string name="cat_scifi" translatable="false">Sci-Fi</string>
+    <string name="cat_tv" translatable="false">Tv Shows</string>
+    <string name="cat_vehicles" translatable="false">Vehicles</string>
 
 
     <!--Set As Wallpaper-->
@@ -59,10 +70,11 @@
 
     <!--Download Handler-->
     <string name="downloaded">Downloaded</string>
+    <string name="permission_denied">Cannot download , please grant permission using \nSettings->Apps &amp; Notification->App Permission</string>
 
 
     <!--Favorite Fragment-->
-    <string name="delete_warning">Warning !</string>
+    <string name="delete_warning">Warning!</string>
     <string name="delete_warning_msg">This will delete all your Favorites!</string>
     <string name="delete_error">Some error occurred !</string>
     <string name="no_favs">No Favorites yet!</string>
@@ -71,9 +83,9 @@
 
 
     <!--Fullscreen Wallpaper View Activity-->
-    <string name="size_option_small">Small - 1024x1024</string>
-    <string name="size_option_med">Medium - 2048x2048</string>
-    <string name="size_option_large">Large - 2732x2732</string>
+    <string name="size_option_small">Small Resolution</string>
+    <string name="size_option_med">Medium Resolution</string>
+    <string name="size_option_large">Large Resolution</string>
     <string name="download_wallpaper_btn">Download</string>
     <string name="set_wallpaper_btn">Set</string>
     <string name="downloading_wallpaper">Downloading Wallpaper </string>
@@ -84,20 +96,37 @@
 
 
     <!--Search Fragment-->
-    <string name="search_what">Tell me what you are searching for , \n I will do the rest!</string>
+    <string name="search_what">Tell me what you are searching for, \n I will do the rest!</string>
     <string name="search404">Sorry, No wallpapers found for \n</string>
     <string name="search_query_hint">What are you looking for ?</string>
     <string name="search_query">Searching wallpapers for </string>
+    <string name="search_relevant">Search something Relevant</string>
 
 
     <!--Downloads Fragment-->
     <string name="no_wallpaper_downloaded">No Wallpapers Downloaded !</string>
     <string name="download_now_btn">Download Now</string>
 
+    <!--Help Translate Activity-->
+    <string name="translated_to">Translated to : </string>
+    <string name="get_started">Get Started</string>
+    <string name="step1">Step 1:</string>
+    <string name="step1_desc">Download the <i>strings.xml</i> from here</string>
+    <string name="step2">Step 2:</string>
+    <string name="step2_desc">Translate the strings to your language and save the strings.xml file with new name</string>
+    <string name="step3">Step 3:</string>
+    <string name="step3_desc">Mail the translated strings.xml to the developer.</string>
+    <string name="step4">Step 4:</string>
+    <string name="step4_desc"><b>Good Work!</b>\nThank you for all your effort, you will be added to the \ncontributors list
+                                after the translation is reviewed and published.</string>
+
 
     <!--About Me Section-->
     <string name="myname">Yugansh Tyagi</string>
     <string name="aboutme">Android Developer and Graphic Designer.\nTech Enthusiast at morning and \nFull Otaku at night\nEat, Sleep, Code, Repeat!</string>
+    <string name="help_translate">Help Us Translate?</string>
+    <string name="contribute">Contribute by helping in translation of the app in different languages.</string>
+    <string name="contributors">Contributors</string>
     <string name="copyright_claim">Copyright / Claim</string>
     <string name="cpyrghtText">I do not own or claim copyright to the images used in the app
                                 all the work belongs to their original owners.
@@ -106,12 +135,12 @@
                                 the consent of their owners. :)</string>
 
     <string name="shareApp">Share App with Friends</string>
-    <string name="shareText">Hey checkout this Awesome Wallpaper app I found!\nhttp://play.google.com/store/apps/details?id=</string>
-    <string name="rateApp">Rate app on PlayStore</string>
+    <string name="shareText">Hey checkout this Awesome Wallpaper app I found!\nIt\'s called Wall Bucket.\nhttp://play.google.com/store/apps/details?id=</string>
+    <string name="rateApp">Rate App on \nGoogle Play</string>
 
     <!--Update App Dialog-->
     <string name="update_text"><i>New Update  -  Version</i></string>
     <string name="update">Update</string>
-    <string name="release_notes"><b>Release Notes : </b></string>
+    <string name="release_notes"><b>Change Log : </b></string>
 
 </resources>

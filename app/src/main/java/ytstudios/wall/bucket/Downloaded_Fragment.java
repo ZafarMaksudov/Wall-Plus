@@ -107,7 +107,7 @@ public class Downloaded_Fragment extends Fragment {
                     noDownloadsImage.setVisibility(View.VISIBLE);
                 }
             }
-            downloadFragmentAdapter = new DownloadFragmentAdapter(getActivity().getApplicationContext(), filePaths, fileNames, getActivity());
+            downloadFragmentAdapter = new DownloadFragmentAdapter(getActivity().getApplicationContext(), filePaths);
             recyclerView.setAdapter(downloadFragmentAdapter);
         } catch (Exception e) {
             Log.i("EXCEPTION ", e.toString());

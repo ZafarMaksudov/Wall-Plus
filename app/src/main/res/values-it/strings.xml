@@ -1,0 +1,123 @@
+<resources>
+
+    <!--Rate Dialog Resources-->
+    <string name="rate_dialog_title">Sembra che ti piace qui!</string>
+    <string name="rate_dialog_message">If you are enjoying <i>Wall Bucket</i>, would you mind taking a moment to rate it? It won\'t take more than a minute. Thanks for your support! :)</string>
+    <string name="rate_dialog_ok">Rate It Now</string>
+    <string name="rate_dialog_cancel">Later</string>
+    <string name="rate_dialog_no">No, Thanks</string>
+
+    <!--App Strings -->
+    <string name="no_net_connection">Nessuna connessione Internet</string>
+    <string name="connect_btn">Collegare</string>
+    <string name="cannot_connect">Impossibile connettersi a una rete!</string>
+    <string name="loading_more">Caricamento di più sfondi</string>
+    <string name="disable_adblock">Disattiva AdBlock e lo sviluppo di supporto!</string>
+
+
+    <!--Menus-->
+    <string name="menu_about">Sviluppatore</string>
+    <string name="remove_database">Rimuovi database</string>
+    <string name="refresh">Aggiorna</string>
+
+    <!--Main Activity-->
+    <string name="playstore_error">Errore all\'apertura di Play Store</string>
+    <string name="cannot_update">Couldn\'t check for updates!</string>
+
+    <!--Intro Activity Strings-->
+    <string name="app_desc">La migliore applicazione per il download di wallpaper per Android!</string>
+    <string name="explore_intro"><b>Esplorare</b></string>
+    <string name="explore_intro_desc">Più di 50000 sfondi curati per il tuo dispositivo</string>
+    <string name="search_intro">Cerca</string>
+    <string name="search_intro_desc">Trova gli sfondi che si adattano al tuo gusto</string>
+    <string name="category_intro">Categorie</string>
+    <string name="category_intro_desc">Esplora le categorie per trovare sfondi precisi</string>
+    <string name="fav_intro">Preferiti</string>
+    <string name="fav_intro_desc"> Piaceva una carta da parati? Toccare due volte per aggiungerli ai preferiti in modo da non perdervi mai</string>
+    <string name="ready_ask">Pronti a tuffarsi?</string>
+    <string name="press_tick">Premere \'Tick\' per continuare</string>
+    <string name="ready_rock">Sei pronto a Rock!</string>
+
+
+    <!--Set As Wallpaper-->
+    <string name="applying">Applicazione di Wallpaper</string>
+    <string name="apply_success">Wallpaper applicato con successo</string>
+    <string name="apply_error">Errore nell\'applicazione di sfondo!</string>
+
+
+    <!--Download Handler-->
+    <string name="downloaded">Scaricati</string>
+    <string name="permission_denied">si prega di concedere l\'autorizzazione utilizzando \nSettings-> Appe amp; Notifica-> Autorizzazione app</string>
+
+
+    <!--Favorite Fragment-->
+    <string name="delete_warning">Avvertimento!</string>
+    <string name="delete_warning_msg">Questo eliminerà tutti i tuoi Preferiti!</string>
+    <string name="delete_error">Si è verificato un errore!</string>
+    <string name="no_favs">Nessun preferito ancora!</string>
+    <string name="double_taps">Toccare due volte Sfondi per aggiungerli ai Preferiti</string>
+    <string name="add_fav_btn">Aggiungi preferiti</string>
+
+
+    <!--Fullscreen Wallpaper View Activity-->
+    <string name="size_option_small">Piccolo Risoluzione</string>
+    <string name="size_option_med">Medio Risoluzione</string>
+    <string name="size_option_large">Grande Risoluzione</string>
+    <string name="download_wallpaper_btn">Scarica</string>
+    <string name="set_wallpaper_btn">Impostato</string>
+    <string name="downloading_wallpaper">Scaricare carta da parati </string>
+
+
+    <!--Home Fragment-->
+    <string name="loading_wallpapers">Caricamento di sfondi</string>
+
+
+    <!--Search Fragment-->
+    <string name="search_what">Dimmi cosa stai cercando, \nfarò il resto!</string>
+    <string name="search404">Spiacenti, non sono stati trovati sfondi \n</string>
+    <string name="search_query_hint">Che cosa stai cercando?</string>
+    <string name="search_query">Cerca sfondi per </string>
+    <string name="search_relevant">Search something Relevant</string>
+
+
+    <!--Downloads Fragment-->
+    <string name="no_wallpaper_downloaded">Nessun Wallpaper scaricato!</string>
+    <string name="download_now_btn">Scaricalo ora!</string>
+
+    <!--Help Translate Activity-->
+    <string name="translated_to">Tradotto in : </string>
+    <string name="get_started">Iniziare</string>
+    <string name="step1">Passo 1:</string>
+    <string name="step1_desc">Scarica qui il <i>strings.xml</i> </string>
+    <string name="step2">Passo 2:</string>
+    <string name="step2_desc">Traduci le stringhe nella tua lingua e salva il file strings.xml con un nuovo nome</string>
+    <string name="step3">Passo 3:</string>
+    <string name="step3_desc">Invia lo strings.xml tradotto allo sviluppatore.</string>
+    <string name="step4">Passo 4:</string>
+    <string name="step4_desc"><b>Buon lavoro!</b>\nGrazie per tutto il tuo sforzo, sarai aggiunto alla \nelenco dei
+                                    contributori dopo la revisione e la pubblicazione della traduzione.</string>
+
+
+    <!--About Me Section-->
+    <string name="myname">Yugansh Tyagi</string>
+    <string name="aboutme">Sviluppatore Android e Progettazione grafica.\nTech Enthusiast alla mattina e \nFull Otaku di notte \nMangi, dormire, codice, ripetere!</string>
+    <string name="copyright_claim">Copyright / reclamo</string>
+    <string name="help_translate">Aiutaci a tradurre?</string>
+    <string name="contributors">Contributori</string>
+    <string name="contribute">Contribuisci aiutando la traduzione dell\'app in diverse lingue.</string>
+    <string name="cpyrghtText">Non sono titolare di diritti d\'autore relativi alle immagini utilizzate nell\'applicazione
+                                tutto il lavoro appartiene ai loro proprietari originali.
+                                Le immagini nell'app sono solo per uso personale e
+                                non dovrebbe essere venduto o distribuito senza
+                                il consenso dei loro proprietari. :)</string>
+
+    <string name="shareApp">Condividi l\'app con gli amici</string>
+    <string name="shareText">Hey checkout questa applicazione Awesome Wallpaper che ho trovato!\nhttp://play.google.com/store/apps/details?id=</string>
+    <string name="rateApp">Valuta l\'applicazione su \nGoogle Play</string>
+
+    <!--Update App Dialog-->
+    <string name="update_text"><i>Aggiornamento - versione</i></string>
+    <string name="update">Aggiornare</string>
+    <string name="release_notes"><b>Registro delle modifiche :</b></string>
+
+</resources>

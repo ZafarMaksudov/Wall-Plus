@@ -7,8 +7,8 @@ android {
         applicationId "ytstudios.wall.bucket"
         minSdkVersion 19
         targetSdkVersion 26
-        versionCode 3
-        versionName "1.1"
+        versionCode 10
+        versionName "2.7"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

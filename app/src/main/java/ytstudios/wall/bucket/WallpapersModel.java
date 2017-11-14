@@ -15,15 +15,6 @@ public class WallpapersModel implements Parcelable {
     private int wallId;
     private int isFavorite;
 
-    public WallpapersModel(String wallpaperURL, String wallpaperFullURL, String fileType, int wallId, int isFavorite) {
-        this.wallpaperURL = wallpaperURL;
-        this.wallpaperFullURL = wallpaperFullURL;
-        this.fileType = fileType;
-        this.wallId = wallId;
-        this.isFavorite = isFavorite;
-
-    }
-
     public WallpapersModel(String wallpaperURL, String wallpaperFullURL, String fileType, int wallId) {
         this.wallpaperURL = wallpaperURL;
         this.wallpaperFullURL = wallpaperFullURL;

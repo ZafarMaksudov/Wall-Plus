@@ -101,7 +101,7 @@ public class Home_Fragment extends Fragment {
         wallpapersModelArrayList = new ArrayList<>();
         handler = new Handler();
 
-        homeSite = "http://papers.co/android/";
+        homeSite = "http://papers.co/iphone/";
         initData();
 
         gridLayoutManager = new GridLayoutManager(getContext(), 3);
@@ -205,9 +205,9 @@ public class Home_Fragment extends Fragment {
                         wallpaperNumber++;
                         String string = list.get(i).toString();
                         String sep[] = string.split("http://");
-                        sep[1] = sep[1].replace("android/wp-content/uploads", "wallpaper");
+                        sep[1] = sep[1].replace("iphone/wp-content/uploads", "wallpaper");
                         String septemp[] = sep[1].split("wallpaper-");
-                        if (!septemp[1].contains("250x400.jpg")) {
+                        if (!septemp[1].contains("250x444.jpg")) {
                             //Log.i("YES ", "It will be fixed!");
                             septemp[0] = septemp[0] + "wallpaper-" + septemp[1] + "wallpaper.jpg?download=true";
                             sep[1] = "http://" + septemp[0];
@@ -219,7 +219,7 @@ public class Home_Fragment extends Fragment {
                         wallpapersModelArrayList.add(wallpapersModelArrayList.size() - 1, new WallpapersModel(
                                 string,///
                                 sep[1],
-                                "jpg",
+                                ".jpg",
                                 wallpaperNumber
                         ));
                     }
@@ -297,37 +297,40 @@ public class Home_Fragment extends Fragment {
         @Override
         protected String doInBackground(String... params) {
 
-            try {
+            if (isNetworkAvailable()) {
 
-                Document document = Jsoup.connect(params[0]).get();
-                Element wall = document.select("ul.postul").first();
-                //Log.i("LIST ", wall.toString());
-                Elements url = wall.getElementsByAttribute("src");
-                Element page = document.select("a.page-numbers").last();
-                numPages = Integer.parseInt(page.text());
-                Log.i("PAGE NUMBER ", String.valueOf(numPages));
-                list = url.eachAttr("src");
+                try {
 
-                for (int i = 0; i < list.size(); i++) {
-                    wallpaperNumber++;
-                    String string = list.get(i).toString();
-                    String sep[] = string.split("http://");
-                    sep[1] = sep[1].replace("android/wp-content/uploads", "wallpaper");
-                    String septemp[] = sep[1].split("wallpaper-");
-                    septemp[0] = septemp[0] + "wallpaper.jpg?download=true";
-                    sep[1] = "http://" + septemp[0];
-                    Log.i("String ", sep[1]);
-                    //Log.i("URL", string);
-                    wallpapersModelArrayList.add(new WallpapersModel(
-                            string,///
-                            sep[1],
-                            "jpg",
-                            wallpaperNumber,
-                            0
-                    ));
+                    Document document = Jsoup.connect(params[0]).get();
+                    Element wall = document.select("ul.postul").first();
+                    //Log.i("LIST ", wall.toString());
+                    Elements url = wall.getElementsByAttribute("src");
+                    Element page = document.select("a.page-numbers").last();
+                    numPages = Integer.parseInt(page.text());
+                    Log.i("PAGE NUMBER ", String.valueOf(numPages));
+                    list = url.eachAttr("src");
+
+                    for (int i = 0; i < list.size(); i++) {
+                        wallpaperNumber++;
+                        String string = list.get(i).toString();
+                        String sep[] = string.split("http://");
+                        sep[1] = sep[1].replace("iphone/wp-content/uploads", "wallpaper");
+                        String septemp[] = sep[1].split("wallpaper-");
+                        septemp[0] = septemp[0] + "wallpaper.jpg?download=true";
+                        sep[1] = "http://" + septemp[0];
+                        Log.i("String ", sep[1]);
+                        //Log.i("URL", string);
+                        wallpapersModelArrayList.add(new WallpapersModel(
+                                string,///
+                                sep[1],
+                                ".jpg",
+                                wallpaperNumber
+                        ));
+                    }
+
+                } catch (Exception e) {
+                    Log.i("ERROR LOADING WEBSITE ", e.toString());
                 }
-            } catch (Exception e) {
-                Log.i("ERROR LOADING WEBSITE ", e.toString());
             }
             return null;
         }

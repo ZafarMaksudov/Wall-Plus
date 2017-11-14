@@ -26,7 +26,15 @@ There is something for everyone.
 . Multiple downloads at same time   
 . Set wallpaper **without downloading**  
 . Manage your wallpaper from within the App  
-. Small in Size   
+. Small in Size
+
+## **Copyright**
+    The app is copyrighted to Yugansh Tyagi
+    and all the code belongs to the owner of the
+    application. The user may view the code as stated 
+    in the policies of Github but they should not 
+    modify any code or republish the code as their own.
+
 
 ## **External Libraries Used**
 .  [BottomBar](https://github.com/roughike/BottomBar) : A custom view component that mimics the new Material Design Bottom Navigation pattern.   

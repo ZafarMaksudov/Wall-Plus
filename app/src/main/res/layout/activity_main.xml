@@ -33,7 +33,12 @@
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
         android:minHeight="?attr/actionBarSize"
-        android:theme="@style/ToolBarStyle"
-        android:elevation="2dp"/>
+        android:theme="@style/ToolBarStyle" />
+
+    <View
+        android:layout_below="@id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@drawable/shadow" />
 
 </RelativeLayout>

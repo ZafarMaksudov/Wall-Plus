@@ -3,6 +3,7 @@ package ytstudios.wall.bucket;
 import android.annotation.TargetApi;
 import android.app.Dialog;
 import android.app.WallpaperManager;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -85,12 +86,12 @@ public class FullWallpaperViewActivity extends AppCompatActivity {
     ArrayList<String> path;
     int pos;
 
-    public WallpaperManager wallpaperManager;
+    public static WallpaperManager wallpaperManager;
 
     ImageView zoomHeart;
 
     public DisplayMetrics dm;
-    public int height, width;
+    public static int height, width;
 
     String tempPath;
 
@@ -134,7 +135,7 @@ public class FullWallpaperViewActivity extends AppCompatActivity {
         encodedUrlFull = getIntent().getStringExtra("fullUrl");
         encodedUrlThumb = getIntent().getStringExtra("thumbUrl");
         wallId = getIntent().getIntExtra("id", 0);
-        fileType = "." + getIntent().getStringExtra("file_type");
+        fileType = getIntent().getStringExtra("file_type");
 
 
         if (ActivityCaller.equals("Downloads")) {
@@ -231,8 +232,7 @@ public class FullWallpaperViewActivity extends AppCompatActivity {
                                                         arrayList.get(pos).getWallpaperURL(),
                                                         arrayList.get(pos).getWallpaperFullURL(),
                                                         arrayList.get(pos).getFileType(),
-                                                        arrayList.get(pos).getWallId(),
-                                                        arrayList.get(pos).getFavorite());
+                                                        arrayList.get(pos).getWallId());
                                                 Log.i("VALUE OF POS", String.valueOf(pos));
                                                 Log.i("IS INSERTED", String.valueOf(inserted));
                                                 Cursor cursor = MainActivity.favDatabaseHelper.readFavFromDatabase();
@@ -361,13 +361,6 @@ public class FullWallpaperViewActivity extends AppCompatActivity {
                         Log.i("URL", encodedUrlFull);
                     } catch (NullPointerException e) {
                     }
-//                    if (ActivityCaller.equals("Home")) {
-//                        Home_Fragment.recyclerView.scrollToPosition(position + 3);
-//                    } else if (ActivityCaller.equals("Search")) {
-//                        Search_Fragment.recyclerView.scrollToPosition(position + 3);
-//                    } else if (ActivityCaller.equals("Category")) {
-//                        CategoryDetailsFragment.recyclerView.scrollToPosition(position + 3);
-//                    }
 
                 }
 
@@ -451,6 +444,8 @@ public class FullWallpaperViewActivity extends AppCompatActivity {
                                             toast = Toast.makeText(getApplicationContext(), getResources().getString(R.string.downloading_wallpaper) + String.valueOf(wallId) + "(S)" + fileType, Toast.LENGTH_SHORT);
                                             //toast.setGravity(Gravity.BOTTOM, 0, 330);
                                             toast.show();
+                                            Log.i("ENCODED URL BEFORE",encodedUrlFull);
+                                            encodedUrlFull = encodedUrlFull.replace("-33-iphone6-", "-4-");
                                             new DownloadHandler.ImageDownloadAndSave(getApplicationContext()).execute(encodedUrlFull, "Wallpaper " + String.valueOf(wallId) + fileType);
                                             Log.i("ENCODEDURL", encodedUrlFull);
                                             break;
@@ -458,7 +453,7 @@ public class FullWallpaperViewActivity extends AppCompatActivity {
                                             toast = Toast.makeText(getApplicationContext(), getResources().getString(R.string.downloading_wallpaper) + String.valueOf(wallId) + "(M)" + fileType, Toast.LENGTH_SHORT);
                                             //toast.setGravity(Gravity.BOTTOM, 0, 330);
                                             toast.show();
-                                            encodedUrlFull = encodedUrlFull.replace("-6-", "-8-");
+                                            Log.i("ENCODED URL BEFORE",encodedUrlFull);
                                             new DownloadHandler.ImageDownloadAndSave(getApplicationContext()).execute(encodedUrlFull, "Wallpaper " + String.valueOf(wallId) + fileType);
                                             Log.i("ENCODEDURL", encodedUrlFull);
                                             break;
@@ -466,7 +461,8 @@ public class FullWallpaperViewActivity extends AppCompatActivity {
                                             toast = Toast.makeText(getApplicationContext(), getResources().getString(R.string.downloading_wallpaper) + String.valueOf(wallId) + "(L)" + fileType, Toast.LENGTH_SHORT);
                                             //toast.setGravity(Gravity.BOTTOM, 0, 330);
                                             toast.show();
-                                            encodedUrlFull = encodedUrlFull.replace("-6-", "-40-");
+                                            Log.i("ENCODED URL BEFORE",encodedUrlFull);
+                                            encodedUrlFull = encodedUrlFull.replace("-33-iphone6-", "-34-iphone6-plus-");
                                             new DownloadHandler.ImageDownloadAndSave(getApplicationContext()).execute(encodedUrlFull, "Wallpaper " + String.valueOf(wallId) + fileType);
                                             Log.i("ENCODEDURL", encodedUrlFull);
                                             break;
@@ -489,7 +485,7 @@ public class FullWallpaperViewActivity extends AppCompatActivity {
                         boolean isNetworkConnected = isNetworkAvailable();
                         if (isNetworkConnected) {
                             encodedUrlFull = FavoriteFragment.arrayList.get(pos).getWallpaperFullURL();
-                            Toast.makeText(getApplicationContext(), getResources().getString(R.string.downloading_wallpaper) + String.valueOf(wallId) + "." + FavoriteFragment.arrayList.get(pos).getFileType(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), getResources().getString(R.string.downloading_wallpaper) + String.valueOf(wallId)  + FavoriteFragment.arrayList.get(pos).getFileType(), Toast.LENGTH_SHORT).show();
                             new DownloadHandler.ImageDownloadAndSave(getApplicationContext()).execute(encodedUrlFull, "Wallpaper " + String.valueOf(FavoriteFragment.arrayList.get(pos).getWallId()) + FavoriteFragment.arrayList.get(pos).getFileType());
                         } else {
                             Toast.makeText(getApplicationContext(), getResources().getString(R.string.no_net_connection), Toast.LENGTH_SHORT).show();
@@ -575,13 +571,20 @@ public class FullWallpaperViewActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void aVoid) {
             try {
-                Intent in = new Intent(wallpaperManager.getCropAndSetWallpaperIntent(getImageUri(FullWallpaperViewActivity.this, result)));
-                startActivityForResult(in, 1);
+                Intent in = new Intent(wallpaperManager.getCropAndSetWallpaperIntent(getImageUri(FullWallpaperViewActivity.this,result)));
+                in.setFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                in.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                 wallpaperManager.suggestDesiredDimensions(width, height);
+                startActivityForResult(in, 1);
             } catch (Exception ex) {
-                ex.printStackTrace();
-                Toast toast = makeText(context, getResources().getString(R.string.apply_error), Toast.LENGTH_SHORT);
-                toast.show();
+                try{
+                    wallpaperManager.setBitmap(result);
+                    Toast.makeText(context, getResources().getString(R.string.apply_success), Toast.LENGTH_SHORT).show();
+                    deleteSetImage();
+                }catch (Exception e){
+                    Log.d("Wallpaper Set Exception", ex.toString());
+                    Toast.makeText(context, getResources().getString(R.string.apply_error), Toast.LENGTH_SHORT).show();
+                }
             }
             alertDialog.hide();
         }
@@ -591,28 +594,35 @@ public class FullWallpaperViewActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 1 && resultCode == -1) {
-            Log.i("CODE ", String.valueOf(resultCode));
+            Log.d("CODE ", String.valueOf(resultCode));
             Toast toast = makeText(FullWallpaperViewActivity.this, getResources().getString(R.string.apply_success), Toast.LENGTH_SHORT);
             toast.show();
-            String tempUri = getRealPathFromUri(getApplicationContext(), Uri.parse(tempPath));
-            File tempFile = new File(tempUri);
-            Log.i("URI OF PATH DELETE", String.valueOf(tempFile.exists()));
-            if (tempFile.exists()) {
-                tempFile.delete();
-            }
-            Intent mediaScanIntent = new Intent(
-                    Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-            Uri contentUri = Uri.fromFile(tempFile); //out is your file you saved/deleted/moved/copied
-            mediaScanIntent.setData(contentUri);
-            FullWallpaperViewActivity.this.sendBroadcast(mediaScanIntent);
         }
+        deleteSetImage();
+    }
+
+    private void deleteSetImage()
+    {
+        String tempUri = getRealPathFromUri(getApplicationContext(), Uri.parse(tempPath));
+        File tempFile = new File(tempUri);
+        Log.i("URI OF PATH DELETE", String.valueOf(tempFile.exists()));
+        if (tempFile.exists()) {
+            tempFile.delete();
+        }
+        Intent mediaScanIntent = new Intent(
+                Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        Uri contentUri = Uri.fromFile(tempFile); //out is your file you saved/deleted/moved/copied
+        mediaScanIntent.setData(contentUri);
+        FullWallpaperViewActivity.this.sendBroadcast(mediaScanIntent);
     }
 
     public Uri getImageUri(Context inContext, Bitmap inImage) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
         tempPath = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
-        Log.i("URI OF SET IMAGE", tempPath);
+        Log.d("URI OF SET IMAGE", tempPath);
+        ContentResolver cr = this.getContentResolver();
+        Log.d("CONTENT TYPE: ", "IS: " + cr.getType(Uri.parse(tempPath)));
         return Uri.parse(tempPath);
     }
 

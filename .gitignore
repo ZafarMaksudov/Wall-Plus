@@ -9,7 +9,7 @@
 .externalNativeBuild
 _Assets
 /app/src/main/res/values/secrets.xml
-build.gradle
-gradle.properties
-settings.gradle
-gradle
+/build.gradle
+/gradle.properties
+/settings.gradle
+/gradle

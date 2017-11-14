@@ -2,6 +2,8 @@ package ytstudios.wall.bucket;
 
 import android.content.Context;
 import android.content.pm.ActivityInfo;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -13,7 +15,9 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
@@ -44,6 +48,9 @@ public class CategoryDetailsFragment extends AppCompatActivity {
     private Handler handler;
     private int pageCount = 1;
 
+    private TextView noNetText;
+    private ImageView noNetImage;
+
     private String categorySearchUrl;
 
     Context context;
@@ -51,7 +58,7 @@ public class CategoryDetailsFragment extends AppCompatActivity {
     AdView bannerAd;
     CardView disableAdBlock;
 
-    ProgressBar  progressBar;
+    ProgressBar progressBar;
 
     private static int numPages, currPg = 1;
 
@@ -81,49 +88,81 @@ public class CategoryDetailsFragment extends AppCompatActivity {
 
         progressBar = findViewById(R.id.progressBar);
 
+        noNetImage = findViewById(R.id.noNet);
+        noNetText = findViewById(R.id.noNetText);
+
+        if(!isNetworkAvailable()){
+            noNetImage.setVisibility(View.VISIBLE);
+            noNetText.setVisibility(View.VISIBLE);
+        }
+        else {
+            noNetText.setVisibility(View.GONE);
+            noNetImage.setVisibility(View.GONE);
+        }
         categorySite = "https://mobile.alphacoders.com/by-resolution/1/";
         categoryName = getIntent().getStringExtra("categoryName");
-        try{
+        try {
             getSupportActionBar().setTitle(categoryName);
-        }catch (Exception e ){}
+        } catch (Exception e) {
+        }
         switch (categoryName) {
             case "Abstract":
-                numPages =0;
+                numPages = 0;
                 currPg = 0;
                 categorySearchUrl = categorySite + "Abstract/1080x1920-Wallpapers/?page=";
                 break;
             case "Animal":
-                numPages =0;
+                numPages = 0;
                 currPg = 0;
                 categorySearchUrl = categorySite + "Animal/1080x1920-Wallpapers/?page=";
                 break;
             case "Anime":
-                numPages =0;
+                numPages = 0;
                 currPg = 0;
                 categorySearchUrl = categorySite + "Anime/1080x1920-Wallpapers/?page=";
                 break;
             case "Cityscape":
-                numPages =0;
+                numPages = 0;
                 currPg = 0;
                 categorySearchUrl = categorySite + "Man-Made/1080x1920-Wallpapers/?page=";
                 break;
             case "Comics":
-                numPages =0;
+                numPages = 0;
                 currPg = 0;
                 categorySearchUrl = categorySite + "Comics/1080x1920-Wallpapers/?page=";
                 break;
+            case "Games":
+                numPages = 0;
+                currPg = 0;
+                categorySearchUrl = categorySite + "Video-Game/1080x1920-Wallpapers/?page=";
+                break;
             case "Nature":
-                numPages =0;
+                numPages = 0;
                 currPg = 0;
                 categorySearchUrl = categorySite + "Earth/1080x1920-Wallpapers/?page=";
                 break;
+            case "Movies":
+                numPages = 0;
+                currPg = 0;
+                categorySearchUrl = categorySite + "Movie/1080x1920-Wallpapers/?page=";
+                break;
             case "Patterns":
-                numPages =0;
+                numPages = 0;
                 currPg = 0;
                 categorySearchUrl = categorySite + "Pattern/1080x1920-Wallpapers/?page=";
                 break;
+            case "Sci-Fi":
+                numPages = 0;
+                currPg = 0;
+                categorySearchUrl = categorySite + "Sci-Fi/1080x1920-Wallpapers/?page=";
+                break;
+            case "Tv Shows":
+                numPages = 0;
+                currPg = 0;
+                categorySearchUrl = categorySite + "TV-Show/1080x1920-Wallpapers/?page=";
+                break;
             case "Vehicles":
-                numPages =0;
+                numPages = 0;
                 currPg = 0;
                 categorySearchUrl = categorySite + "Vehicles/1080x1920-Wallpapers/?page=";
                 break;
@@ -139,7 +178,7 @@ public class CategoryDetailsFragment extends AppCompatActivity {
         categoryDetailsFragmentAdapter.setOnLoadMoreListener(new onLoadMoreListener() {
             @Override
             public void onLoadMore() {
-                if (currPg <= numPages){
+                if (currPg <= numPages) {
                     pageCount++;
                     //add null , so the adapter will check view_type and show progress bar at bottom
                     wallpapersModels.add(null);
@@ -180,9 +219,9 @@ public class CategoryDetailsFragment extends AppCompatActivity {
             @Override
             public void onAdFailedToLoad(int i) {
                 Log.i("I KI VALUE ", String.valueOf(i));
-                if(i == 3){
+                if (i == 3 || !isNetworkAvailable()) {
                     disableAdBlock.setVisibility(View.INVISIBLE);
-                }else{
+                } else {
                     disableAdBlock.setVisibility(View.VISIBLE);
                 }
             }
@@ -221,12 +260,19 @@ public class CategoryDetailsFragment extends AppCompatActivity {
         super.onDestroy();
     }
 
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        MenuInflater inflater = getMenuInflater();
-//        inflater.inflate(R.menu.home_menu, menu);
-//        return super.onCreateOptionsMenu(menu);
-//    }
+
+    public boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        try {
+            NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+            Log.i("IS NETWORK", String.valueOf(activeNetworkInfo));
+            Log.i("Connected", String.valueOf(activeNetworkInfo.isConnected()));
+            return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+        } catch (Exception e) {
+        }
+        return false;
+    }
 
     class loadMore extends AsyncTask<String, Integer, String> {
 
@@ -248,12 +294,11 @@ public class CategoryDetailsFragment extends AppCompatActivity {
                         wallpapersModels.add(wallpapersModels.size() - 1, new WallpapersModel(
                                 wallUrl,///
                                 wallUrl.replace("thumb-", ""),
-                                "jpg",
+                                ".jpg",
                                 Integer.valueOf(sep[1])
                         ));
                     }
-                }
-                else return null;
+                } else return null;
             } catch (Exception e) {
                 Log.i("ERROR 2", e.toString());
             }
@@ -304,7 +349,7 @@ public class CategoryDetailsFragment extends AppCompatActivity {
                     wallpapersModels.add(new WallpapersModel(
                             wallUrl,///
                             wallUrl.replace("thumb-", ""),
-                            "jpg",
+                            ".jpg",
                             Integer.valueOf(sep[1])
                     ));
                 }

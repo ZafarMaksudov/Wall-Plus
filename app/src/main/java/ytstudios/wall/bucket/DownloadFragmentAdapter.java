@@ -1,24 +1,17 @@
 package ytstudios.wall.bucket;
 
-import android.app.Activity;
-import android.app.WallpaperManager;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -36,16 +29,12 @@ import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOption
 public class DownloadFragmentAdapter extends RecyclerView.Adapter {
 
     private ArrayList<String> paths;
-    private ArrayList<String> names;
     Context context;
-    DisplayMetrics displayMetrics;
+    private DisplayMetrics displayMetrics;
     public static Uri uri;
-    Activity activity;
 
-    public DownloadFragmentAdapter(Context context, ArrayList<String> paths, ArrayList<String> names, Activity activity) {
+    public DownloadFragmentAdapter(Context context, ArrayList<String> paths) {
         this.paths = paths;
-        this.names = names;
-        this.activity = activity;
         this.context = context;
     }
 
@@ -109,15 +98,7 @@ public class DownloadFragmentAdapter extends RecyclerView.Adapter {
                 });
                 ((DownloadsHolder) holder).downloadedImage.startAnimation(animation);
                 ((DownloadsHolder) holder).deleteDownload.startAnimation(animation1);
-                ((DownloadsHolder) holder).setAsWall.startAnimation(animation1);
                 ((DownloadsHolder) holder).view.startAnimation(animation1);
-            }
-        });
-
-        ((DownloadsHolder) holder).setAsWall.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                new setWall(position).execute();
             }
         });
     }
@@ -134,7 +115,7 @@ public class DownloadFragmentAdapter extends RecyclerView.Adapter {
     public static class DownloadsHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         SimpleDraweeView downloadedImage;
-        ImageView deleteDownload, setAsWall;
+        ImageView deleteDownload;
         View view;
         Context context;
         ArrayList<String> paths;
@@ -146,7 +127,6 @@ public class DownloadFragmentAdapter extends RecyclerView.Adapter {
             this.paths = paths;
             itemView.setOnClickListener(this);
             this.deleteDownload = itemView.findViewById(R.id.deleteDownload);
-            this.setAsWall = itemView.findViewById(R.id.setaswall);
             this.view = itemView.findViewById(R.id.viewBar);
         }
 
@@ -163,42 +143,4 @@ public class DownloadFragmentAdapter extends RecyclerView.Adapter {
 
         }
     }
-
-    class setWall extends AsyncTask<Void, Void, Void> {
-        Bitmap result;
-        int position;
-
-        public setWall(int position) {
-            this.result = null;
-            this.position = position;
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            try {
-                result = BitmapFactory.decodeFile(paths.get(position));
-            } catch (Exception e) {
-                Log.i("PICASSO EXCEPTION", e.toString());
-                return null;
-            }
-            return null;
-        }
-
-            @Override
-            protected void onPreExecute () {
-                Toast.makeText(context, context.getResources().getString(R.string.applying), Toast.LENGTH_LONG).show();
-            }
-
-            @Override
-            protected void onPostExecute (Void aVoid){
-                try {
-                    WallpaperManager wallpaperManager = WallpaperManager.getInstance(context);
-                    wallpaperManager.setBitmap(result);
-                    Toast.makeText(context, context.getResources().getString(R.string.apply_success), Toast.LENGTH_SHORT).show();
-                } catch (Exception ex) {
-                    Log.i("ERROR", ex.toString());
-                    Toast.makeText(context, context.getResources().getString(R.string.apply_error), Toast.LENGTH_SHORT).show();
-                }
-            }
-        }
-    }
+}

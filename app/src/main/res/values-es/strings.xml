@@ -1,10 +1,11 @@
 <resources>
-    <!--App Essentials-->
-    <string name="app_name">Wall Bucket</string>
-    <string name="preferencesName">WallBucketPrefs</string>
-    <string name="downloadLocation">/Wall Bucket/WallBucket Downloads</string>
 
-
+    <!--Rate Dialog Resources-->
+    <string name="rate_dialog_title">Parece que te gusta aquí!</string>
+    <string name="rate_dialog_message">Si está disfrutando de Wall Bucket, ¿le importaría tomarse un momento para calificarlo? No llevará más de un minuto. ¡Gracias por su apoyo! :)</string>
+    <string name="rate_dialog_ok">Califícalo ahora</string>
+    <string name="rate_dialog_cancel">Luego</string>
+    <string name="rate_dialog_no">No, gracias</string>
 
     <!--App Strings -->
     <string name="no_net_connection">Sin conexión a Internet</string>
@@ -17,13 +18,11 @@
     <!--Menus-->
     <string name="menu_about">Acerca de</string>
     <string name="remove_database">Eliminar base de datos</string>
-    <string name="change_layout">Change Layout</string>
-    <string name="grid_2">2 Grid</string>
-    <string name="grid_3">3 Grid</string>
     <string name="refresh">Refrescar</string>
 
     <!--Main Activity-->
     <string name="playstore_error">Error al abrir Play Store</string>
+    <string name="cannot_update">¡Error de actualización!</string>
 
     <!--Intro Activity Strings-->
     <string name="app_desc">¡La mejor aplicación de descarga de fondo de pantalla para Android!</string>
@@ -39,18 +38,6 @@
     <string name="press_tick">Presiona \'Marcar\' para continuar</string>
     <string name="ready_rock">¡Estás listo para Rock!</string>
 
-
-    <!--Category Fragment-->
-    <string name="cat_abstract">Abstracto</string>
-    <string name="cat_animal">Animal</string>
-    <string name="cat_anime">Anime</string>
-    <string name="cat_city">Ciudad</string>
-    <string name="cat_comic">Historietas</string>
-    <string name="cat_nature">Naturaleza</string>
-    <string name="cat_patterns">Patrones</string>
-    <string name="cat_vehicles">Vehículos</string>
-
-
     <!--Set As Wallpaper-->
     <string name="applying">Aplicando papel tapiz</string>
         <string name="apply_success">Éxito</string>
@@ -59,10 +46,11 @@
 
     <!--Download Handler-->
     <string name="downloaded">Descargado</string>
+    <string name="permission_denied">No se puede descargar, conceda permiso usando \nConfiguraciones-> Notificación &amp; aplicaciones-> Permiso de la aplicación</string>
 
 
     <!--Favorite Fragment-->
-    <string name="delete_warning">Advertencia !</string>
+    <string name="delete_warning">Advertencia!</string>
     <string name="delete_warning_msg">¡Esto borrará todos tus Favoritos!</string>
     <string name="delete_error">¡Ha ocurrido un error!</string>
     <string name="no_favs">¡Sin favoritos todavía!</string>
@@ -71,9 +59,9 @@
 
 
     <!--Fullscreen Wallpaper View Activity-->
-    <string name="size_option_small">Pequeña - 1024x1024</string>
-    <string name="size_option_med">Medio - 2048x2048</string>
-    <string name="size_option_large">Grande - 2732x2732</string>
+    <string name="size_option_small">Pequeña Resolución</string>
+    <string name="size_option_med">Medio Resolución</string>
+    <string name="size_option_large">Grande Resolución</string>
     <string name="download_wallpaper_btn">Descargar</string>
     <string name="set_wallpaper_btn">Conjunto</string>
     <string name="downloading_wallpaper">Descargaring Wallpaper</string>
@@ -88,17 +76,34 @@
     <string name="search404">Lo sentimos, no se encontraron fondos de pantalla para \n</string>
     <string name="search_query_hint">Qué estás buscando ?</string>
     <string name="search_query">Buscando fondos de pantalla para </string>
+    <string name="search_relevant">Buscar algo relevante</string>
 
 
     <!--Downloads Fragment-->
     <string name="no_wallpaper_downloaded">¡Sin descargas!</string>
     <string name="download_now_btn">Descargar ahora</string>
 
+    <!--Help Translate Activity-->
+    <string name="translated_to">Traducido a : </string>
+    <string name="get_started">Comience</string>
+    <string name="step1">Paso 1:</string>
+    <string name="step1_desc">Descargue el archivo strings.xml de aquí</string>
+    <string name="step2">Paso 2:</string>
+    <string name="step2_desc">Traduzca las cadenas a su idioma y guarde el archivo strings.xml con un nuevo nombre</string>
+    <string name="step3">Paso 3:</string>
+    <string name="step3_desc">Envíe las cadenas de caracteres traducidas al desarrollador.</string>
+    <string name="step4">Paso 4:</string>
+    <string name="step4_desc"><b>¡Buen trabajo!</b>\nGracias por todo su esfuerzo, se le agregará a la\nlista de
+                                    contribuyentes después de que la traducción es revisada y publicada.</string>
+
 
     <!--About Me Section-->
     <string name="myname">Yugansh Tyagi</string>
     <string name="aboutme">Desarrollador de Android y Diseñador gráfico.\nEntusiasta de la tecnología en la \nmañana y Otaku completo en la noche. \n¡Coma, duerma, codifique, repita!</string>
     <string name="copyright_claim">Copyright / Reclamo</string>
+    <string name="help_translate">Ayudanos a traducir?</string>
+    <string name="contributors">Colaboradores</string>
+    <string name="contribute">Contribuya en la traducción de la aplicación en diferentes idiomas.</string>
     <string name="cpyrghtText">No soy propietario ni reclamo derechos de autor de las imágenes utilizadas en la aplicación
                                  todo el trabajo pertenece a sus dueños originales.
                                  Las imágenes en la aplicación son solo para uso personal y
@@ -108,5 +113,10 @@
     <string name="shareApp">Compartir aplicación con amigos</string>
     <string name="shareText">¡Oye, revisa esta aplicación Awesome Wallpaper que encontré!\nhttp://play.google.com/store/apps/details?id=</string>
     <string name="rateApp">Califica la aplicación en PlayStore</string>
+
+    <!--Update App Dialog-->
+    <string name="update_text"><i>Nueva actualización - Versión</i></string>
+    <string name="update">Actualizar</string>
+    <string name="release_notes"><b>Registro de cambios: </b></string>
 
 </resources>

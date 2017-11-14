@@ -14,6 +14,13 @@
     <meta-data android:name="com.google.android.gms.version"
         android:value="@integer/google_play_services_version" />
 
+    <supports-screens
+        android:xlargeScreens="true"
+        android:largeScreens="true"
+        android:normalScreens="true"
+        android:smallScreens="true"
+        android:anyDensity="true"/>
+
     <application
         android:allowBackup="true"
         android:hardwareAccelerated="true"
@@ -32,6 +39,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".DownloadHandler"/>
         <activity
             android:name="ytstudios.wall.bucket.FullWallpaperViewActivity"
             android:theme="@style/AppTheme.FullScreen" />
@@ -40,6 +48,8 @@
             android:name=".IntroActivity"
             android:theme="@style/AppTheme.FullScreen" />
         <activity android:name=".AboutActivity" />
+        <activity android:name=".HelpTranslateActivity"/>
+        <activity android:name=".ContributorsActivity"/>
 
         <service
             android:name=".FireBaseInstanceIdService"
