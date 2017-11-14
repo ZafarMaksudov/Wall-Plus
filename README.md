@@ -1,8 +1,6 @@
 ![minSdkVersion 21](https://img.shields.io/badge/minSdkVersion-19-red.svg?style=true)
 ![compileSdkVersion 26](https://img.shields.io/badge/compileSdkVersion-26-yellow.svg?style=true)
 [![HitCount](http://hits.dwyl.io/YuganshT79/Wall-Plus.svg)](http://hits.dwyl.io/YuganshT79/Wall-Plus)
-
- ![Icon](https://i.imgur.com/S1Zytjq.png)  
  
 
 # **Wall Bucket**
@@ -28,11 +26,19 @@ There is something for everyone.
 . Multiple downloads at same time   
 . Set wallpaper **without downloading**  
 . Manage your wallpaper from within the App  
-. Small in Size   
+. Small in Size
+
+## **Copyright**
+    The app is copyrighted to Yugansh Tyagi
+    and all the code belongs to the owner of the
+    application. The user may view the code as stated 
+    in the policies of Github but they should not 
+    modify any code or republish the code as their own.
+
 
 ## **External Libraries Used**
 .  [BottomBar](https://github.com/roughike/BottomBar) : A custom view component that mimics the new Material Design Bottom Navigation pattern.   
-. [Glide](https://github.com/bumptech/glide) :   Glide is a fast and efficient open source media management and image loading  
+. [Glide](https://github.com/bumptech/glide) : Glide is a fast and efficient open source media management and image loading  
 . [Picasso](https://github.com/square/picasso) : A powerful image downloading and caching library for Android  
 . [Fresco](https://github.com/facebook/fresco) : An Android library for managing images and the memory they use  
 . [Jsoup](https://github.com/jhy/jsoup) : Java HTML Parser, with best of DOM, CSS, and jquery  
