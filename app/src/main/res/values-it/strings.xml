@@ -101,10 +101,11 @@
     <!--About Me Section-->
     <string name="myname">Yugansh Tyagi</string>
     <string name="aboutme">Sviluppatore Android e Progettazione grafica.\nTech Enthusiast alla mattina e \nFull Otaku di notte \nMangi, dormire, codice, ripetere!</string>
-    <string name="copyright_claim">Copyright / reclamo</string>
+    <string name="morefromdev">Altri Apps by Developer</string>
     <string name="help_translate">Aiutaci a tradurre?</string>
     <string name="contributors">Contributori</string>
     <string name="contribute">Contribuisci aiutando la traduzione dell\'app in diverse lingue.</string>
+    <string name="copyright_claim">Copyright / reclamo</string>
     <string name="cpyrghtText">Non sono titolare di diritti d\'autore relativi alle immagini utilizzate nell\'applicazione
                                 tutto il lavoro appartiene ai loro proprietari originali.
                                 Le immagini nell'app sono solo per uso personale e

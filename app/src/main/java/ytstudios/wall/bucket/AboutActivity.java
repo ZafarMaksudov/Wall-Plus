@@ -23,7 +23,7 @@ public class AboutActivity extends AppCompatActivity {
 
     Toolbar toolbar;
     ImageView github, gmail, linkedIn;
-    CardView shareApp, rateApp, translate,contributors;
+    CardView shareApp, rateApp, translate,contributors,moreFromDev;
     SimpleDraweeView me, codingScreen;
 
     @Override
@@ -121,6 +121,24 @@ public class AboutActivity extends AppCompatActivity {
                 } catch (ActivityNotFoundException e) {
                     startActivity(new Intent(Intent.ACTION_VIEW,
                             Uri.parse("http://play.google.com/store/apps/details?id=" + AboutActivity.this.getPackageName())));
+                }
+            }
+        });
+
+        moreFromDev = findViewById(R.id.moreFromDev);
+        moreFromDev.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try{
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://dev?id=4686399596714986595"));
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+                    startActivity(intent);
+                }catch (Exception e){
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/dev?id=4686399596714986595"));
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+                    startActivity(intent);
                 }
             }
         });

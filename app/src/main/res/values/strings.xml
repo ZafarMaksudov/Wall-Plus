@@ -124,6 +124,7 @@
     <!--About Me Section-->
     <string name="myname">Yugansh Tyagi</string>
     <string name="aboutme">Android Developer and Graphic Designer.\nTech Enthusiast at morning and \nFull Otaku at night\nEat, Sleep, Code, Repeat!</string>
+    <string name="morefromdev">More apps by developer</string>
     <string name="help_translate">Help Us Translate?</string>
     <string name="contribute">Contribute by helping in translation of the app in different languages.</string>
     <string name="contributors">Contributors</string>
